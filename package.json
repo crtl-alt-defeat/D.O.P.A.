@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start:dev": "nodemon server",
-    "test": "vitest"
+    "test": "vitest",
+    "db:schema": "psql -d dopa -f server/db/schema.sql"
   },
   "keywords": [],
   "author": "",
