@@ -19,8 +19,8 @@ CREATE TABLE types (
 CREATE TABLE goals (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    type INT NOT NULL,
-    CONSTRAINT fk_types FOREIGN KEY (type) REFERENCES types(id)
+    type_id INT NOT NULL,
+    CONSTRAINT fk_types FOREIGN KEY (type_id) REFERENCES types(id)
 );
 
 CREATE TABLE users_goals (
@@ -29,15 +29,15 @@ CREATE TABLE users_goals (
     goal_id INT NOT NULL,
     date_made DATE NOT NULL,
     date_complete DATE,
-    CONSTRAINT fk_users FOREIGN KEY (users) REFERENCES users(id),
-    CONSTRAINT fk_goals FOREIGN KEY (goals) REFERENCES goals(id)
+    CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_goals FOREIGN KEY (goal_id) REFERENCES goals(id)
 );
 
 CREATE TABLE users_types (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     type_id INT NOT NULL,
-    CONSTRAINT fk_users FOREIGN KEY (users) REFERENCES users(id),
-    CONSTRAINT fk_types FOREIGN KEY (types) REFERENCES types(id),
+    CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_types FOREIGN KEY (type_id) REFERENCES types(id),
     CONSTRAINT mutually_unique_user_and_type UNIQUE (user_id, type_id)
 );
