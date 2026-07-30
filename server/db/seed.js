@@ -80,7 +80,7 @@ export default async function seed() {
     const user = users[i];
 
     //add a random number of desired goal types to a user
-    let numTypes = 1 + Math.round(Math.random() * types.length - 1);
+    let numTypes = Math.ceil(Math.random() * types.length);
     for (let j = 0; j < numTypes; j++) {
       //only add new types to the user
       let foundUnique = false;
@@ -117,20 +117,21 @@ export default async function seed() {
     let numGoals = 3;
 
     //find types of goals the user is interested in   TODO: replace this with a query of the users_types table
-    const possibleTypes = usersTypes.filter((userType) => {
-      if ((userType.user_id = user.id)) {
-        return types.find((type) => (type.id = userType.type_id));
-      }
-    });
+    const selectedTypes = usersTypes.filter(
+      (userType) => userType.user_id == user.id,
+    );
 
-    //find goals the user is interested in (based on type of goal) TODO: replace this with a query of the users_goals table
+    //find goals the user is interested in (based on type of goal)   TODO: replace this with a query of the users_goals table
     const possibleGoals = goals.filter((goal) => {
-      if (types.find((type) => (type.id = goal.id))) {
-        return goal;
-      }
+      const goalTypeInSelectedTypes = selectedTypes.find((userType) => {
+        return userType.type_id == goal.type_id;
+      });
+
+      return goalTypeInSelectedTypes ? true : false;
     });
 
     //create new users_goals rows for the user
+    const assignedGoals = [];
     for (let j = 0; j < numGoals; j++) {
       let foundUnique = false;
       do {
@@ -139,14 +140,14 @@ export default async function seed() {
           possibleGoals[Math.floor(Math.random() * possibleGoals.length)];
 
         //check if user already has the randomly picked goal for the day
-        const findPair = usersGoals.find(
-          (userGoal) =>
-            userGoal.user_id == user.id && userGoal.goal_id == newGoal.id,
+        const newGoalInAssignedGoals = assignedGoals.find(
+          (goal) => goal.id == newGoal.id,
         );
-        foundUnique = !findPair;
+        foundUnique = !newGoalInAssignedGoals;
 
         //if the goal is unique, add it to the users_goals table
         if (foundUnique) {
+          assignedGoals.push(newGoal);
           const newUserGoal = {
             user_id: user.id,
             goal_id: newGoal.id,
@@ -154,6 +155,9 @@ export default async function seed() {
           };
           usersGoals.push(await createUserGoal(newUserGoal));
         }
+
+        //exit condition (no more possible goals to add)
+        if (assignedGoals.length >= possibleGoals.length) break;
 
         //if the goal id not unique, search again
       } while (!foundUnique);
