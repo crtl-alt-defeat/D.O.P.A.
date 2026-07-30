@@ -110,6 +110,102 @@ describe("Database schema", () => {
   });
 });
 
+//describe seeding
+describe("Database is seeded with", () => {
+  let users = [];
+
+  test("5 different users", async () => {
+    const { rows: usersArr, rowCount } = await client.query(
+      "SELECT * FROM users",
+    );
+    expect(rowCount).toBe(5);
+    users = usersArr;
+  });
+
+  test("3 different goal types", async () => {
+    const { rows, rowCount } = await client.query("SELECT * FROM types");
+    expect(rowCount).toBe(3);
+  });
+
+  test("6 different goals", async () => {
+    const { rows, rowCount } = await client.query("SELECT * FROM goals");
+    expect(rowCount).toBe(6);
+  });
+
+  test("at least 1 selected type per user", async () => {
+    for (const user of users) {
+      const { rows, rowCount } = await client.query(
+        `
+          SELECT *
+          FROM users_types
+          WHERE user_id = $1
+        `,
+        [user.id],
+      );
+      expect(rowCount).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  describe("user_goals", async () => {
+    test("each user has 3 goals", async () => {
+      for (const user of users) {
+        const { rows, rowCount } = await client.query(
+          `
+          SELECT *
+          FROM users_goals
+          WHERE user_id = $1
+        `,
+          [user.id],
+        );
+        expect(rowCount).toBe(3);
+      }
+    });
+
+    test("every goal a user has is from one of their selected types", async () => {
+      //check if each goal belongs to a valid type
+      for (const user of users) {
+        //get goals for the current user
+        const { rows: userGoals } = await client.query(
+          `
+          SELECT *
+          FROM users_goals
+          WHERE user_id = $1
+        `,
+          [user.id],
+        );
+
+        //loop through each goal
+        for (const userGoal of userGoals) {
+          //check if current goal is of a valid type
+          const response = await client.query(
+            `
+              WITH get_goal_from_users_goals AS (  
+                SELECT goals.*
+                  FROM
+                    users_goals
+                    JOIN goals ON goals.id = users_goals.goal_id
+                  WHERE
+                    users_goals.id = $1
+              )
+              
+              SELECT goal.*
+              FROM
+                get_goal_from_users_goals as goal
+                JOIN users_types ON
+                  users_types.type_id = goal.type_id
+                  AND users_types.user_id = $2
+            `,
+            [userGoal.id, user.id],
+          );
+
+          const foundValidType = response.rows[0];
+          expect(foundValidType).toBeDefined();
+        }
+      }
+    });
+  });
+});
+
 async function getColumns(table) {
   const sql = `
   SELECT column_name, data_type, is_nullable
