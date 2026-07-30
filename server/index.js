@@ -10,8 +10,13 @@ app.use(express.json());
 //for deployment only
 const __dirname = import.meta.dirname;
 
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, "../client/dist/index.html")));
-app.use("/assets", express.static(path.join(__dirname, "../client/dist/assets")));
+app.get("/", (req, res) =>
+  res.sendFile(path.join(__dirname, "../client/dist/index.html")),
+);
+app.use(
+  "/assets",
+  express.static(path.join(__dirname, "../client/dist/assets")),
+);
 
 //use api routes
 app.use("/api", router);
@@ -24,7 +29,9 @@ app.use("/{*path}", (req, res, next) => {
 //custom error handling route
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(err.status || 500).send({ error: err.message ? err.message : err });
+  res
+    .status(err.status || 500)
+    .send({ error: err.message ? err.message : err });
 });
 
 const init = async () => {
@@ -32,8 +39,10 @@ const init = async () => {
   await client.connect();
   console.log("connected to database");
 
-  await seed();
-
+  if (process.env.SEED === "true") {
+    await seed();
+    console.log("🌱 Database seeded.");
+  }
   app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
   });
