@@ -3,10 +3,13 @@ import express from "express";
 import client from "./db/client.js";
 import seed from "./db/seed.js";
 import router from "./api/index.js";
+import typesRouter from "./api/types.js";
+import goalsRouter from "./api/goals.js";
 const app = express();
 //body parsing middleware
 app.use(express.json());
-
+app.use("/types", typesRouter);
+app.use("/goals", goalsRouter);
 //for deployment only
 const __dirname = import.meta.dirname;
 
