@@ -113,37 +113,63 @@ describe("Database schema", () => {
 //describe seeding
 describe("Database is seeded with", () => {
   let users = [];
+  let types = [];
 
-  test("5 different users", async () => {
-    const { rows: usersArr, rowCount } = await client.query(
-      "SELECT * FROM users",
-    );
-    expect(rowCount).toBe(5);
-    users = usersArr;
-  });
-
-  test("3 different goal types", async () => {
-    const { rows, rowCount } = await client.query("SELECT * FROM types");
-    expect(rowCount).toBe(3);
-  });
-
-  test("6 different goals", async () => {
-    const { rows, rowCount } = await client.query("SELECT * FROM goals");
-    expect(rowCount).toBe(6);
-  });
-
-  test("at least 1 selected type per user", async () => {
-    for (const user of users) {
-      const { rows, rowCount } = await client.query(
-        `
-          SELECT *
-          FROM users_types
-          WHERE user_id = $1
-        `,
-        [user.id],
+  describe("users", async () => {
+    test("at least 5 different users", async () => {
+      const { rows: usersArr, rowCount } = await client.query(
+        "SELECT * FROM users",
       );
-      expect(rowCount).toBeGreaterThanOrEqual(1);
-    }
+      expect(rowCount).toBe(5);
+      users = usersArr;
+    });
+  });
+
+  describe("types", async () => {
+    test("at least 4 different goal types", async () => {
+      const { rows: typesArr, rowCount } = await client.query(
+        "SELECT * FROM types",
+      );
+      expect(rowCount).toBeGreaterThanOrEqual(4);
+      types = typesArr;
+    });
+  });
+
+  describe("goals", async () => {
+    test("at least 9 different goals", async () => {
+      const { rows, rowCount } = await client.query("SELECT * FROM goals");
+      expect(rowCount).toBeGreaterThanOrEqual(9);
+    });
+
+    test("each type has 3 goals", async () => {
+      for (const type of types) {
+        const { rows, rowCount } = await client.query(
+          `
+            SELECT *
+            FROM goals
+            WHERE type_id = $1
+          `,
+          [type.id],
+        );
+        expect(rowCount).toBeGreaterThanOrEqual(3);
+      }
+    });
+  });
+
+  describe("users_types", async () => {
+    test("at least 1 selected type per user", async () => {
+      for (const user of users) {
+        const { rows, rowCount } = await client.query(
+          `
+            SELECT *
+            FROM users_types
+            WHERE user_id = $1
+          `,
+          [user.id],
+        );
+        expect(rowCount).toBeGreaterThanOrEqual(1);
+      }
+    });
   });
 
   describe("user_goals", async () => {
@@ -151,10 +177,10 @@ describe("Database is seeded with", () => {
       for (const user of users) {
         const { rows, rowCount } = await client.query(
           `
-          SELECT *
-          FROM users_goals
-          WHERE user_id = $1
-        `,
+            SELECT *
+            FROM users_goals
+            WHERE user_id = $1
+          `,
           [user.id],
         );
         expect(rowCount).toBe(3);
@@ -167,10 +193,10 @@ describe("Database is seeded with", () => {
         //get goals for the current user
         const { rows: userGoals } = await client.query(
           `
-          SELECT *
-          FROM users_goals
-          WHERE user_id = $1
-        `,
+            SELECT *
+            FROM users_goals
+            WHERE user_id = $1
+          `,
           [user.id],
         );
 
@@ -208,9 +234,9 @@ describe("Database is seeded with", () => {
 
 async function getColumns(table) {
   const sql = `
-  SELECT column_name, data_type, is_nullable
-  FROM information_schema.columns
-  WHERE table_name = $1
+    SELECT column_name, data_type, is_nullable
+    FROM information_schema.columns
+    WHERE table_name = $1
   `;
   const { rows } = await client.query(sql, [table]);
   return rows;
@@ -218,15 +244,15 @@ async function getColumns(table) {
 
 async function isColumnConstrained(table, column, constraint) {
   const sql = `
-  SELECT *
-  FROM
-    information_schema.table_constraints AS tc
-    JOIN information_schema.key_column_usage AS kcu
-      ON kcu.constraint_name = tc.constraint_name
-  WHERE
-    tc.table_name = $1
-    AND kcu.column_name = $2
-    AND tc.constraint_type ilike $3
+    SELECT *
+    FROM
+      information_schema.table_constraints AS tc
+      JOIN information_schema.key_column_usage AS kcu
+        ON kcu.constraint_name = tc.constraint_name
+    WHERE
+      tc.table_name = $1
+      AND kcu.column_name = $2
+      AND tc.constraint_type ilike $3
   `;
   const { rowCount } = await client.query(sql, [table, column, constraint]);
   return rowCount > 0;
