@@ -31,7 +31,7 @@ export default async function seed() {
   types.push(await createType("self care"));
   types.push(await createType("household"));
   types.push(await createType("work/school"));
-  //types.push(await createType("relationship"));
+  types.push(await createType("relationship"));
 
   // seed goals table
   const goals = [];
@@ -49,16 +49,48 @@ export default async function seed() {
   );
   goals.push(
     await createGoal({
+      name: "take a shower",
+      type_id: types[0].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "exercise",
+      type_id: types[1].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "touch grass",
+      type_id: types[1].id,
+    }),
+  );
+
+  goals.push(
+    await createGoal({
       name: "do laundry",
       type_id: types[1].id,
     }),
   );
   goals.push(
     await createGoal({
-      name: "clean room",
+      name: "clean room (min. 4 items)",
       type_id: types[1].id,
     }),
   );
+  goals.push(
+    await createGoal({
+      name: "get groceries",
+      type_id: types[1].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "do dishes",
+      type_id: types[1].id,
+    }),
+  );
+
   goals.push(
     await createGoal({
       name: "check email",
@@ -71,6 +103,39 @@ export default async function seed() {
       type_id: types[2].id,
     }),
   );
+  goals.push(
+    await createGoal({
+      name: "make a task list",
+      type_id: types[2].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "prepare outfit for tomorrow",
+      type_id: types[2].id,
+    }),
+  );
+
+  goals.push(
+    await createGoal({
+      name: "Kiss your significant other",
+      type_id: types[3].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "Text a friend/fam",
+      type_id: types[3].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "make plans with someone",
+      type_id: types[3].id,
+    }),
+  );
+
+  //deadline goals
   //goals.push(await createGoal("birthday reminder", types[3].id));
   //goals.push(await createGoal("appointment reminder", types[3].id));
 
