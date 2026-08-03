@@ -1,13 +1,15 @@
-import client from "../db/client.js";
+import client from "../client.js";
+
 export async function createType(name) {
   const SQL = `
-    INSERT INTO types (name)
-    VALUES ($1)
-    RETURNING *
-    `;
+  INSERT INTO types (name)
+  VALUES ($1)
+  RETURNING *
+  `;
   const response = await client.query(SQL, [name]);
   return response.rows[0];
 }
+
 export async function getTypes() {
   const SQL = `
   SELECT *
@@ -16,6 +18,7 @@ export async function getTypes() {
   const { rows: types } = await client.query(SQL);
   return types;
 }
+
 export async function getType(id) {
   const SQL = `
   SELECT *

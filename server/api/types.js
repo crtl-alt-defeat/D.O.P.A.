@@ -1,5 +1,10 @@
 import express from "express";
 const typesRouter = express.Router();
+
+//middleware
+//todo: import requireBody (copy middleware folder from previous assignments)
+
+//queries
 import {
   createType,
   getTypes,
@@ -15,6 +20,9 @@ typesRouter.get("/", async (req, res, next) => {
     next(error);
   }
 });
+
+//todo: make a param route for id
+
 typesRouter.get("/:id", async (req, res, next) => {
   try {
     const type = await getType(req.params.id);
@@ -24,6 +32,11 @@ typesRouter.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+//todo: make a 'GET /:id/goals' to get all goals of a specific type
+
+//todo: move to users and change from 'GET /types/user/:userId' to 'GET /users/me/types'
+//todo:   requiring a token and getting user from token (use getUserFromToken and requireUser middleware)
 typesRouter.get("/user/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -35,6 +48,9 @@ typesRouter.get("/user/:userId", async (req, res, next) => {
     next(error);
   }
 });
+
+//todo: make more secure (restrict this call to admins?)
+//todo: use middleware (requireBody)
 typesRouter.post("/", async (req, res, next) => {
   try {
     const { name } = req.body;
