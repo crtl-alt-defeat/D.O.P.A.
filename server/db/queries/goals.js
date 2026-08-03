@@ -1,14 +1,15 @@
-import client from "../db/client.js";
+import client from "../client.js";
 
-export async function createGoal(name, type_id) {
+export async function createGoal({ name, type_id }) {
   const SQL = `
-    INSERT INTO goals (name, type_id)
-    VALUES ($1, $2)
-    RETURNING *
-    `;
+  INSERT INTO goals (name, type_id)
+  VALUES ($1, $2)
+  RETURNING *
+  `;
   const response = await client.query(SQL, [name, type_id]);
   return response.rows[0];
 }
+
 export async function getGoals() {
   const SQL = `
   SELECT *
@@ -17,6 +18,7 @@ export async function getGoals() {
   const { rows: goals } = await client.query(SQL);
   return goals;
 }
+
 export async function getGoal(id) {
   const SQL = `
   SELECT *

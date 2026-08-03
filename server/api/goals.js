@@ -1,5 +1,10 @@
 import express from "express";
 const goalsRouter = express.Router();
+
+//middleware
+//todo: import requireBody (copy middleware folder from previous assignments)
+
+//queries
 import {
   createGoal,
   getGoals,
@@ -15,6 +20,8 @@ goalsRouter.get("/", async (req, res, next) => {
     next(error);
   }
 });
+
+//todo: use middleware (requireBody)
 goalsRouter.get("/:id", async (req, res, next) => {
   try {
     const goal = await getGoal(req.params.id);
@@ -24,6 +31,9 @@ goalsRouter.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+//todo: move to users and change from 'GET /goals/user/:userId' to 'GET /users/me/goals'
+//todo:   requiring a token and getting user from token (use getUserFromToken and requireUser middleware)
 goalsRouter.get("/user/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -35,6 +45,9 @@ goalsRouter.get("/user/:userId", async (req, res, next) => {
     next(error);
   }
 });
+
+//todo: make more secure (restrict this call to admins?)
+//todo: use middleware (require body)
 goalsRouter.post("/", async (req, res, next) => {
   try {
     const { name, type_id } = req.body;

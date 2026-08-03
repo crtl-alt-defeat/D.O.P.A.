@@ -1,4 +1,4 @@
-import client from "./client.js";
+//import client from "./client.js";
 import { faker } from "@faker-js/faker";
 
 //database queries
@@ -8,10 +8,12 @@ import { createGoal } from "./queries/goals.js";
 import { createUserType } from "./queries/usersTypes.js";
 import { createUserGoal } from "./queries/usersGoals.js";
 
-await client.connect();
-await seed();
-await client.end();
-console.log("🌱 Database seeded.");
+// if (process.env.SEED == "true") {
+//   await client.connect();
+//   await seed();
+//   await client.end();
+//   console.log("🌱 Database seeded.");
+// }
 
 //seed tables
 export default async function seed() {
