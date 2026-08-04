@@ -1,8 +1,8 @@
 import express from "express";
-import router from "./api/index.js";
-
 import path from "path";
 
+//api imports
+import usersRouter from "./api/users.js";
 import typesRouter from "./api/types.js";
 import goalsRouter from "./api/goals.js";
 
@@ -12,7 +12,8 @@ export default app;
 //body parsing middleware
 app.use(express.json());
 
-//todo: move to /server/api/index.js
+//api routes
+app.use("/users", usersRouter);
 app.use("/types", typesRouter);
 app.use("/goals", goalsRouter);
 
@@ -26,9 +27,6 @@ app.use(
   "/assets",
   express.static(path.join(__dirname, "../client/dist/assets")),
 );
-
-//use api routes
-app.use("/api", router);
 
 //express routes catch all
 app.use("/{*path}", (req, res, next) => {

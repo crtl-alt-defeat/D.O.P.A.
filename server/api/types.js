@@ -56,7 +56,7 @@ typesRouter.post("/", async (req, res, next) => {
     const { name } = req.body;
     if (!name)
       return res.status(400).send({ message: "Missing required field." });
-    const newType = await createType({ name });
+    const newType = await createType(name);
     res.status(201).send(newType);
   } catch (error) {
     next(error);
