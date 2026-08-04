@@ -1,4 +1,4 @@
-import client from "./client.js";
+//import client from "./client.js";
 import { faker } from "@faker-js/faker";
 
 //database queries
@@ -8,10 +8,12 @@ import { createGoal } from "./queries/goals.js";
 import { createUserType } from "./queries/usersTypes.js";
 import { createUserGoal } from "./queries/usersGoals.js";
 
-await client.connect();
-await seed();
-await client.end();
-console.log("🌱 Database seeded.");
+// if (process.env.SEED == "true") {
+//   await client.connect();
+//   await seed();
+//   await client.end();
+//   console.log("🌱 Database seeded.");
+// }
 
 //seed tables
 export default async function seed() {
@@ -49,16 +51,48 @@ export default async function seed() {
   );
   goals.push(
     await createGoal({
+      name: "take a shower",
+      type_id: types[0].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "exercise",
+      type_id: types[1].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "touch grass",
+      type_id: types[1].id,
+    }),
+  );
+
+  goals.push(
+    await createGoal({
       name: "do laundry",
       type_id: types[1].id
     })
   );
   goals.push(
     await createGoal({
-      name: "clean room",
-      type_id: types[1].id
-    })
+      name: "clean room (min. 4 items)",
+      type_id: types[1].id,
+    }),
   );
+  goals.push(
+    await createGoal({
+      name: "get groceries",
+      type_id: types[1].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "do dishes",
+      type_id: types[1].id,
+    }),
+  );
+
   goals.push(
     await createGoal({
       name: "check email",
@@ -71,6 +105,39 @@ export default async function seed() {
       type_id: types[2].id
     })
   );
+  goals.push(
+    await createGoal({
+      name: "make a task list",
+      type_id: types[2].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "prepare outfit for tomorrow",
+      type_id: types[2].id,
+    }),
+  );
+
+  goals.push(
+    await createGoal({
+      name: "Kiss your significant other",
+      type_id: types[3].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "Text a friend/fam",
+      type_id: types[3].id,
+    }),
+  );
+  goals.push(
+    await createGoal({
+      name: "make plans with someone",
+      type_id: types[3].id,
+    }),
+  );
+
+  //deadline goals
   //goals.push(await createGoal("birthday reminder", types[3].id));
   //goals.push(await createGoal("appointment reminder", types[3].id));
 

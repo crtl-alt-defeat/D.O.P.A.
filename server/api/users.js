@@ -1,8 +1,16 @@
 import express from "express";
 const usersRouter = express.Router();
+
+//middleware
+//todo: import requireBody (copy middleware folder from previous assignments)
+//todo: import getUserFromToken (copy middleware folder from previous assignments)
+//todo: import requireUser (copy middleware folder from previous assignments)
+
+//queries
 import { createUser, getUserById } from "../db/usersQueries.js";
 
 usersRouter.get("/:id", async (req, res, next) => {
+  //todo: make more secure maybe? (require token and restrict to admins? [this would require implementing an admin role in users])
   try {
     const user = await getUserById(req.params.id);
     if (!user) {
@@ -14,6 +22,7 @@ usersRouter.get("/:id", async (req, res, next) => {
   }
 });
 
+//todo: use middleware (requireBody)
 usersRouter.post("/register", async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -28,5 +37,15 @@ usersRouter.post("/register", async (req, res, next) => {
     next(error);
   }
 });
+
+//todo: make a 'POST /login' route
+
+//todo: make a 'GET /me' route, that requires a token and returns a user
+
+//todo: move 'GET /types/user/:userId' to here as 'GET /users/me/types
+//todo:   requiring a token and returning a list of types
+
+//todo: move 'GET /goals/user/:userId' to here as 'GET /users/me/goals
+//todo:   requiring a token and returning a list of goals
 
 export default usersRouter;
