@@ -7,10 +7,10 @@ export const createUser = async ({ name, email, password }) => {
     const {
       rows: [user]
     } = await client.query(
-      `INSERT INTO users(username, email, password) 
+      `INSERT INTO users(name, email, password) 
        VALUES($1, $2, $3) 
-       RETURNING id, username, email;`,
-      [username, email, hashedPassword]
+       RETURNING id, name, email;`,
+      [name, email, hashedPassword]
     );
     return user;
   } catch (error) {
@@ -22,10 +22,9 @@ export const getUserById = async (id) => {
   try {
     const {
       rows: [user]
-    } = await client.query(
-      `SELECT id, username, email FROM users WHERE id = $1;`,
-      [id]
-    );
+    } = await client.query(`SELECT id, name, email FROM users WHERE id = $1;`, [
+      id
+    ]);
     return user;
   } catch (error) {
     throw error;
