@@ -1,7 +1,7 @@
 import client from "../client.js";
 import bcrypt from "bcrypt";
 
-export const createUser = async ({ username, email, password }) => {
+export const createUser = async ({ name, email, password }) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
     const {
