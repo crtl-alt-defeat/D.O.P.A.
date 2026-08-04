@@ -7,7 +7,7 @@ const usersRouter = express.Router();
 //todo: import requireUser (copy middleware folder from previous assignments)
 
 //queries
-import { createUser, getUserById } from "../db/usersQueries.js";
+import { createUser, getUserById } from "../db/queries/users.js";
 
 usersRouter.get("/:id", async (req, res, next) => {
   //todo: make more secure maybe? (require token and restrict to admins? [this would require implementing an admin role in users])
