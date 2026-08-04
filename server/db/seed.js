@@ -23,7 +23,7 @@ export default async function seed() {
     const newUser = {
       email: faker.internet.email(),
       password: faker.internet.password(),
-      name: `${faker.person.firstName()} ${faker.person.lastName()}`,
+      name: `${faker.person.firstName()} ${faker.person.lastName()}`
     };
     users.push(await createUser(newUser));
   }
@@ -40,14 +40,14 @@ export default async function seed() {
   goals.push(
     await createGoal({
       name: "brush teeth",
-      type_id: types[0].id,
-    }),
+      type_id: types[0].id
+    })
   );
   goals.push(
     await createGoal({
       name: "take meds",
-      type_id: types[0].id,
-    }),
+      type_id: types[0].id
+    })
   );
   goals.push(
     await createGoal({
@@ -71,8 +71,8 @@ export default async function seed() {
   goals.push(
     await createGoal({
       name: "do laundry",
-      type_id: types[1].id,
-    }),
+      type_id: types[1].id
+    })
   );
   goals.push(
     await createGoal({
@@ -96,14 +96,14 @@ export default async function seed() {
   goals.push(
     await createGoal({
       name: "check email",
-      type_id: types[2].id,
-    }),
+      type_id: types[2].id
+    })
   );
   goals.push(
     await createGoal({
       name: "work on deadlines",
-      type_id: types[2].id,
-    }),
+      type_id: types[2].id
+    })
   );
   goals.push(
     await createGoal({
@@ -158,7 +158,7 @@ export default async function seed() {
         //check if user already has an entry for picked type
         const findPair = usersTypes.find(
           (userType) =>
-            userType.user_id == user.id && userType.type_id == newType.id,
+            userType.user_id == user.id && userType.type_id == newType.id
         );
         foundUnique = !findPair;
 
@@ -166,7 +166,7 @@ export default async function seed() {
         if (foundUnique) {
           const newUserType = {
             user_id: user.id,
-            type_id: newType.id,
+            type_id: newType.id
           };
           usersTypes.push(await createUserType(newUserType));
         }
@@ -185,7 +185,7 @@ export default async function seed() {
 
     //find types of goals the user is interested in   TODO: replace this with a query of the users_types table
     const selectedTypes = usersTypes.filter(
-      (userType) => userType.user_id == user.id,
+      (userType) => userType.user_id == user.id
     );
 
     //find goals the user is interested in (based on type of goal)   TODO: replace this with a query of the users_goals table
@@ -208,7 +208,7 @@ export default async function seed() {
 
         //check if user already has the randomly picked goal for the day
         const newGoalInAssignedGoals = assignedGoals.find(
-          (goal) => goal.id == newGoal.id,
+          (goal) => goal.id == newGoal.id
         );
         foundUnique = !newGoalInAssignedGoals;
 
@@ -218,7 +218,7 @@ export default async function seed() {
           const newUserGoal = {
             user_id: user.id,
             goal_id: newGoal.id,
-            date_made: new Date(),
+            date_made: new Date()
           };
           usersGoals.push(await createUserGoal(newUserGoal));
         }
