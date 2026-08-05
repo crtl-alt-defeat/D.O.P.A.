@@ -1,43 +1,73 @@
 import client from "../client.js";
 import bcrypt from "bcrypt";
+import { createToken } from "../../utils/jwt.js";
 
 export const createUser = async ({ name, email, password }) => {
-  try {
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const {
-      rows: [user]
-    } = await client.query(
-      `INSERT INTO users(name, email, password) 
-       VALUES($1, $2, $3) 
-       RETURNING id, name, email;`,
-      [name, email, hashedPassword]
-    );
-    return user;
-  } catch (error) {
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const SQL = `
+    INSERT INTO users(name, email, password) 
+    VALUES($1, $2, $3) 
+    RETURNING *
+  `;
+
+  const {
+    rows: [user],
+  } = await client.query(SQL, [name, email, hashedPassword]);
+
+  const token = createToken({ id: user.id });
+  return token;
+};
+
+export const authenticate = async ({ email, password }) => {
+  const SQL = `
+    SELECT *
+    FROM users
+    WHERE email = $1
+  `;
+
+  const {
+    rows: [user],
+  } = await client.query(SQL, [email]);
+
+  if (!user) {
+    const error = new Error("invalid credentials");
+    error.status = 401;
     throw error;
   }
+
+  const isValid = await bcrypt.compare(password, user.password);
+  if (!isValid) {
+    const error = new Error("invalid credentials");
+    error.status = 401;
+    throw error;
+  }
+
+  const token = createToken({ id: user.id });
+  return token;
 };
 
 export const getUserById = async (id) => {
-  try {
-    const {
-      rows: [user]
-    } = await client.query(`SELECT id, name, email FROM users WHERE id = $1;`, [
-      id
-    ]);
-    return user;
-  } catch (error) {
-    throw error;
-  }
+  const SQL = `
+    SELECT *
+    FROM users
+    WHERE id = $1
+  `;
+
+  const {
+    rows: [user],
+  } = await client.query(SQL, [id]);
+  return user;
 };
 
 export const getUserByEmail = async (email) => {
-  try {
-    const {
-      rows: [user]
-    } = await client.query(`SELECT * FROM users WHERE email = $1;`, [email]);
-    return user;
-  } catch (error) {
-    throw error;
-  }
+  const SQL = `
+    SELECT *
+    FROM users
+    WHERE email = $1
+  `;
+
+  const {
+    rows: [user],
+  } = await client.query(SQL, [email]);
+  return user;
 };

@@ -8,6 +8,7 @@ import { afterAll, beforeAll, describe, expect, it, test } from "vitest";
 let adminToken;
 let firstUser;
 const newUser = {
+  name: "Test Tester",
   email: "test.account@gmail.com",
   password: "newTestPassword",
 };
@@ -112,7 +113,7 @@ describe("users", () => {
     });
 
     //todo: sends a 401 if incorrect credentials are provided (if we make this api call only available to admins)
-    it.todo("sends a 401 if incorrect credentials are provided", async () => {
+    it.skip("TODO: sends a 401 if incorrect credentials are provided", async () => {
       const response = await request(app)
         .get(`/users/1`)
         .set("Authorization", `Bearer ${adminToken}`);
@@ -121,7 +122,7 @@ describe("users", () => {
   });
 
   //todo: we should be able to get the information of a user who is logged in
-  describe.todo("Get /users/me", () => {
+  describe("Get /users/me", () => {
     it("sends the requested user information", async () => {
       const response = await request(app)
         .get("/users/me")
@@ -132,8 +133,9 @@ describe("users", () => {
       expect(user).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
+          name: newUser.name,
           email: newUser.email,
-          password: newUser.password,
+          password: expect.any(String),
         }),
       );
     });
