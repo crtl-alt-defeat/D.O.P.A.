@@ -31,8 +31,7 @@ typesRouter.get("/", async (req, res, next) => {
   }
 });
 
-//todo: move to users and change from 'GET /types/user/:userId' to 'GET /users/me/types'
-//todo:   requiring a token and getting user from token (use getUserFromToken and requireUser middleware)
+//todo: make more secure (restrict this call to admins?)
 typesRouter.get("/user/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -45,13 +44,16 @@ typesRouter.get("/user/:userId", async (req, res, next) => {
   }
 });
 
-//todo: make a param route for id
+typesRouter.param("id", async (req, res, next) => {
+  const type = await getType(req.params.id);
+  if (!type) return res.status(404).send({});
+  req.type = type;
+  next();
+});
 
 typesRouter.get("/:id", async (req, res, next) => {
   try {
-    const type = await getType(req.params.id);
-    if (!type) return res.status(404).send({ message: "Type not found." });
-    res.send(type);
+    res.send(req.type);
   } catch (error) {
     next(error);
   }
