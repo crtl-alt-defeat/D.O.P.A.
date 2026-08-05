@@ -6,7 +6,7 @@ import {
   Link,
   useLocation,
   useNavigate
-} from "react-router-dom";
+} from "react-router";
 
 function WelcomePage() {
   return (
