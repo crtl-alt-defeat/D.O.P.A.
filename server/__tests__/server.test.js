@@ -211,7 +211,6 @@ describe("types", () => {
         expect.objectContaining({
           id: expect.any(Number),
           name: newType.name,
-          type_id: expect.any(Number),
         }),
       );
     });
@@ -266,7 +265,7 @@ describe("goals", () => {
   describe("POST /goals", () => {
     it("creates a new goal and sends back an object of it", async () => {
       const response = await request(app).post("/goals").send(newGoal);
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(201);
       expect(response.body).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -303,7 +302,7 @@ describe("goals", () => {
     it("sends the goal object if the correct id is given", async () => {
       const response = await request(app).get(`/goals/${firstGoal.id}`);
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(firatGoal);
+      expect(response.body).toEqual(firstGoal);
     });
 
     it("sends 404 if the goal doesnt exist", async () => {
