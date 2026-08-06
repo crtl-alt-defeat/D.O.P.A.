@@ -1,15 +1,29 @@
+import { useNavigate } from "react-router";
+import { useState } from "react";
+
 function IntakePage() {
-  /*   const navigate = useNavigate(); */
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
 
   const totalSteps = 3;
 
+  const [answers, setAnswers] = useState({
+    q1: "",
+    q2: "",
+    q3: "",
+  });
+
   function handleNextStep(event) {
     event.preventDefault();
+
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
-      navigate("/home");
+      // ⭐ Save answers to localStorage
+      localStorage.setItem("intakeAnswers", JSON.stringify(answers));
+
+      // ⭐ Navigate to register
+      navigate("/register");
     }
   }
 
@@ -26,16 +40,38 @@ function IntakePage() {
         {currentStep === 1 && (
           <div>
             <p>Question 1</p>
+
             <label>
-              <input type="radio" name="q1" required /> Health & Fitness
+              <input
+                type="radio"
+                name="q1"
+                value="Health & Fitness"
+                onChange={(e) => setAnswers({ ...answers, q1: e.target.value })}
+                required
+              />
+              Health & Fitness
             </label>
             <br />
+
             <label>
-              <input type="radio" name="q1" /> Career & Studies
+              <input
+                type="radio"
+                name="q1"
+                value="Career & Studies"
+                onChange={(e) => setAnswers({ ...answers, q1: e.target.value })}
+              />
+              Career & Studies
             </label>
             <br />
+
             <label>
-              <input type="radio" name="q1" /> Mindset & Routine
+              <input
+                type="radio"
+                name="q1"
+                value="Mindset & Routine"
+                onChange={(e) => setAnswers({ ...answers, q1: e.target.value })}
+              />
+              Mindset & Routine
             </label>
           </div>
         )}
@@ -43,18 +79,37 @@ function IntakePage() {
         {currentStep === 2 && (
           <div>
             <p>Question 2</p>
+
             <label>
-              <input type="radio" name="q2" required />
+              <input
+                type="radio"
+                name="q2"
+                value="Abc"
+                onChange={(e) => setAnswers({ ...answers, q2: e.target.value })}
+                required
+              />
               Abc
             </label>
             <br />
+
             <label>
-              <input type="radio" name="q2" />
+              <input
+                type="radio"
+                name="q2"
+                value="Def"
+                onChange={(e) => setAnswers({ ...answers, q2: e.target.value })}
+              />
               Def
             </label>
             <br />
+
             <label>
-              <input type="radio" name="q2" />
+              <input
+                type="radio"
+                name="q2"
+                value="Ghi"
+                onChange={(e) => setAnswers({ ...answers, q2: e.target.value })}
+              />
               Ghi
             </label>
           </div>
@@ -63,18 +118,37 @@ function IntakePage() {
         {currentStep === 3 && (
           <div>
             <p>Question 3</p>
+
             <label>
-              <input type="radio" name="q3" required />
+              <input
+                type="radio"
+                name="q3"
+                value="Jkl"
+                onChange={(e) => setAnswers({ ...answers, q3: e.target.value })}
+                required
+              />
               Jkl
             </label>
             <br />
+
             <label>
-              <input type="radio" name="q3" />
+              <input
+                type="radio"
+                name="q3"
+                value="Mno"
+                onChange={(e) => setAnswers({ ...answers, q3: e.target.value })}
+              />
               Mno
             </label>
             <br />
+
             <label>
-              <input type="radio" name="q3" />
+              <input
+                type="radio"
+                name="q3"
+                value="Pqr"
+                onChange={(e) => setAnswers({ ...answers, q3: e.target.value })}
+              />
               Pqr
             </label>
           </div>
@@ -82,10 +156,11 @@ function IntakePage() {
 
         <br />
         <button type="submit">
-          {currentStep === totalSteps ? "Finish & Go Home" : "Next Question"}
+          {currentStep === totalSteps ? "Finish & Register" : "Next Question"}
         </button>
       </form>
     </div>
   );
 }
+
 export default IntakePage;
