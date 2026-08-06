@@ -6,6 +6,7 @@ import IntakePage from "./pages/IntakeForm.jsx";
 import LoginPage from "./auth/Login.jsx";
 import HomePage from "./pages/Home.jsx";
 import SettingsPage from "./pages/Settings.jsx";
+import SchedulesPage from "./pages/Schedules.jsx";
 import Layout from "./Layout.jsx";
 
 /* 
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/schedules" element={<SchedulesPage />} />
       </Route>
     </Routes>
   );
