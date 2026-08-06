@@ -41,3 +41,5 @@ export async function getGoalsByUserId(userId) {
   const { rows: goals } = await client.query(SQL, [userId]);
   return goals;
 }
+
+//todo: getGoalByTypeId
