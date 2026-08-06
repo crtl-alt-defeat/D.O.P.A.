@@ -13,7 +13,7 @@ export async function createType(name) {
       "Content-type": "application/json",
     };
 
-    await axios.post(typesAPI, newType, config);
+    await axios.post("/types", newType, config);
   } catch (error) {
     console.error(error);
   }
@@ -21,7 +21,7 @@ export async function createType(name) {
 
 export async function getTypes() {
   try {
-    const { data } = await axios.get(typesAPI);
+    const { data } = await axios.get("/types");
     return data;
   } catch (error) {
     console.error(error);
@@ -30,7 +30,7 @@ export async function getTypes() {
 
 export async function getType(id) {
   try {
-    const { data } = await axios.get(typesAPI + `/${id}`);
+    const { data } = await axios.get("/types" + `/${id}`);
     return data;
   } catch (error) {
     console.error(error);
