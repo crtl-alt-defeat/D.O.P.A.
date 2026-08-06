@@ -59,6 +59,4 @@ typesRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-//todo: make a 'GET /:id/goals' to get all goals of a specific type
-
 export default typesRouter;
