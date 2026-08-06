@@ -3,7 +3,8 @@ import App from "../App";
 import axios from "axios";
 
 //get api path from .env file
-const API = import.meta.env.VITE_API;
+const API = import.meta.env.VITE_API || "localhost:3000";
+const userAPI = API + "/users";
 
 //create context
 const authContext = createContext();
@@ -34,7 +35,7 @@ export function AuthProvider({ children }) {
       "Content-type": "application/json",
     };
 
-    const response = await axios.post(API + "/users/register", newUser, config);
+    const response = await axios.post(userAPI + "/register", newUser, config);
     setToken(response.data.token);
     localStorage.setItem("authToken", response.data.token);
   }
@@ -49,7 +50,7 @@ export function AuthProvider({ children }) {
       "Content-type": "application/json",
     };
 
-    const response = await axios.post(API + "/users/login", userInfo, config);
+    const response = await axios.post(userAPI + "/login", userInfo, config);
     setToken(response.data.token);
     localStorage.setItem("authToken", response.data.token);
   }
@@ -67,7 +68,7 @@ export function AuthProvider({ children }) {
         },
       };
 
-      const { data } = await axios.get(API + "/users/me", config);
+      const { data } = await axios.get(userAPI + "/me", config);
       return data;
     } catch (error) {
       console.error(error);

@@ -48,6 +48,8 @@ goalsRouter.get("/user/:userId", async (req, res, next) => {
   }
 });
 
+//todo: goalsRouter.get("/type/:typeId") (get goals by type_id)
+
 goalsRouter.get("/:id", async (req, res, next) => {
   try {
     const goal = await getGoal(req.params.id);
