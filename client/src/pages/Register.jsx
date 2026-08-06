@@ -1,9 +1,10 @@
+import { useNavigate } from "react-router";
 function RegisterPage() {
   const navigate = useNavigate();
 
   function handleRegister(event) {
     event.preventDefault();
-    navigate("/intake");
+    /* navigate("/intake"); */
   }
 
   return (
@@ -26,7 +27,9 @@ function RegisterPage() {
             <input type="password" placeholder="Choose Password" required />
           </label>
         </p>
-        <button type="submit">Submit & Continue</button>
+        <button type="submit" onClick={() => navigate("/home")}>
+          Submit & Continue
+        </button>
       </form>
     </div>
   );
