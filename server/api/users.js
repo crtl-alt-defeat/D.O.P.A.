@@ -7,7 +7,6 @@ import getUserFromToken from "../middleware/getUsersFromToken.js";
 import requireUser from "../middleware/requireUser.js";
 
 //queries
-import { createUser, getUserById } from "../db/queries/users.js";
 import { getDailyGoals } from "../db/queries/usersGoals.js";
 import { authenticate, createUser, getUserById } from "../db/queries/users.js";
 

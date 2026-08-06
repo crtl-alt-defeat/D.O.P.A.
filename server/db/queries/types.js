@@ -1,13 +1,36 @@
 import client from "../client.js";
 
-export async function createType(name) {
+/* export async function createType(name) {
   const SQL = `
   INSERT INTO types (name)
   VALUES ($1)
+  ON CONFLICT (name) DO NOTHING
   RETURNING *
-  `;
+  `,
+    [name];
   const response = await client.query(SQL, [name]);
   return response.rows[0];
+} */
+export async function createType(name) {
+  const insert = await client.query(
+    `INSERT INTO types (name)
+     VALUES ($1)
+     ON CONFLICT (name) DO NOTHING
+     RETURNING *`,
+    [name],
+  );
+
+  // If insert returned a row, use it
+  if (insert.rows.length > 0) {
+    return insert.rows[0];
+  }
+
+  // Otherwise fetch the existing row
+  const existing = await client.query(`SELECT * FROM types WHERE name = $1`, [
+    name,
+  ]);
+
+  return existing.rows[0];
 }
 
 export async function getTypes() {
