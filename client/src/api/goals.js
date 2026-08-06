@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API = import.meta.env.VITE_API || "localhost:3000";
-const goalsAPI = API + "/goals";
+// const API = import.meta.env.VITE_API || "http://localhost:3000";
+// const goalsAPI = API + "/goals";
 
 export async function createGoal(name, type_id) {
   try {
@@ -14,7 +14,7 @@ export async function createGoal(name, type_id) {
       "Content-type": "application/json",
     };
 
-    await axios.post(goalsAPI, newUser, config);
+    await axios.post("/goals", newUser, config);
   } catch (error) {
     console.error(error);
   }
@@ -22,7 +22,7 @@ export async function createGoal(name, type_id) {
 
 export async function getGoals() {
   try {
-    const { data } = await axios.get(goalsAPI);
+    const { data } = await axios.get("/goals");
     return data;
   } catch (error) {
     console.error(error);
@@ -32,7 +32,7 @@ export async function getGoals() {
 
 export async function getGoal(id) {
   try {
-    const { data } = await axios.get(goalsAPI + `/${id}`);
+    const { data } = await axios.get("/goals" + `/${id}`);
     return data;
   } catch (error) {
     console.error(error);
@@ -41,7 +41,7 @@ export async function getGoal(id) {
 
 export async function getGoalByUserId(userId) {
   try {
-    const { data } = await axios.get(goalsAPI + `/user/${userId}`);
+    const { data } = await axios.get("/goals" + `/user/${userId}`);
     return data;
   } catch (error) {
     console.error(error);
