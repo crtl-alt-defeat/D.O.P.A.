@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API = import.meta.env.VITE_API || "http://localhost:3000";
-const goalsAPI = API + "/goals";
+// const API = import.meta.env.VITE_API || "http://localhost:3000";
+// const goalsAPI = API + "/goals";
 
 export async function createGoal(name, type_id) {
   try {

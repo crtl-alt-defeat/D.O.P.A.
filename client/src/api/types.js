@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API = import.meta.env.VITE_API || "http://localhost:3000";
-const typesAPI = API + "/types";
+// const API = import.meta.env.VITE_API || "http://localhost:3000";
+// const typesAPI = API + "/types";
 
 export async function createType(name) {
   try {
