@@ -18,6 +18,21 @@ export const createUser = async ({ name, email, password }) => {
   return token;
 };
 
+export const updateUser = async ({ id, name, email, password }) => {
+  console.log("server/queries/ test");
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const SQL = `
+    UPDATE users
+    SET name = $1, email = $2, password = $3
+    WHERE id = $4
+  `;
+
+  const {
+    rows: [user],
+  } = await client.query(SQL, [name, email, password, id]);
+  return user;
+};
+
 export const authenticate = async ({ email, password }) => {
   const SQL = `
     SELECT *

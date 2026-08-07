@@ -1,7 +1,8 @@
 import { NavLink } from "react-router";
+import { useAuth } from "../auth/AuthContext";
+
 export default function Navbar() {
-  // const { token, logout } = useAuth(); // uncomment when ready
-  const token = false; // temporary so your app doesn't crash
+  const { token, logout } = useAuth(); // uncomment when ready
 
   return (
     <header>
@@ -15,8 +16,10 @@ export default function Navbar() {
 
         {token ? (
           <>
-            <button>Log out</button>
-            <NavLink to="/profile">Profile</NavLink>
+            <NavLink to="/home" onClick={logout}>
+              Log out
+            </NavLink>
+            <NavLink to="/settings">Settings</NavLink>
           </>
         ) : (
           <>

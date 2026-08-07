@@ -36,7 +36,6 @@ export function AuthProvider({ children }) {
     };
 
     const response = await axios.post("/users/register", newUser, config);
-    console.log(response);
     setToken(response.data);
     localStorage.setItem("authToken", response.data);
   }
@@ -52,7 +51,6 @@ export function AuthProvider({ children }) {
     };
 
     const response = await axios.post("/users/login", userInfo, config);
-    console.log(response.data);
     setToken(response.data);
     localStorage.setItem("authToken", response.data);
   }
@@ -78,7 +76,23 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const value = { token, register, login, logout, getUser };
+  async function updateUser(id, name, email, password) {
+    const updatedUser = {
+      id: id,
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    const config = {
+      "Content-type": "application/json",
+    };
+
+    const { data } = await axios.put("/users/me/update", updatedUser, config);
+    return data;
+  }
+
+  const value = { token, register, login, logout, getUser, updateUser };
   return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }
 
