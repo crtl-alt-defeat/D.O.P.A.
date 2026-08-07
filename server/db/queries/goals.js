@@ -26,7 +26,7 @@ export async function getGoal(id) {
   WHERE id = $1
   `;
   const {
-    rows: [goal],
+    rows: [goal]
   } = await client.query(SQL, [id]);
   return goal;
 }
@@ -42,4 +42,11 @@ export async function getGoalsByUserId(userId) {
   return goals;
 }
 
-//todo: getGoalByTypeId
+export async function getGoalsByTypeId(typeId) {
+  const SQL = `
+    SELECT * FROM goals
+    WHERE type_id = $1
+  `;
+  const { rows: goals } = await client.query(SQL, [typeId]);
+  return goals;
+}

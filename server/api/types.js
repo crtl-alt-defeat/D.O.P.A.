@@ -1,4 +1,5 @@
 import express from "express";
+import { getGoals, getGoalsByTypeId } from "../db/queries/goals.js";
 const typesRouter = express.Router();
 
 //middleware
@@ -9,7 +10,7 @@ import {
   createType,
   getTypes,
   getType,
-  getTypesByUserId,
+  getTypesByUserId
 } from "../db/queries/types.js";
 
 //todo: make more secure (restrict this call to admins?)
@@ -59,6 +60,15 @@ typesRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-//todo: make a 'GET /:id/goals' to get all goals of a specific type
+typesRouter.get("/;id/goals", async (req, res, next) => {
+  try {
+    const typeId = req.params.id;
+    const goalType = await getGoalsByTypeId(typeId);
+
+    res.send(goalType);
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default typesRouter;
