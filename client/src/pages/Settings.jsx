@@ -31,7 +31,7 @@ function SettingsPage() {
 
   useEffect(() => {
     syncUser();
-  }, []);
+  }, [user]);
 
   return user ? (
     <div>
