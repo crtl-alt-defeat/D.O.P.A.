@@ -20,6 +20,7 @@ function SettingsPage() {
       setUser(data);
     } catch (e) {
       console.error(e.message);
+      setError(e.message);
     }
   }
 

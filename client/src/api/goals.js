@@ -22,7 +22,7 @@ export async function createGoal(name, type_id) {
 
 export async function getGoals() {
   try {
-    const { data } = await axios.get("/goals");
+    const { data } = await axios.get("/api/goals");
     return data;
   } catch (error) {
     console.error(error);
@@ -32,7 +32,7 @@ export async function getGoals() {
 
 export async function getGoal(id) {
   try {
-    const { data } = await axios.get("/goals" + `/${id}`);
+    const { data } = await axios.get("/api/goals" + `/${id}`);
     return data;
   } catch (error) {
     console.error(error);
@@ -41,7 +41,7 @@ export async function getGoal(id) {
 
 export async function getGoalByUserId(userId) {
   try {
-    const { data } = await axios.get("/goals" + `/user/${userId}`);
+    const { data } = await axios.get("/api/goals" + `/user/${userId}`);
     return data;
   } catch (error) {
     console.error(error);
