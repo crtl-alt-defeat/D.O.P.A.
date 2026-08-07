@@ -19,7 +19,7 @@ function RegisterPage() {
 
     try {
       await register(name, email, password);
-      navigate("/intake");
+      navigate("/home");
     } catch (e) {
       console.error(e);
       setError(e.message);

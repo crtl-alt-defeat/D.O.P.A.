@@ -1,9 +1,10 @@
 import { useState } from "react";
 import "./Navbar.css";
 import { NavLink } from "react-router";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Navbar() {
-  const token = false;
+  const { token, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -29,16 +30,18 @@ export default function Navbar() {
 
           {isOpen && (
             <div className="dropdown-menu">
-              <NavLink to="/">Home</NavLink>
-
               {token ? (
                 <>
-                  <button>Log out</button>
-                  <NavLink to="/profile">Profile</NavLink>
+                  <NavLink to="/home">Home</NavLink>
+                  <NavLink to="/" onClick={logout}>
+                    Log out
+                  </NavLink>
+                  <NavLink to="/settings">Settings</NavLink>
                   <NavLink to="/schedules">Schedules</NavLink>
                 </>
               ) : (
                 <>
+                  <NavLink to="/">Home</NavLink>
                   <NavLink to="/login">Login</NavLink>
                   <NavLink to="/intake">Register</NavLink>
                 </>
