@@ -21,7 +21,7 @@ export async function createType(name) {
 
 export async function getTypes() {
   try {
-    const { data } = await axios.get("/types");
+    const { data } = await axios.get("/api/types");
     return data;
   } catch (error) {
     console.error(error);
@@ -30,7 +30,7 @@ export async function getTypes() {
 
 export async function getType(id) {
   try {
-    const { data } = await axios.get("/types" + `/${id}`);
+    const { data } = await axios.get("/api/types" + `/${id}`);
     return data;
   } catch (error) {
     console.error(error);
@@ -39,7 +39,7 @@ export async function getType(id) {
 
 export async function getTypesByUserId(userId) {
   try {
-    const { data } = await axios.get(typesAPI + `/user/${userId}`);
+    const { data } = await axios.get("/api/types" + `/user/${userId}`);
     return data;
   } catch (error) {
     console.error(error);
