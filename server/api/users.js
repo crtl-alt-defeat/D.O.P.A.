@@ -1,6 +1,10 @@
 import express from "express";
 const usersRouter = express.Router();
 
+import { createUserType } from "../db/queries/usersTypes.js";
+import { getTypesByUserId } from "../db/queries/types.js";
+import { getGoalsByUserId } from "../db/queries/goals.js";
+
 //middleware
 import requireBody from "../middleware/requireBody.js";
 import getUserFromToken from "../middleware/getUsersFromToken.js";
@@ -12,7 +16,7 @@ import {
   authenticate,
   createUser,
   getUserById,
-  updateUser,
+  updateUser
 } from "../db/queries/users.js";
 
 usersRouter.post(
@@ -26,7 +30,7 @@ usersRouter.post(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 usersRouter.post(
@@ -36,12 +40,31 @@ usersRouter.post(
     const userInfo = req.body;
     const token = await authenticate(userInfo);
     res.send(token);
-  },
+  }
 );
 
 usersRouter.get("/me", getUserFromToken, requireUser, async (req, res) => {
   res.send(req.user);
 });
+
+usersRouter.post(
+  "/me/types",
+  getUserFromToken,
+  requireUser,
+  requireBody(["type_id"]),
+  async (req, res, next) => {
+    try {
+      const userTypeLink = await createUserType({
+        user_id: req.user.id,
+        type_id: req.body.type_id
+      });
+
+      res.status(201).send(userTypeLink);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 usersRouter.put(
   "/me/update",
@@ -52,14 +75,49 @@ usersRouter.put(
     console.log("server/api/ test");
     const newUser = await updateUser(req.body);
     res.send(newUser);
-  },
+  }
 );
 
 //todo: move 'GET /types/user/:userId' to here as 'GET /users/me/types
 //todo:   requiring a token and returning a list of types
+usersRouter.get(
+  "/me/types",
+  getUserFromToken,
+  requireUser,
+  async (req, res, next) => {
+    try {
+      const userTypes = await getTypesByUserId(req.user.id);
+
+      if (!userTypes || !userTypes.length) {
+        return res.send([]);
+      }
+
+      res.send(userTypes);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 //todo: move 'GET /goals/user/:userId' to here as 'GET /users/me/goals
 //todo:   requiring a token and returning a list of goals
+usersRouter.get(
+  "/me/goals",
+  getUserFromToken,
+  requireUser,
+  async (req, res, next) => {
+    try {
+      const userGoals = await getGoalsByUserId(req.user.id);
+
+      if (!userGoals || !userGoals.length) {
+        return res.send([]);
+      }
+      res.send(userGoals);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 //get daily goals for logged in user
 usersRouter.get(
@@ -77,7 +135,7 @@ usersRouter.get(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 //get weekly goals by user id
@@ -95,7 +153,7 @@ usersRouter.get(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 usersRouter.get("/:id", async (req, res, next) => {
