@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API = import.meta.env.VITE_API || "localhost:3000";
-const typesAPI = API + "/types";
+// const API = import.meta.env.VITE_API || "http://localhost:3000";
+// const typesAPI = API + "/types";
 
 export async function createType(name) {
   try {
@@ -13,7 +13,7 @@ export async function createType(name) {
       "Content-type": "application/json",
     };
 
-    await axios.post(typesAPI, newType, config);
+    await axios.post("/types", newType, config);
   } catch (error) {
     console.error(error);
   }
@@ -21,7 +21,7 @@ export async function createType(name) {
 
 export async function getTypes() {
   try {
-    const { data } = await axios.get(typesAPI);
+    const { data } = await axios.get("/api/types");
     return data;
   } catch (error) {
     console.error(error);
@@ -30,7 +30,7 @@ export async function getTypes() {
 
 export async function getType(id) {
   try {
-    const { data } = await axios.get(typesAPI + `/${id}`);
+    const { data } = await axios.get("/api/types" + `/${id}`);
     return data;
   } catch (error) {
     console.error(error);
@@ -39,7 +39,7 @@ export async function getType(id) {
 
 export async function getTypesByUserId(userId) {
   try {
-    const { data } = await axios.get(typesAPI + `/user/${userId}`);
+    const { data } = await axios.get("/api/types" + `/user/${userId}`);
     return data;
   } catch (error) {
     console.error(error);

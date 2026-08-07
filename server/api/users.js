@@ -8,7 +8,12 @@ import requireUser from "../middleware/requireUser.js";
 
 //queries
 import { getDailyGoals } from "../db/queries/usersGoals.js";
-import { authenticate, createUser, getUserById } from "../db/queries/users.js";
+import {
+  authenticate,
+  createUser,
+  getUserById,
+  updateUser,
+} from "../db/queries/users.js";
 
 usersRouter.post(
   "/register",
@@ -37,6 +42,18 @@ usersRouter.post(
 usersRouter.get("/me", getUserFromToken, requireUser, async (req, res) => {
   res.send(req.user);
 });
+
+usersRouter.put(
+  "/me/update",
+  getUserFromToken,
+  requireUser,
+  requireBody(["id", "name", "email", "password"]),
+  async (req, res) => {
+    console.log("server/api/ test");
+    const newUser = await updateUser(req.body);
+    res.send(newUser);
+  },
+);
 
 //todo: move 'GET /types/user/:userId' to here as 'GET /users/me/types
 //todo:   requiring a token and returning a list of types

@@ -3,8 +3,8 @@ import App from "../App";
 import axios from "axios";
 
 //get api path from .env file
-const API = import.meta.env.VITE_API || "localhost:3000";
-const userAPI = API + "/users";
+//const API = import.meta.env.VITE_API || "http://localhost:3000";
+//const userAPI = API + "/users";
 
 //create context
 const authContext = createContext();
@@ -19,25 +19,22 @@ export function AuthProvider({ children }) {
       setToken(localStorageToken);
     }
   }
-
   useEffect(() => {
     attemptGetToken();
   }, []);
-
   async function register(name, email, password) {
     const newUser = {
       name: name,
       email: email,
       password: password,
     };
-
     const config = {
       "Content-type": "application/json",
     };
 
-    const response = await axios.post(userAPI + "/register", newUser, config);
-    setToken(response.data.token);
-    localStorage.setItem("authToken", response.data.token);
+    const response = await axios.post("/api/users/register", newUser, config);
+    setToken(response.data);
+    localStorage.setItem("authToken", response.data);
   }
 
   async function login(email, password) {
@@ -50,9 +47,9 @@ export function AuthProvider({ children }) {
       "Content-type": "application/json",
     };
 
-    const response = await axios.post(userAPI + "/login", userInfo, config);
-    setToken(response.data.token);
-    localStorage.setItem("authToken", response.data.token);
+    const response = await axios.post("/api/users/login", userInfo, config);
+    setToken(response.data);
+    localStorage.setItem("authToken", response.data);
   }
 
   function logout() {
@@ -68,7 +65,7 @@ export function AuthProvider({ children }) {
         },
       };
 
-      const { data } = await axios.get(userAPI + "/me", config);
+      const { data } = await axios.get("/api/users/me", config);
       return data;
     } catch (error) {
       console.error(error);
@@ -76,7 +73,30 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const value = { token, register, login, logout, getUser };
+  async function updateUser(id, name, email, password) {
+    const updatedUser = {
+      id: id,
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    const config = {
+      "Content-type": "application/json",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      "/api/users/me/update",
+      updatedUser,
+      config,
+    );
+    return data;
+  }
+
+  const value = { token, register, login, logout, getUser, updateUser };
   return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }
 

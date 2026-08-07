@@ -1,3 +1,4 @@
+import { writeFile, appendFile } from "fs/promises";
 import { faker } from "@faker-js/faker";
 import { verifyToken } from "../utils/jwt.js";
 
@@ -8,8 +9,25 @@ import { createGoal } from "./queries/goals.js";
 import { createUserType } from "./queries/usersTypes.js";
 import { createUserGoal } from "./queries/usersGoals.js";
 
+//auxiliary function: checks if seeding function should log its results
+function shouldLog() {
+  //if environment variable doesnt exist: don't log
+  if (!process.env.LOG_SEED) return false;
+  //if environment variable is equal to 'true': log
+  return process.env.LOG_SEED == "true";
+}
+
 //seed tables
 export default async function seed() {
+  if (shouldLog()) {
+    //create log file
+    try {
+      await writeFile("fake_user_info.txt", "", "utf8");
+    } catch (e) {
+      console.error("Error creating log file:", e.message);
+    }
+  }
+
   // seed users table
   const users = [];
   for (let i = 0; i < 5; i++) {
@@ -25,6 +43,17 @@ export default async function seed() {
     };
     const token = await createUser(newUser);
     users.push(verifyToken(token));
+
+    if (shouldLog()) {
+      //add user info to log file
+      try {
+        const lineBreak = i != 0 ? "\n" : "";
+        const fileText = `name: ${newUser.name}\nemail: ${newUser.email}\npass: ${newUser.password}\n`;
+        await appendFile("fake_user_info.txt", lineBreak + fileText, "utf8");
+      } catch (e) {
+        console.error("Error writing to log file:", e.message);
+      }
+    }
   }
 
   // seed types table
@@ -196,37 +225,44 @@ export default async function seed() {
       return goalTypeInSelectedTypes ? true : false;
     });
 
+    const today = new Date();
+
     //create new users_goals rows for the user
-    const assignedGoals = [];
-    for (let j = 0; j < numGoals; j++) {
-      let foundUnique = false;
-      do {
-        //randomly pick a goal (from desired goals)
-        const newGoal =
-          possibleGoals[Math.floor(Math.random() * possibleGoals.length)];
+    const weeksGoals = [];
+    for (let j = 0; j < 7; j++) {
+      const currDay = new Date();
+      currDay.setDate(today.getDate() - j);
+      const assignedGoals = [];
+      for (let k = 0; k < numGoals; k++) {
+        let foundUnique = false;
+        do {
+          //randomly pick a goal (from desired goals)
+          const newGoal =
+            possibleGoals[Math.floor(Math.random() * possibleGoals.length)];
 
-        //check if user already has the randomly picked goal for the day
-        const newGoalInAssignedGoals = assignedGoals.find(
-          (goal) => goal.id == newGoal.id,
-        );
-        foundUnique = !newGoalInAssignedGoals;
+          //check if user already has the randomly picked goal for the day
+          const newGoalInAssignedGoals = assignedGoals.find(
+            (goal) => goal.id == newGoal.id,
+          );
+          foundUnique = !newGoalInAssignedGoals;
 
-        //if the goal is unique, add it to the users_goals table
-        if (foundUnique) {
-          assignedGoals.push(newGoal);
-          const newUserGoal = {
-            user_id: user.id,
-            goal_id: newGoal.id,
-            date_made: new Date(),
-          };
-          usersGoals.push(await createUserGoal(newUserGoal));
-        }
+          //if the goal is unique, add it to the users_goals table
+          if (foundUnique) {
+            assignedGoals.push(newGoal);
+            const newUserGoal = {
+              user_id: user.id,
+              goal_id: newGoal.id,
+              date_made: currDay,
+            };
+            usersGoals.push(await createUserGoal(newUserGoal));
+          }
 
-        //exit condition (no more possible goals to add)
-        if (assignedGoals.length >= possibleGoals.length) break;
+          //exit condition (no more possible goals to add)
+          if (assignedGoals.length >= possibleGoals.length) break;
 
-        //if the goal id not unique, search again
-      } while (!foundUnique);
+          //if the goal id not unique, search again
+        } while (!foundUnique);
+      }
     }
   }
 }
