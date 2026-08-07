@@ -225,37 +225,44 @@ export default async function seed() {
       return goalTypeInSelectedTypes ? true : false;
     });
 
+    const today = new Date();
+
     //create new users_goals rows for the user
-    const assignedGoals = [];
-    for (let j = 0; j < numGoals; j++) {
-      let foundUnique = false;
-      do {
-        //randomly pick a goal (from desired goals)
-        const newGoal =
-          possibleGoals[Math.floor(Math.random() * possibleGoals.length)];
+    const weeksGoals = [];
+    for (let j = 0; j < 7; j++) {
+      const currDay = new Date();
+      currDay.setDate(today.getDate() - j);
+      const assignedGoals = [];
+      for (let k = 0; k < numGoals; k++) {
+        let foundUnique = false;
+        do {
+          //randomly pick a goal (from desired goals)
+          const newGoal =
+            possibleGoals[Math.floor(Math.random() * possibleGoals.length)];
 
-        //check if user already has the randomly picked goal for the day
-        const newGoalInAssignedGoals = assignedGoals.find(
-          (goal) => goal.id == newGoal.id,
-        );
-        foundUnique = !newGoalInAssignedGoals;
+          //check if user already has the randomly picked goal for the day
+          const newGoalInAssignedGoals = assignedGoals.find(
+            (goal) => goal.id == newGoal.id,
+          );
+          foundUnique = !newGoalInAssignedGoals;
 
-        //if the goal is unique, add it to the users_goals table
-        if (foundUnique) {
-          assignedGoals.push(newGoal);
-          const newUserGoal = {
-            user_id: user.id,
-            goal_id: newGoal.id,
-            date_made: new Date(),
-          };
-          usersGoals.push(await createUserGoal(newUserGoal));
-        }
+          //if the goal is unique, add it to the users_goals table
+          if (foundUnique) {
+            assignedGoals.push(newGoal);
+            const newUserGoal = {
+              user_id: user.id,
+              goal_id: newGoal.id,
+              date_made: currDay,
+            };
+            usersGoals.push(await createUserGoal(newUserGoal));
+          }
 
-        //exit condition (no more possible goals to add)
-        if (assignedGoals.length >= possibleGoals.length) break;
+          //exit condition (no more possible goals to add)
+          if (assignedGoals.length >= possibleGoals.length) break;
 
-        //if the goal id not unique, search again
-      } while (!foundUnique);
+          //if the goal id not unique, search again
+        } while (!foundUnique);
+      }
     }
   }
 }
