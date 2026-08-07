@@ -2,3 +2,16 @@ body {
   background-color: #556954;
   font-family: "Courier New", Courier, monospace;
 }
+button {
+  background-color: rgba(245, 245, 220, 0.274);
+  padding: 0.5rem;
+  font-size: small;
+  font-weight: 600;
+  max-width: 12vw;
+  text-align: center;
+  border-radius: 6px;
+}
+.completed {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
