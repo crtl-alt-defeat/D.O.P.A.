@@ -37,7 +37,7 @@ export default function Navbar() {
                   <NavLink to="/home" onClick={logout}>
                     Log out
                   </NavLink>
-                  <NavLink to="/profile">Profile</NavLink>
+                  <NavLink to="/settings">Settings</NavLink>
                   <NavLink to="/schedules">Schedules</NavLink>
                 </>
               ) : (
