@@ -19,18 +19,15 @@ export function AuthProvider({ children }) {
       setToken(localStorageToken);
     }
   }
-
   useEffect(() => {
     attemptGetToken();
   }, []);
-
   async function register(name, email, password) {
     const newUser = {
       name: name,
       email: email,
       password: password,
     };
-
     const config = {
       "Content-type": "application/json",
     };
