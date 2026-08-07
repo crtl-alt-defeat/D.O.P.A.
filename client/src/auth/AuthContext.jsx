@@ -85,7 +85,11 @@ export function AuthProvider({ children }) {
       "Content-type": "application/json",
     };
 
-    const { data } = await axios.put("/users/me/update", updatedUser, config);
+    const { data } = await axios.put(
+      "/api/users/me/update",
+      updatedUser,
+      config,
+    );
     return data;
   }
 
