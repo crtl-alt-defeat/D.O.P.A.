@@ -60,7 +60,7 @@ typesRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-typesRouter.get("/;id/goals", async (req, res, next) => {
+typesRouter.get("/:id/goals", async (req, res, next) => {
   try {
     const typeId = req.params.id;
     const goalType = await getGoalsByTypeId(typeId);
