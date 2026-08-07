@@ -83,6 +83,9 @@ export function AuthProvider({ children }) {
 
     const config = {
       "Content-type": "application/json",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     };
 
     const { data } = await axios.put(
