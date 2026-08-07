@@ -30,11 +30,10 @@ export default function Navbar() {
 
           {isOpen && (
             <div className="dropdown-menu">
-              <NavLink to="/">Home</NavLink>
-
               {token ? (
                 <>
-                  <NavLink to="/home" onClick={logout}>
+                  <NavLink to="/home">Home</NavLink>
+                  <NavLink to="/" onClick={logout}>
                     Log out
                   </NavLink>
                   <NavLink to="/settings">Settings</NavLink>
@@ -42,6 +41,7 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
+                  <NavLink to="/">Home</NavLink>
                   <NavLink to="/login">Login</NavLink>
                   <NavLink to="/intake">Register</NavLink>
                 </>
