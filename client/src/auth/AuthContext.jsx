@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
       "Content-type": "application/json",
     };
 
-    const response = await axios.post("/users/register", newUser, config);
+    const response = await axios.post("/api/users/register", newUser, config);
     setToken(response.data);
     localStorage.setItem("authToken", response.data);
   }
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
       "Content-type": "application/json",
     };
 
-    const response = await axios.post("/users/login", userInfo, config);
+    const response = await axios.post("/api/users/login", userInfo, config);
     setToken(response.data);
     localStorage.setItem("authToken", response.data);
   }
@@ -65,7 +65,7 @@ export function AuthProvider({ children }) {
         },
       };
 
-      const { data } = await axios.get("/users/me", config);
+      const { data } = await axios.get("/api/users/me", config);
       return data;
     } catch (error) {
       console.error(error);
