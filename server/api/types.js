@@ -1,4 +1,5 @@
 import express from "express";
+import { getGoals, getGoalsByTypeId } from "../db/queries/goals.js";
 const typesRouter = express.Router();
 
 //middleware
@@ -9,7 +10,7 @@ import {
   createType,
   getTypes,
   getType,
-  getTypesByUserId,
+  getTypesByUserId
 } from "../db/queries/types.js";
 
 //todo: make more secure (restrict this call to admins?)
@@ -54,6 +55,17 @@ typesRouter.param("id", async (req, res, next) => {
 typesRouter.get("/:id", async (req, res, next) => {
   try {
     res.send(req.type);
+  } catch (error) {
+    next(error);
+  }
+});
+
+typesRouter.get("/:id/goals", async (req, res, next) => {
+  try {
+    const typeId = req.params.id;
+    const goalType = await getGoalsByTypeId(typeId);
+
+    res.send(goalType);
   } catch (error) {
     next(error);
   }
