@@ -53,6 +53,17 @@ export const getWeeksGoals = async (userId) => {
   return rows;
 };
 
+export async function getGoalsByUserId(userId) {
+  const SQL = `
+    SELECT goals.*
+    FROM goals
+    JOIN users_goals ON users_goals.goal_id = goals.id
+    WHERE users_goals.user_id = $1
+  `;
+  const { rows: goals } = await client.query(SQL, [userId]);
+  return goals;
+}
+
 export async function getTypesByUserId(userId) {
   const SQL = `
   SELECT types.*

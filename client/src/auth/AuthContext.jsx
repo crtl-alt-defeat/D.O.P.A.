@@ -19,9 +19,11 @@ export function AuthProvider({ children }) {
       setToken(localStorageToken);
     }
   }
+
   useEffect(() => {
     attemptGetToken();
   }, []);
+
   async function register(name, email, password) {
     const newUser = {
       name: name,
@@ -96,7 +98,31 @@ export function AuthProvider({ children }) {
     return data;
   }
 
-  const value = { token, register, login, logout, getUser, updateUser };
+  async function getSelectedTypes() {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.get("/api/users/me/types", config);
+      return data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  const value = {
+    token,
+    register,
+    login,
+    logout,
+    getUser,
+    updateUser,
+    getSelectedTypes,
+  };
   return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }
 

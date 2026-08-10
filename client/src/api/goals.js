@@ -68,6 +68,38 @@ export async function getWeeklyGoals(userId) {
     console.error(error);
   }
 }
+export async function getGoalsForToday(token) {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/users/me/daily", config);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getPotentialGoals(token) {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/users/me/potentialGoals", config);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 //todo: export async function getGoalsByTypeId(typeId) (get goals by type_id)
 /* added Fri */
 export async function getUncompletedGoals(token) {

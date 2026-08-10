@@ -13,6 +13,7 @@ import requireUser from "../middleware/requireUser.js";
 //queries
 import {
   getDailyGoals,
+  getTypesByUserId,
   getWeeksGoals,
   createUserGoal,
 } from "../db/queries/usersGoals.js";
@@ -20,10 +21,13 @@ import {
   authenticate,
   createUser,
   getUserById,
-  updateUser
+  updateUser,
 } from "../db/queries/users.js";
-import { createGoal } from "../db/queries/goals.js";
-import { getGoalsByUserId } from "../db/queries/goals.js";
+import {
+  createGoal,
+  getGoalsByUserId,
+  getPotentialGoals,
+} from "../db/queries/goals.js";
 import client from "../db/client.js";
 
 usersRouter.post(
@@ -37,7 +41,7 @@ usersRouter.post(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 usersRouter.post(
@@ -47,7 +51,7 @@ usersRouter.post(
     const userInfo = req.body;
     const token = await authenticate(userInfo);
     res.send(token);
-  }
+  },
 );
 
 usersRouter.get("/me", getUserFromToken, requireUser, async (req, res) => {
@@ -63,14 +67,14 @@ usersRouter.post(
     try {
       const userTypeLink = await createUserType({
         user_id: req.user.id,
-        type_id: req.body.type_id
+        type_id: req.body.type_id,
       });
 
       res.status(201).send(userTypeLink);
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 usersRouter.put(
@@ -79,10 +83,9 @@ usersRouter.put(
   requireUser,
   requireBody(["id", "name", "email", "password"]),
   async (req, res) => {
-    console.log("server/api/ test");
     const newUser = await updateUser(req.body);
     res.send(newUser);
-  }
+  },
 );
 
 //todo: move 'GET /types/user/:userId' to here as 'GET /users/me/types
@@ -103,7 +106,7 @@ usersRouter.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 //todo: move 'GET /goals/user/:userId' to here as 'GET /users/me/goals
@@ -123,7 +126,21 @@ usersRouter.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
+);
+
+usersRouter.get(
+  "/me/potentialGoals",
+  getUserFromToken,
+  requireUser,
+  async (req, res, next) => {
+    try {
+      const potentialGoals = await getPotentialGoals(req.user.id);
+      res.send(potentialGoals);
+    } catch (error) {
+      next(error);
+    }
+  },
 );
 
 //get daily goals for logged in user
@@ -142,7 +159,7 @@ usersRouter.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 //get weekly goals by user id
@@ -265,7 +282,7 @@ usersRouter.put(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 usersRouter.get("/:id", async (req, res, next) => {
