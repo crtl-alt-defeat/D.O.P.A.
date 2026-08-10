@@ -7,13 +7,14 @@ import getUserFromToken from "../middleware/getUsersFromToken.js";
 import requireUser from "../middleware/requireUser.js";
 
 //queries
-import { getDailyGoals } from "../db/queries/usersGoals.js";
+import { getDailyGoals, getTypesByUserId } from "../db/queries/usersGoals.js";
 import {
   authenticate,
   createUser,
   getUserById,
   updateUser,
 } from "../db/queries/users.js";
+import { getPotentialGoals } from "../db/queries/goals.js";
 
 usersRouter.post(
   "/register",
@@ -49,17 +50,37 @@ usersRouter.put(
   requireUser,
   requireBody(["id", "name", "email", "password"]),
   async (req, res) => {
-    console.log("server/api/ test");
     const newUser = await updateUser(req.body);
     res.send(newUser);
   },
 );
 
-//todo: move 'GET /types/user/:userId' to here as 'GET /users/me/types
-//todo:   requiring a token and returning a list of types
+usersRouter.get(
+  "/me/types",
+  getUserFromToken,
+  requireUser,
+  async (req, res) => {
+    const types = await getTypesByUserId(req.user.id);
+    res.send(types);
+  },
+);
 
 //todo: move 'GET /goals/user/:userId' to here as 'GET /users/me/goals
 //todo:   requiring a token and returning a list of goals
+
+usersRouter.get(
+  "/me/potentialGoals",
+  getUserFromToken,
+  requireUser,
+  async (req, res, next) => {
+    try {
+      const potentialGoals = await getPotentialGoals(req.user.id);
+      res.send(potentialGoals);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 //get daily goals for logged in user
 usersRouter.get(

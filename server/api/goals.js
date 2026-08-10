@@ -10,6 +10,7 @@ import {
   getGoals,
   getGoal,
   getGoalsByUserId,
+  getGoalsByTypeId,
 } from "../db/queries/goals.js";
 
 //todo: make more secure (restrict this call to admins?)
@@ -48,7 +49,15 @@ goalsRouter.get("/user/:userId", async (req, res, next) => {
   }
 });
 
-//todo: goalsRouter.get("/type/:typeId") (get goals by type_id)
+goalsRouter.get("/type/:id", async (req, res, next) => {
+  try {
+    const goals = await getGoalsByTypeId(req.params.id);
+    if (!goals) return res.status(404).send({ message: "Goals not found." });
+    return goals;
+  } catch (error) {
+    next(error);
+  }
+});
 
 goalsRouter.get("/:id", async (req, res, next) => {
   try {
