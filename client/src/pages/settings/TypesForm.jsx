@@ -12,7 +12,7 @@ export default function TypesForm({ user }) {
 
   useEffect(() => {
     syncTypes();
-  }, [types]);
+  }, []);
 
   useEffect(() => {
     syncSelectedTypes();
@@ -36,6 +36,7 @@ export default function TypesForm({ user }) {
           return (
             <TypesFormItem
               key={type.id}
+              user={user}
               type={type}
               selectedTypes={selectedTypes}
               syncSelectedTypes={syncSelectedTypes}

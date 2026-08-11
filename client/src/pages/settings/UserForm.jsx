@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useAuth } from "../../auth/AuthContext";
 
-export default function UserForm({ user, setUser }) {
+export default function UserForm({ user, syncUser }) {
+  const { updateUser } = useAuth();
   const [error, setError] = useState(null);
 
   async function handleUpdateUser(formData) {

@@ -1,9 +1,6 @@
 import express from "express";
 const usersRouter = express.Router();
-
-import { createUserType } from "../db/queries/usersTypes.js";
-import { getTypesByUserId } from "../db/queries/types.js";
-import { getGoalsByUserId } from "../db/queries/goals.js";
+import client from "../db/client.js";
 
 //middleware
 import requireBody from "../middleware/requireBody.js";
@@ -11,12 +8,6 @@ import getUserFromToken from "../middleware/getUsersFromToken.js";
 import requireUser from "../middleware/requireUser.js";
 
 //queries
-import {
-  getDailyGoals,
-  getTypesByUserId,
-  getWeeksGoals,
-  createUserGoal,
-} from "../db/queries/usersGoals.js";
 import {
   authenticate,
   createUser,
@@ -28,7 +19,13 @@ import {
   getGoalsByUserId,
   getPotentialGoals,
 } from "../db/queries/goals.js";
-import client from "../db/client.js";
+import { createUserType, deleteUserType } from "../db/queries/usersTypes.js";
+import {
+  getDailyGoals,
+  getTypesByUserId,
+  getWeeksGoals,
+  createUserGoal,
+} from "../db/queries/usersGoals.js";
 
 usersRouter.post(
   "/register",
@@ -88,8 +85,6 @@ usersRouter.put(
   },
 );
 
-//todo: move 'GET /types/user/:userId' to here as 'GET /users/me/types
-//todo:   requiring a token and returning a list of types
 usersRouter.get(
   "/me/types",
   getUserFromToken,
@@ -109,8 +104,60 @@ usersRouter.get(
   },
 );
 
-//todo: move 'GET /goals/user/:userId' to here as 'GET /users/me/goals
-//todo:   requiring a token and returning a list of goals
+usersRouter.post(
+  "/me/types/:id",
+  getUserFromToken,
+  requireUser,
+  async (req, res, next) => {
+    console.log("test");
+    try {
+      const newUserType = {
+        user_id: req.user.id,
+        type_id: req.params.id,
+      };
+
+      const created = await createUserType(newUserType);
+      if (!created) {
+        return res.status(404).send({ message: "failed to create" });
+      }
+
+      res.send(created);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+usersRouter.delete(
+  "/me/types/:id",
+  getUserFromToken,
+  requireUser,
+  async (req, res, next) => {
+    try {
+      const oldUserType = {
+        user_id: req.user.id,
+        type_id: req.params.id,
+      };
+
+      const deleted = await deleteUserType(oldUserType);
+      if (!deleted) {
+        return res
+          .status(404)
+          .send({
+            message: `failed to delete | deleted: ${deleted}`,
+            test: deleted,
+          });
+      }
+
+      res.send({
+        message: `users_types with user_id ${req.user.id} and type_id ${req.params.id} has been deleted`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 usersRouter.get(
   "/me/goals",
   getUserFromToken,
@@ -122,6 +169,7 @@ usersRouter.get(
       if (!userGoals || !userGoals.length) {
         return res.send([]);
       }
+
       res.send(userGoals);
     } catch (error) {
       next(error);
@@ -136,6 +184,11 @@ usersRouter.get(
   async (req, res, next) => {
     try {
       const potentialGoals = await getPotentialGoals(req.user.id);
+
+      if (!potentialGoals || !potentialGoals.length) {
+        return res.send([]);
+      }
+
       res.send(potentialGoals);
     } catch (error) {
       next(error);
