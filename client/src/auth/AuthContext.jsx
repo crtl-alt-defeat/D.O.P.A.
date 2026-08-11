@@ -114,6 +114,45 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function addSelectedType(typeId) {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        `/api/users/me/types/${typeId}`,
+        {},
+        config,
+      );
+      return data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async function removeSelectedType(typeId) {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.delete(
+        `/api/users/me/types/${typeId}`,
+        config,
+      );
+      return data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   const value = {
     token,
     register,
@@ -122,6 +161,8 @@ export function AuthProvider({ children }) {
     getUser,
     updateUser,
     getSelectedTypes,
+    addSelectedType,
+    removeSelectedType,
   };
   return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }

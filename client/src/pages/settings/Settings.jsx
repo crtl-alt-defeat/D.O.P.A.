@@ -17,13 +17,13 @@ function SettingsPage() {
 
   useEffect(() => {
     syncUser();
-  }, [user]);
+  }, []);
 
   return user ? (
     <div>
       <h2>Account Settings</h2>
       <UserInfo user={user} />
-      <UserForm user={user} setUser={setUser} />
+      <UserForm user={user} syncUser={syncUser} />
       <TypesForm user={user} />
     </div>
   ) : (
