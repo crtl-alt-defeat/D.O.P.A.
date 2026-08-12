@@ -1,0 +1,10 @@
+p[role="alert"] {
+  color: rgb(180, 34, 34);
+  background-color: rgba(245, 245, 220, 0.274);
+  padding: 0.5rem;
+  font-size: small;
+  font-weight: 600;
+  max-width: 12vw;
+  text-align: center;
+  border-radius: 6px;
+}

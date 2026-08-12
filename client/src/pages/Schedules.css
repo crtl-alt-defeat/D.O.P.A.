@@ -1,0 +1,55 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  padding: 0.5rem;
+}
+.grid-item {
+  background-color: #648464;
+  color: black;
+  padding: 0.2rem;
+  text-align: center;
+  max-height: inherit;
+  border-radius: 6px;
+}
+.grid-item {
+  background-color: #648464;
+  color: black;
+  padding: 0.2rem;
+  text-align: center;
+  max-height: inherit;
+  border-radius: 6px;
+}
+.grid-item {
+  background-color: #648464;
+  color: black;
+  padding: 0.2rem;
+  text-align: center;
+  border-radius: 6px;
+}
+
+.grid-item.completed-today {
+  background-color: #4caf50;
+  color: white;
+}
+
+.grid-item.completed-previously {
+  background-color: #8bc34a;
+  color: white;
+}
+
+.grid-item.not-completed {
+  background-color: #f44336;
+  color: white;
+}
+.grid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.day-label {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
