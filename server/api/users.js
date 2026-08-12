@@ -141,12 +141,10 @@ usersRouter.delete(
 
       const deleted = await deleteUserType(oldUserType);
       if (!deleted) {
-        return res
-          .status(404)
-          .send({
-            message: `failed to delete | deleted: ${deleted}`,
-            test: deleted,
-          });
+        return res.status(404).send({
+          message: `failed to delete | deleted: ${deleted}`,
+          test: deleted,
+        });
       }
 
       res.send({
@@ -291,8 +289,7 @@ usersRouter.get(
       const goals = await getGoalsByUserId(userId);
 
       const uncompleted = goals.filter((g) => !g.date_complete);
-
-      res.status(200).send(uncompleted.slice(0, 3));
+      res.status(200).send(uncompleted);
     } catch (error) {
       next(error);
     }

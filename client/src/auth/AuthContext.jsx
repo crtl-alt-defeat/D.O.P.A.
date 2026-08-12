@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
     attemptGetToken();
   }, []);
 
-  async function register(name, email, password) {
+  /*   async function register(name, email, password) {
     const newUser = {
       name: name,
       email: email,
@@ -37,6 +37,18 @@ export function AuthProvider({ children }) {
     const response = await axios.post("/api/users/register", newUser, config);
     setToken(response.data);
     localStorage.setItem("authToken", response.data);
+  } */
+  async function register(name, email, password) {
+    const newUser = { name, email, password };
+
+    const { data } = await axios.post("/api/users/register", newUser, {
+      headers: { "Content-Type": "application/json" },
+    });
+    if (data.token) {
+      setToken(data.token);
+      localStorage.setItem("authToken", data.token);
+    }
+    return data.user;
   }
 
   async function login(email, password) {

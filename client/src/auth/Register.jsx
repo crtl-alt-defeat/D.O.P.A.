@@ -1,7 +1,7 @@
 import "./auth.css";
 
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 
 function RegisterPage() {
@@ -9,6 +9,14 @@ function RegisterPage() {
   const navigate = useNavigate();
 
   const [error, setError] = useState(null);
+  const [sectionResults, setSectionResults] = useState([]);
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem("sectionResults"));
+    if (stored) {
+      setSectionResults(stored);
+      console.log("Imported section results:", stored);
+    }
+  }, []);
 
   async function handleRegister(formData) {
     setError(null);
@@ -29,6 +37,8 @@ function RegisterPage() {
   return (
     <div>
       <h2>Create an Account</h2>
+      <p>Survey Results: {JSON.stringify(sectionResults)}</p>
+
       <form action={handleRegister}>
         <p>
           <label>
@@ -64,4 +74,5 @@ function RegisterPage() {
     </div>
   );
 }
+
 export default RegisterPage;

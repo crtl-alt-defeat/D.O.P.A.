@@ -16,7 +16,7 @@ export default function TypesForm({ user }) {
 
   useEffect(() => {
     syncSelectedTypes();
-  }, [selectedTypes]);
+  }, []);
 
   async function syncTypes() {
     const data = await getTypes();
