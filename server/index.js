@@ -1,5 +1,5 @@
 import client from "./db/client.js";
-import seed from "./db/seed.js";
+import seed from "./db/seed/seed.js";
 
 import app from "./app.js";
 
@@ -8,7 +8,7 @@ const init = async () => {
   await client.connect();
   console.log("connected to database");
 
-  if (process.env.SEED ? process.env.SEED == "true" : true) {
+  if (process.env.SYNC ? process.env.SYNC == "true" : true) {
     await seed();
     console.log("🌱 Database seeded.");
   }

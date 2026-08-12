@@ -10,7 +10,7 @@
     "db:schema": "psql -d dopa -f server/db/schema.sql",
     "db:seed": "node --env-file=.env server/db/seed/runSeed.js",
     "db:reset": "npm run db:schema && npm run db:seed",
-    "render:schema": "env-cmd -f .env cross-env-shell \"psql $EXTERNAL_DATABASE_URL -f server/db/schema.sql\""
+    "render:NUKE_DATABASE": "env-cmd -f .env cross-env-shell \"psql $EXTERNAL_DATABASE_URL -f server/db/schema.sql\""
   },
   "keywords": [],
   "author": "",

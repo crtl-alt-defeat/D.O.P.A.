@@ -190,6 +190,45 @@ usersRouter.get(
   },
 );
 
+usersRouter.get(
+  "/me/potentialGoals/random",
+  getUserFromToken,
+  requireUser,
+  async (req, res, next) => {
+    try {
+      const potentialGoals = await getPotentialGoals(req.user.id);
+
+      if (!potentialGoals || !potentialGoals.length) {
+        return res.send([]);
+      }
+
+      const newGoals = [];
+      for (let i = 0; i < 3; i++) {
+        let foundUnique = false;
+        do {
+          const newGoalIndex = Math.floor(
+            Math.random() * potentialGoals.length,
+          );
+          const newGoal = potentialGoals[newGoalIndex];
+
+          const findGoal = newGoals.find((goal) => goal.id == newGoal.id);
+          foundUnique = !findGoal;
+
+          if (foundUnique) {
+            newGoals.push(newGoal);
+          } else if (newGoals.length == potentialGoals.length) {
+            break;
+          }
+        } while (!foundUnique);
+      }
+
+      res.send(newGoals);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 //get daily goals for logged in user
 usersRouter.get(
   "/me/daily",
