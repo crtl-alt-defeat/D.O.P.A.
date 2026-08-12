@@ -1,7 +1,7 @@
 import client from "./db/client.js";
 import seed from "./db/seed/seed.js";
-
 import app from "./app.js";
+import { goalsScheduler } from "./utils/cron.js";
 
 const init = async () => {
   const PORT = process.env.PORT || 3000;
@@ -15,6 +15,8 @@ const init = async () => {
   app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
   });
+
+  //goalsScheduler();
 };
 
 init();

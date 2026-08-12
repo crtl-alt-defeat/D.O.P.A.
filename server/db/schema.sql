@@ -20,7 +20,8 @@ CREATE TABLE goals (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     type_id INT NOT NULL,
-    CONSTRAINT fk_types FOREIGN KEY (type_id) REFERENCES types(id)
+    CONSTRAINT fk_types FOREIGN KEY (type_id) REFERENCES types(id),
+    CONSTRAINT mutually_unique_name_and_type UNIQUE (name, type_id)
 );
 
 CREATE TABLE users_types (

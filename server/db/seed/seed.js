@@ -36,11 +36,8 @@ export default async function seed() {
   }
 
   // seed users table
-  if (
-    process.env.SYNC_CREATE_FAKE_USERS &&
-    process.env.SYNC_CREATE_FAKE_USERS == "true"
-  ) {
-    let newUsers;
+  let newUsers;
+  if (process.env.SYNC_CREATE_FAKE_USERS == "true") {
     try {
       newUsers = await seedUsers(5);
     } catch (e) {
