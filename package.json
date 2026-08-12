@@ -8,14 +8,17 @@
     "start:dev": "nodemon --env-file=.env server",
     "test": "vitest",
     "db:schema": "psql -d dopa -f server/db/schema.sql",
-    "db:seed": "node --env-file=.env server/db/runSeed.js",
-    "db:reset": "npm run db:schema && npm run db:seed"
+    "db:seed": "node --env-file=.env server/db/seed/runSeed.js",
+    "db:reset": "npm run db:schema && npm run db:seed",
+    "render:schema": "env-cmd -f .env cross-env-shell \"psql $EXTERNAL_DATABASE_URL -f server/db/schema.sql\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^10.5.0",
+    "cross-env": "^10.1.0",
+    "env-cmd": "^11.0.0",
     "nodemon": "^3.1.11",
     "supertest": "^7.2.2",
     "vitest": "^4.1.10"

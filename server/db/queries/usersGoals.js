@@ -17,6 +17,15 @@ export async function createUserGoal({
   return userGoal;
 }
 
+export async function getUsersGoals() {
+  const SQL = `
+    SELECT *
+    FROM users_goals
+  `;
+  const { rows: usersGoals } = await client.query(SQL);
+  return usersGoals;
+}
+
 export const getDailyGoals = async (userId) => {
   const SQL = `
     select goals.*

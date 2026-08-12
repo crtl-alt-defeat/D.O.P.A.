@@ -109,7 +109,6 @@ usersRouter.post(
   getUserFromToken,
   requireUser,
   async (req, res, next) => {
-    console.log("test");
     try {
       const newUserType = {
         user_id: req.user.id,
@@ -141,10 +140,7 @@ usersRouter.delete(
 
       const deleted = await deleteUserType(oldUserType);
       if (!deleted) {
-        return res.status(404).send({
-          message: `failed to delete | deleted: ${deleted}`,
-          test: deleted,
-        });
+        return res.status(404).send({ message: "failed to delete" });
       }
 
       res.send({
@@ -344,7 +340,7 @@ usersRouter.get("/:id", async (req, res, next) => {
     }
     res.send(user);
   } catch (error) {
-    next(error); // sends to custom error handler is server/index.js <- should I do this?
+    next(error); // sends to custom error handler is server/index.js <- should I do this? // (raven: maybe??? If you want to?)
   }
 });
 export default usersRouter;

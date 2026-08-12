@@ -18,7 +18,6 @@ export default function TypesFormItem({
 
     const checked = findSelected != null;
     await setIsChecked(checked);
-    console.log(type, checked, isChecked);
   }
 
   async function handleUpdateType(formData) {
@@ -29,12 +28,10 @@ export default function TypesFormItem({
     try {
       if (selected) {
         //add type to users_types
-        console.log("selected");
         addSelectedType(type.id);
         setIsChecked(true);
       } else {
         //remove type from users_types
-        console.log("deselected");
         removeSelectedType(type.id);
         setIsChecked(false);
       }

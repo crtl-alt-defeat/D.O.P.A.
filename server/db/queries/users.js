@@ -61,6 +61,15 @@ export const authenticate = async ({ email, password }) => {
   return token;
 };
 
+export const getUsers = async () => {
+  const SQL = `
+    SELECT *
+    FROM users
+  `;
+  const { rows: users } = await client.query(SQL);
+  return users;
+};
+
 export const getUserById = async (id) => {
   const SQL = `
     SELECT *
