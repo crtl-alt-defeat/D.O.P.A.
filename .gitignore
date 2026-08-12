@@ -3,9 +3,4 @@ package-lock.json
 .DS_Store
 .env
 .vscode
-fake_user_info.txt
-logged_users.txt
-logged_types.txt
-logged_goals.txt
-logged_users_types.txt
-logged_users_goals.txt
+logs

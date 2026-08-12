@@ -2,11 +2,11 @@
 import { shouldLog, createLogFile, logObjectArray } from "./logSeed.js";
 
 //seed functions
-import seedUsers from "./seedUsers.js";
-import seedTypes from "./seedTypes.js";
-import seedGoals from "./seedGoals.js";
-import seedUsersTypes from "./seedUsersTypes.js";
-import seedUsersGoals from "./seedUsersGoals.js";
+import seedUsers from "./components/seedUsers.js";
+import seedTypes from "./components/seedTypes.js";
+import seedGoals from "./components/seedGoals.js";
+import seedUsersTypes from "./components/seedUsersTypes.js";
+import seedUsersGoals from "./components/seedUsersGoals.js";
 
 //database queries
 import { getUsers } from "../queries/users.js";
@@ -19,11 +19,12 @@ import { getUsersGoals } from "../queries/usersGoals.js";
 export default async function seed() {
   //logging info
   const logging = shouldLog();
-  const USER_INFO_FILE = "logged_users.txt";
-  const TYPES_INFO_FILE = "logged_types.txt";
-  const GOALS_INFO_FILE = "logged_goals.txt";
-  const USERS_TYPES_INFO_FILE = "logged_users_types.txt";
-  const USERS_GOALS_INFO_FILE = "logged_users_goals.txt";
+  const LOG_PATH = "logs/";
+  const USER_INFO_FILE = LOG_PATH + "logged_users.txt";
+  const TYPES_INFO_FILE = LOG_PATH + "logged_types.txt";
+  const GOALS_INFO_FILE = LOG_PATH + "logged_goals.txt";
+  const USERS_TYPES_INFO_FILE = LOG_PATH + "logged_users_types.txt";
+  const USERS_GOALS_INFO_FILE = LOG_PATH + "logged_users_goals.txt";
 
   //create log file(s)
   if (logging) {

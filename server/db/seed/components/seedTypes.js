@@ -1,4 +1,4 @@
-import { createType } from "../queries/types.js";
+import { createType } from "../../queries/types.js";
 
 export default async function seedTypes() {
   const types = [];
