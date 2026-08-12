@@ -1,4 +1,4 @@
-import { createGoal } from "../queries/goals.js";
+import { createGoal } from "../../queries/goals.js";
 
 export default async function seedGoals(types) {
   const goals = [];

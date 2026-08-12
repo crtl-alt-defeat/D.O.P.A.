@@ -1,4 +1,4 @@
-import { createUserType } from "../queries/usersTypes.js";
+import { createUserType } from "../../queries/usersTypes.js";
 
 export default async function seedUsersTypes(users, types) {
   const usersTypes = [];

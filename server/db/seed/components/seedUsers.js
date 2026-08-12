@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { verifyToken } from "../../utils/jwt.js";
-import { createUser } from "../queries/users.js";
+import { verifyToken } from "../../../utils/jwt.js";
+import { createUser } from "../../queries/users.js";
 
 export default async function seedUsers(num) {
   const users = [];
