@@ -13,7 +13,7 @@ export default function TypesFormItem({
 
   async function getIsChecked() {
     const findSelected = selectedTypes.find((selectedType) => {
-      return (selectedType.id = type.id);
+      return selectedType.id == type.id;
     });
 
     const checked = findSelected != null;

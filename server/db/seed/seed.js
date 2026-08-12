@@ -36,14 +36,19 @@ export default async function seed() {
   }
 
   // seed users table
-  let newUsers;
-  try {
-    newUsers = await seedUsers(5);
-  } catch (e) {
-    console.error("ERROR: failed to seed users:", e.message);
+  if (
+    process.env.SYNC_CREATE_FAKE_USERS &&
+    process.env.SYNC_CREATE_FAKE_USERS == "true"
+  ) {
+    let newUsers;
+    try {
+      newUsers = await seedUsers(5);
+    } catch (e) {
+      console.error("ERROR: failed to seed users:", e.message);
+    }
+    const users = await getUsers();
+    if (logging) await logObjectArray(USER_INFO_FILE, users);
   }
-  const users = await getUsers();
-  if (logging) await logObjectArray(USER_INFO_FILE, users);
 
   // seed types table
   try {
