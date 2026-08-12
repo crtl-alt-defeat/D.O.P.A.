@@ -4,13 +4,12 @@ import { getGoals, getPotentialGoals } from "../db/queries/goals.js";
 import { createUserGoal } from "../db/queries/usersGoals.js";
 
 export async function goalsScheduler() {
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("0 4 * * *", async () => {
+    console.log("Added new goals for users:", new Date().toLocaleString());
     const users = await getUsers();
-    console.log(new Date().toLocaleString());
 
     for (const user of users) {
       const randomGoals = await getRandomGoals(user.id);
-      console.log(user.name, randomGoals);
 
       for (const goal of randomGoals) {
         const newUserGoal = {
@@ -19,52 +18,65 @@ export async function goalsScheduler() {
           date_made: new Date(),
         };
         const created = await createUserGoal(newUserGoal);
-        console.log(created);
       }
     }
   });
 }
 
+//get 3 goals (preferably of selected types)
 async function getRandomGoals(userId) {
+  const goals = await getGoals();
   const potentialGoals = await getPotentialGoals(userId);
 
   const newGoals = [];
+
+  //get up to 3 potential goals
   if (potentialGoals.length > 0) {
     for (let i = 0; i < 3; i++) {
-      let foundUnique = false;
-      do {
-        const newGoalIndex = Math.floor(Math.random() * potentialGoals.length);
-        const newGoal = potentialGoals[newGoalIndex];
+      let newGoal = getRandomUnique(potentialGoals, newGoals);
 
-        const findGoal = newGoals.find((goal) => goal.id == newGoal.id);
-        foundUnique = !findGoal;
-
-        if (foundUnique) {
-          newGoals.push(newGoal);
-        } else if (newGoals.length == potentialGoals.length) {
-          break;
-        }
-      } while (!foundUnique);
+      //if newGoal found, add to array
+      if (newGoal) {
+        newGoals.push(newGoal);
+      } else {
+        //if not found, stop looking for one
+        break;
+      }
     }
   }
 
-  const goals = getGoals();
-  for (let i = newGoals.length; i <= 3; i++) {
-    let foundUnique = false;
-    do {
-      const newGoalIndex = Math.floor(Math.random() * potentialGoals.length);
-      const newGoal = potentialGoals[newGoalIndex];
-
-      const findGoal = newGoals.find((goal) => goal.id == newGoal.id);
-      foundUnique = !findGoal;
-
-      if (foundUnique) {
-        newGoals.push(newGoal);
-      } else if (newGoals.length == potentialGoals.length) {
-        break;
-      }
-    } while (!foundUnique);
+  //if less than 3 potential goals found, get up to 3 random goals
+  for (let i = newGoals.length; i < 3; i++) {
+    let newGoal = getRandomUnique(goals, newGoals);
+    if (newGoal) {
+      newGoals.push(newGoal);
+    } else {
+      break;
+    }
   }
 
   return newGoals;
+}
+
+//helper function: get a random unique item from source array
+function getRandomUnique(sourceArr, outputArr) {
+  let uniqueItem = null;
+
+  let foundUnique = false;
+  do {
+    const randIndex = Math.floor(Math.random() * sourceArr.length);
+    const randItem = sourceArr[randIndex];
+
+    const findItem = outputArr.find((item) => item.id == randItem.id);
+    foundUnique = !findItem;
+
+    if (foundUnique) {
+      uniqueItem = randItem;
+    } else if (outputArr.length >= sourceArr.length) {
+      //if output array already has all items from source array, stop searching
+      break;
+    }
+  } while (!foundUnique);
+
+  return uniqueItem;
 }
