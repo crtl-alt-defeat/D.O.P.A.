@@ -10,7 +10,7 @@ import {
   createType,
   getTypes,
   getType,
-  getTypesByUserId
+  getTypesByUserId,
 } from "../db/queries/types.js";
 
 //todo: make more secure (restrict this call to admins?)
@@ -37,8 +37,9 @@ typesRouter.get("/user/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const userTypes = await getTypesByUserId(userId);
-    if (!userTypes.length)
-      return res.status(404).send({ message: "Types not found." });
+    /*     if (!userTypes.length)
+      return res.status(404).send({ message: "Types not found." }); */
+    console.log(userTypes);
     res.send(userTypes);
   } catch (error) {
     next(error);

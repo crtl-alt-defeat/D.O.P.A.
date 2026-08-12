@@ -9,18 +9,6 @@ import SettingsPage from "./pages/settings/Settings.jsx";
 import SchedulesPage from "./pages/Schedules.jsx";
 import Layout from "./Layout.jsx";
 
-/* 
-function NavigationBar() {
-  const location = useLocation();
-
-  return (
-    <nav>
-      <Link to="/">Welcome</Link> | <Link to="/login">Log In</Link> |{" "}
-      <Link to="/register">Register</Link> | <Link to="/home">Home</Link> |{" "}
-      <Link to="/settings">Settings</Link>
-    </nav>
-  );
-} */
 function App() {
   return (
     <Routes>
