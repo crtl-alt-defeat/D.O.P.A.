@@ -1,5 +1,5 @@
 import client from "./db/client.js";
-import seed from "./db/seed.js";
+import seed from "./db/seed/seed.js";
 
 import app from "./app.js";
 
