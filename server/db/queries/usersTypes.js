@@ -23,3 +23,12 @@ export async function deleteUserType({ user_id, type_id }) {
   } = await client.query(SQL, [user_id, type_id]);
   return userType;
 }
+
+export async function getUsersTypes() {
+  const SQL = `
+  SELECT *
+  FROM users_types
+  `;
+  const { rows: usersTypes } = await client.query(SQL);
+  return usersTypes;
+}

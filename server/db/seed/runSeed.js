@@ -1,4 +1,4 @@
-import client from "./client.js";
+import client from "../client.js";
 import seed from "./seed.js";
 
 await client.connect();
