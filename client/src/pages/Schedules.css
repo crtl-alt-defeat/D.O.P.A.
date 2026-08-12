@@ -28,21 +28,18 @@
   border-radius: 6px;
 }
 
-/* Completed today */
 .grid-item.completed-today {
-  background-color: #4caf50; /* green */
+  background-color: #4caf50;
   color: white;
 }
 
-/* Completed previously */
 .grid-item.completed-previously {
-  background-color: #8bc34a; /* lighter green */
+  background-color: #8bc34a;
   color: white;
 }
 
-/* Not completed */
 .grid-item.not-completed {
-  background-color: #f44336; /* red */
+  background-color: #f44336;
   color: white;
 }
 .grid-column {
