@@ -92,7 +92,7 @@ export default async function seedGoals(types) {
   );
   goals.push(
     await createGoal({
-      name: "Text a friend/fam",
+      name: "Text a friend or family member",
       type_id: types[3].id,
     }),
   );

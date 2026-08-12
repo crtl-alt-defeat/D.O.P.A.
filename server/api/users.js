@@ -212,7 +212,7 @@ usersRouter.get(
           const newGoal = potentialGoals[newGoalIndex];
 
           const findGoal = newGoals.find((goal) => goal.id == newGoal.id);
-          const foundUnique = !findGoal;
+          foundUnique = !findGoal;
 
           if (foundUnique) {
             newGoals.push(newGoal);
