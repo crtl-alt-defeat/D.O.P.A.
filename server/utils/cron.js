@@ -4,25 +4,29 @@ import { getGoals, getPotentialGoals } from "../db/queries/goals.js";
 import { createUserGoal } from "../db/queries/usersGoals.js";
 
 export async function goalsScheduler() {
-  cron.schedule("* * * * *", async () => {
-    const users = await getUsers();
-    console.log(new Date().toLocaleString());
+  cron.schedule(
+    "0 4 * * *",
+    async () => {
+      const users = await getUsers();
+      console.log(new Date().toLocaleString());
 
-    for (const user of users) {
-      const randomGoals = await getRandomGoals(user.id);
-      console.log(user.name, randomGoals);
+      for (const user of users) {
+        const randomGoals = await getRandomGoals(user.id);
+        console.log(user.name, randomGoals);
 
-      for (const goal of randomGoals) {
-        const newUserGoal = {
-          user_id: user.id,
-          goal_id: goal.id,
-          date_made: new Date(),
-        };
-        const created = await createUserGoal(newUserGoal);
-        console.log(created);
+        for (const goal of randomGoals) {
+          const newUserGoal = {
+            user_id: user.id,
+            goal_id: goal.id,
+            date_made: new Date(),
+          };
+          const created = await createUserGoal(newUserGoal);
+          console.log(created);
+        }
       }
-    }
-  });
+    },
+    { timezone: "America/Chicago" },
+  );
 }
 
 async function getRandomGoals(userId) {
