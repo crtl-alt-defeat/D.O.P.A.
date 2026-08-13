@@ -16,7 +16,7 @@ const init = async () => {
     console.log(`listening on port ${PORT}`);
   });
 
-  goalsScheduler();
+  await goalsScheduler();
 };
 
 init();
