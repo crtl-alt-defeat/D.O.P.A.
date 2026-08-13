@@ -8,5 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send HTTP Request
-        run: curl https://dopa-ke7w.onrender.com/api/ping
+        env: 
+          FULL_URL: ${{ secrets.RENDER_URL }}/api/ping
+        run: curl "$FULL_URL"
   
