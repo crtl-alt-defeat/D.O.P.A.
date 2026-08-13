@@ -11,6 +11,7 @@ import {
   getTypes,
   getType,
   getTypesByUserId,
+  getTypeByName,
 } from "../db/queries/types.js";
 
 //todo: make more secure (restrict this call to admins?)
@@ -32,6 +33,23 @@ typesRouter.get("/", async (req, res, next) => {
   }
 });
 
+// typesRouter.param("name", async (req, res, next) => {
+//   const type = await getTypeByName(req.params.name);
+//   if (!type) return res.status(404).send({ message: "type not found" });
+//   req.type = type;
+//   next();
+// });
+
+typesRouter.get("/name", async (req, res, next) => {
+  try {
+    const type = await getTypeByName(req.query.name);
+    if (!type) return res.status(404).send({ message: "type not found" });
+    res.send(type);
+  } catch (error) {
+    next(error);
+  }
+});
+
 //todo: make more secure (restrict this call to admins?)
 typesRouter.get("/user/:userId", async (req, res, next) => {
   try {
@@ -48,7 +66,7 @@ typesRouter.get("/user/:userId", async (req, res, next) => {
 
 typesRouter.param("id", async (req, res, next) => {
   const type = await getType(req.params.id);
-  if (!type) return res.status(404).send({});
+  if (!type) return res.status(404).send({ message: "type not found" });
   req.type = type;
   next();
 });

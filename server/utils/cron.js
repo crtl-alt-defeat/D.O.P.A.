@@ -23,10 +23,7 @@ export async function goalsSchedulerV2() {
     const users = await getUsers();
 
     for (const user of users) {
-      const dailyGoals = await getDailyGoals(user.id);
-      if (dailyGoals.length == 0) {
-        await giveUserRandomGoals(user.id);
-      }
+      attemptGiveUserRandomGoals(user.id);
     }
   });
 }
@@ -40,14 +37,25 @@ async function giveUsersGoals() {
   }
 }
 
+export async function attemptGiveUserRandomGoals(userId) {
+  const dailyGoals = await getDailyGoals(userId);
+  if (dailyGoals.length == 0) {
+    await giveUserRandomGoals(userId);
+  }
+}
+
 async function giveUserRandomGoals(userId) {
   const randomGoals = await getRandomGoals(userId);
 
   for (const goal of randomGoals) {
+    const date = new Date();
+    const localDate = date.toLocaleString("en-US", {
+      timeZone: "America/Chicago",
+    });
     const newUserGoal = {
       user_id: user.id,
       goal_id: goal.id,
-      date_made: new Date(),
+      date_made: localDate,
     };
     const created = await createUserGoal(newUserGoal);
   }

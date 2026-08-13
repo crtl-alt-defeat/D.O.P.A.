@@ -3,20 +3,33 @@ import "./auth.css";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
+import { getTypeByName } from "../api/types";
 
 function RegisterPage() {
-  const { register } = useAuth();
+  const { register, addSelectedType } = useAuth();
   const navigate = useNavigate();
 
   const [error, setError] = useState(null);
   const [sectionResults, setSectionResults] = useState([]);
-  useEffect(() => {
+  const [accountMade, setAccountMade] = useState(false);
+
+  async function getResults() {
     const stored = JSON.parse(localStorage.getItem("sectionResults"));
     if (stored) {
       setSectionResults(stored);
       console.log("Imported section results:", stored);
     }
+  }
+
+  useEffect(() => {
+    getResults();
   }, []);
+
+  useEffect(() => {
+    if (accountMade) {
+      handleAddSelectedTypes();
+    }
+  }, [accountMade]);
 
   async function handleRegister(formData) {
     setError(null);
@@ -27,6 +40,35 @@ function RegisterPage() {
 
     try {
       await register(name, email, password);
+      setAccountMade(true);
+    } catch (e) {
+      console.error(e);
+      setError(e.message);
+    }
+  }
+
+  async function handleAddSelectedTypes() {
+    try {
+      const types = [
+        await getTypeByName("self care"),
+        await getTypeByName("household"),
+        await getTypeByName("work/school"),
+        await getTypeByName("relationship"),
+      ];
+
+      console.log(types);
+
+      for (let i = 0; i < types.length; i++) {
+        const type = types[i];
+        const result = sectionResults[i];
+        console.log(type, result);
+
+        if (result) {
+          await addSelectedType(type.id);
+          console.log("- added");
+        }
+      }
+
       navigate("/home");
     } catch (e) {
       console.error(e);
