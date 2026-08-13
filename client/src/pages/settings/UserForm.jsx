@@ -15,7 +15,7 @@ export default function UserForm({ user, syncUser }) {
 
     try {
       const data = await updateUser(id, name, email, password);
-      setUser(data);
+      syncUser();
     } catch (e) {
       console.error(e.message);
       setError(e.message);

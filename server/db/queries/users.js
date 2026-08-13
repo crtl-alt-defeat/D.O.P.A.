@@ -19,7 +19,6 @@ export const createUser = async ({ name, email, password }) => {
 };
 
 export const updateUser = async ({ id, name, email, password }) => {
-  console.log("server/queries/ test");
   const hashedPassword = await bcrypt.hash(password, 12);
   const SQL = `
     UPDATE users
