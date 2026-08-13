@@ -1,7 +1,7 @@
 name: Wake Render Server
 on: 
   schedule:
-    - cron: '* * * * *'
+    - cron: '*/15 3-4 * * *'
       timezone: 'America/Chicago'
 jobs:
   ping:
@@ -10,5 +10,5 @@ jobs:
       - name: Send HTTP Request
         env: 
           FULL_URL: ${{ secrets.RENDER_URL }}/api/ping
-        run: curl https://dopa-ke7w.onrender.com/api/ping
+        run: curl "$FULL_URL"
   
