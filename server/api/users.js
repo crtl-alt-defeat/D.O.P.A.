@@ -349,6 +349,8 @@ usersRouter.get(
       console.log("-- GET /me/goals/uncompleted: goals:", goals);
 
       const uncompleted = goals.filter((g) => !g.date_complete);
+      console.log("-- GET /me/goals/uncompleted: uncompleted:", uncompleted);
+
       res.status(200).send(uncompleted);
     } catch (error) {
       next(error);
