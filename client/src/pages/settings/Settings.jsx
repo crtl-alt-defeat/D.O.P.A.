@@ -19,7 +19,7 @@ function SettingsPage() {
 
   useEffect(() => {
     syncUser();
-  }, []);
+  }, [token]);
 
   return user ? (
     <div>
