@@ -12,6 +12,7 @@ const authContext = createContext();
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
+  const [hasGottenGoals, setHasGottenGoals] = useState(false);
 
   function attemptGetToken() {
     const localStorageToken = localStorage.getItem("authToken");
@@ -20,15 +21,19 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function handleGiveGoals() {
+    if (token) {
+      await attemptGiveRandomGoals();
+      setHasGottenGoals(true);
+    }
+  }
+
   useEffect(() => {
     attemptGetToken();
   }, []);
 
   useEffect(() => {
-    //console.log("test", window.location.pathname);
-    if (token) {
-      attemptGiveRandomGoals();
-    }
+    handleGiveGoals();
   }, [token]);
 
   async function register(name, email, password) {
@@ -117,7 +122,6 @@ export function AuthProvider({ children }) {
   }
 
   async function addSelectedType(typeId) {
-    //console.log("new type:", typeId, "| token:", token);
     try {
       const config = {
         headers: {
@@ -174,7 +178,6 @@ export function AuthProvider({ children }) {
         (window.location.pathname == "/home" ||
           window.location.pathname == "/schedules")
       ) {
-        //console.log("refresh");
         window.location.reload();
       }
       return data;
@@ -185,6 +188,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     token,
+    hasGottenGoals,
     register,
     login,
     logout,
