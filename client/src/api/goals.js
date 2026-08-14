@@ -111,6 +111,7 @@ export async function getUncompletedGoals(token) {
   };
 
   const { data } = await axios.get("/api/users/me/goals/uncompleted", config);
+  console.log("--getUncompletedGoals: data:", data);
   return data;
 }
 export async function completeGoal(goalId, token) {
