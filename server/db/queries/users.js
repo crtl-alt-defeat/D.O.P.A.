@@ -28,7 +28,7 @@ export const updateUser = async ({ id, name, email, password }) => {
 
   const {
     rows: [user],
-  } = await client.query(SQL, [name, email, password, id]);
+  } = await client.query(SQL, [name, email, hashedPassword, id]);
   return user;
 };
 
