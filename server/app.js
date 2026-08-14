@@ -20,6 +20,10 @@ app.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "../client/dist/index.html")),
 );
 
+app.get("/home", (req, res) => {
+  res.send("test");
+});
+
 app.use(
   "/assets",
   express.static(path.join(__dirname, "../client/dist/assets")),
@@ -27,8 +31,10 @@ app.use(
 app.use("/api", router);
 
 app.use("/{*path}", (req, res) => {
-  res.status(404).send("Incorrect resource request");
+  //res.status(404).send("Incorrect resource request");
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
+
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(err.status || 500).send({ error: err.message || err });
