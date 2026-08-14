@@ -8,7 +8,7 @@ function IntakePage() {
   const [answers, setAnswers] = useState({});
 
   const [sectionResults, setSectionResults] = useState([]);
-  g;
+  
   const survey = [
     {
       heading: "Health & Self-Care",
