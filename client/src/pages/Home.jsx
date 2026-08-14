@@ -31,6 +31,25 @@ function HomePage() {
       const made = new Date(goal.date_made);
       const today = new Date();
 
+      console.log(
+        "--loadGoals: same year:",
+        made.getFullYear() === today.getFullYear(),
+        made.getFullYear(),
+        today.getFullYear(),
+      );
+      console.log(
+        "--loadGoals: same month:",
+        made.getMonth() === today.getMonth(),
+        made.getMonth(),
+        today.getMonth(),
+      );
+      console.log(
+        "--loadGoals: same date:",
+        made.getDate() === today.getDate(),
+        made.getDate(),
+        today.getDate(),
+      );
+
       return (
         made.getFullYear() === today.getFullYear() &&
         made.getMonth() === today.getMonth() &&
