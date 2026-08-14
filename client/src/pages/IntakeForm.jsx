@@ -5,13 +5,10 @@ function IntakePage() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
 
-  // Stores answer objects: { text, score }
   const [answers, setAnswers] = useState({});
 
-  // Stores true/false qualification per section
   const [sectionResults, setSectionResults] = useState([]);
-
-  // ⭐ Updated survey with scoring
+  g;
   const survey = [
     {
       heading: "Health & Self-Care",
@@ -302,7 +299,6 @@ function IntakePage() {
 
   const totalSteps = survey.length;
 
-  // ⭐ Compute score for a single section
   function getSectionScore(sectionIndex) {
     const section = survey[sectionIndex];
     let score = 0;

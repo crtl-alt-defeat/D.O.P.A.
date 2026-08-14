@@ -27,11 +27,9 @@ export default function TypesFormItem({
 
     try {
       if (selected) {
-        //add type to users_types
         addSelectedType(type.id);
         setIsChecked(true);
       } else {
-        //remove type from users_types
         removeSelectedType(type.id);
         setIsChecked(false);
       }
@@ -54,7 +52,6 @@ export default function TypesFormItem({
           type="checkbox"
           name="selectType"
           onChange={(event) => {
-            //event.preventDefault();
             event.target.form.requestSubmit();
           }}
           defaultChecked={isChecked}
