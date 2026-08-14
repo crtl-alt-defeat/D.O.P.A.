@@ -103,6 +103,7 @@ export async function getPotentialGoals(token) {
 //todo: export async function getGoalsByTypeId(typeId) (get goals by type_id)
 /* added Fri */
 export async function getUncompletedGoals(token) {
+  console.log("--getUncompletedGoals: token:", token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
