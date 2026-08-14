@@ -23,38 +23,40 @@ function HomePage() {
     const data = await getUncompletedGoals(token);
     console.log("--loadGoals: data:", data);
 
-    //const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0];
 
     const todaysGoals = data.filter((goal) => {
       if (!goal.date_made) return false;
 
-      const made = new Date(goal.date_made);
-      const today = new Date();
+      const made = goal.date_made.split("T")[0];
+      //const today = new Date();
 
-      console.log(
-        "--loadGoals: same year:",
-        made.getFullYear() === today.getFullYear(),
-        made.getFullYear(),
-        today.getFullYear(),
-      );
-      console.log(
-        "--loadGoals: same month:",
-        made.getMonth() === today.getMonth(),
-        made.getMonth(),
-        today.getMonth(),
-      );
-      console.log(
-        "--loadGoals: same date:",
-        made.getDate() === today.getDate(),
-        made.getDate(),
-        today.getDate(),
-      );
+      // console.log(
+      //   "--loadGoals: same year:",
+      //   made.getFullYear() === today.getFullYear(),
+      //   made.getFullYear(),
+      //   today.getFullYear(),
+      // );
+      // console.log(
+      //   "--loadGoals: same month:",
+      //   made.getMonth() === today.getMonth(),
+      //   made.getMonth(),
+      //   today.getMonth(),
+      // );
+      // console.log(
+      //   "--loadGoals: same date:",
+      //   made.getDate() === today.getDate(),
+      //   made.getDate(),
+      //   today.getDate(),
+      // );
 
-      return (
-        made.getFullYear() === today.getFullYear() &&
-        made.getMonth() === today.getMonth() &&
-        made.getDate() === today.getDate()
-      );
+      // return (
+      //   made.getFullYear() === today.getFullYear() &&
+      //   made.getMonth() === today.getMonth() &&
+      //   made.getDate() === today.getDate()
+      // );
+      console.log(today, made);
+      return today === made;
     });
     console.log("--loadGoals: todaysGoals:", todaysGoals);
     setGoals(todaysGoals);
