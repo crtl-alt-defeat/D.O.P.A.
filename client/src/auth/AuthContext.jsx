@@ -26,26 +26,13 @@ export function AuthProvider({ children }) {
     attemptGetToken();
   }, []);
 
-  // useEffect(() => {
-  //   if (token) {
-  //     attemptGiveRandomGoals();
-  //   }
-  // }, token);
+  useEffect(() => {
+    //console.log("test", window.location.pathname);
+    if (token) {
+      attemptGiveRandomGoals();
+    }
+  }, [token]);
 
-  /*   async function register(name, email, password) {
-    const newUser = {
-      name: name,
-      email: email,
-      password: password,
-    };
-    const config = {
-      "Content-type": "application/json",
-    };
-
-    const response = await axios.post("/api/users/register", newUser, config);
-    setToken(response.data);
-    localStorage.setItem("authToken", response.data);
-  } */
   async function register(name, email, password) {
     const newUser = { name, email, password };
 
@@ -171,16 +158,32 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // async function attemptGiveRandomGoals() {
-  //   try {
-  //     if (!token) throw new Error("Not logged in");
+  async function attemptGiveRandomGoals() {
+    try {
+      if (!token) throw new Error("Not logged in");
 
-  //     const user = await getUser();
-  //     await attemptGiveUserRandomGoals(user.id);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.post(`/api/users/me/daily`, {}, config);
+
+      //force refresh if data was made
+      if (
+        data &&
+        (window.location.pathname == "/home" ||
+          window.location.pathname == "/schedules")
+      ) {
+        console.log("refresh");
+        window.location.reload();
+      }
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const value = {
     token,

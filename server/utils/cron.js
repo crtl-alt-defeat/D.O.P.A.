@@ -11,6 +11,10 @@ export async function goalsScheduler() {
   cron.schedule(
     getCronString(),
     async () => {
+      console.log(
+        "--📅 giving users goals for the day:",
+        new Date().toLocaleString(),
+      );
       await giveUsersGoals();
     },
     { timezone: "America/Chicago" },
@@ -20,16 +24,19 @@ export async function goalsScheduler() {
 //alternative goals scheduler: runs every 12 minutes; gives goals to any user who doesn't have goals for the day
 export async function goalsSchedulerV2() {
   cron.schedule("*/12 * * * *", async () => {
+    console.log(
+      "--📅 attempting to give users goals:",
+      new Date().toLocaleString(),
+    );
     const users = await getUsers();
 
     for (const user of users) {
-      attemptGiveUserRandomGoals(user.id);
+      await attemptGiveUserRandomGoals(user);
     }
   });
 }
 
 async function giveUsersGoals() {
-  console.log("Added new goals for users:", new Date().toLocaleString());
   const users = await getUsers();
 
   for (const user of users) {
@@ -37,28 +44,36 @@ async function giveUsersGoals() {
   }
 }
 
-export async function attemptGiveUserRandomGoals(userId) {
-  const dailyGoals = await getDailyGoals(userId);
+export async function attemptGiveUserRandomGoals(user) {
+  const dailyGoals = await getDailyGoals(user.id);
   if (dailyGoals.length == 0) {
-    await giveUserRandomGoals(userId);
+    console.log(`  ⤷ giving goals to ${user.name}`);
+    const createdUsersGoals = await giveUserRandomGoals(user.id);
+    return createdUsersGoals;
+  } else {
+    return null;
   }
 }
 
 async function giveUserRandomGoals(userId) {
   const randomGoals = await getRandomGoals(userId);
 
+  const createdUsersGoals = [];
   for (const goal of randomGoals) {
     const date = new Date();
     const localDate = date.toLocaleString("en-US", {
       timeZone: "America/Chicago",
     });
     const newUserGoal = {
-      user_id: user.id,
+      user_id: userId,
       goal_id: goal.id,
       date_made: localDate,
     };
     const created = await createUserGoal(newUserGoal);
+    createdUsersGoals.push(created);
   }
+
+  return createdUsersGoals;
 }
 
 //get 3 goals (preferably of selected types)
