@@ -37,6 +37,17 @@ export async function getType(id) {
   }
 }
 
+export async function getTypeByName(name) {
+  try {
+    const { data } = await axios.get(`/api/types/name/`, {
+      params: { name: name },
+    });
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getTypesByUserId(userId) {
   try {
     const { data } = await axios.get("/api/types" + `/user/${userId}`);

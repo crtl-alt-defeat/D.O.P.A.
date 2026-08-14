@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { getUsers } from "../db/queries/users.js";
 import { getGoals, getPotentialGoals } from "../db/queries/goals.js";
-import { createUserGoal } from "../db/queries/usersGoals.js";
+import { createUserGoal, getDailyGoals } from "../db/queries/usersGoals.js";
 
 export function getCronString() {
   return process.env.DAILY_GOAL_CRON || "0 4 * * *";
@@ -11,27 +11,53 @@ export async function goalsScheduler() {
   cron.schedule(
     getCronString(),
     async () => {
-      await giveUsersRandomGoals();
+      await giveUsersGoals();
     },
     { timezone: "America/Chicago" },
   );
 }
 
-async function giveUsersRandomGoals() {
+//alternative goals scheduler: runs every 12 minutes; gives goals to any user who doesn't have goals for the day
+export async function goalsSchedulerV2() {
+  cron.schedule("*/12 * * * *", async () => {
+    const users = await getUsers();
+
+    for (const user of users) {
+      attemptGiveUserRandomGoals(user.id);
+    }
+  });
+}
+
+async function giveUsersGoals() {
   console.log("Added new goals for users:", new Date().toLocaleString());
   const users = await getUsers();
 
   for (const user of users) {
-    const randomGoals = await getRandomGoals(user.id);
+    await giveUserRandomGoals(user.id);
+  }
+}
 
-    for (const goal of randomGoals) {
-      const newUserGoal = {
-        user_id: user.id,
-        goal_id: goal.id,
-        date_made: new Date(),
-      };
-      const created = await createUserGoal(newUserGoal);
-    }
+export async function attemptGiveUserRandomGoals(userId) {
+  const dailyGoals = await getDailyGoals(userId);
+  if (dailyGoals.length == 0) {
+    await giveUserRandomGoals(userId);
+  }
+}
+
+async function giveUserRandomGoals(userId) {
+  const randomGoals = await getRandomGoals(userId);
+
+  for (const goal of randomGoals) {
+    const date = new Date();
+    const localDate = date.toLocaleString("en-US", {
+      timeZone: "America/Chicago",
+    });
+    const newUserGoal = {
+      user_id: user.id,
+      goal_id: goal.id,
+      date_made: localDate,
+    };
+    const created = await createUserGoal(newUserGoal);
   }
 }
 

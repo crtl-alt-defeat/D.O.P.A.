@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import App from "../App";
 import axios from "axios";
 
+//import { attemptGiveUserRandomGoals } from "../../../server/utils/cron";
+
 //get api path from .env file
 //const API = import.meta.env.VITE_API || "http://localhost:3000";
 //const userAPI = API + "/users";
@@ -22,17 +24,20 @@ export function AuthProvider({ children }) {
     attemptGetToken();
   }, []);
 
+  // useEffect(() => {
+  //   if (token) {
+  //     attemptGiveRandomGoals();
+  //   }
+  // }, token);
+  
   async function register(name, email, password) {
     const newUser = { name, email, password };
 
-    const { data } = await axios.post("/api/users/register", newUser, {
+    const response = await axios.post("/api/users/register", newUser, {
       headers: { "Content-Type": "application/json" },
     });
-    if (data.token) {
-      setToken(data.token);
-      localStorage.setItem("authToken", data.token);
-    }
-    return data.user;
+    setToken(response.data);
+    localStorage.setItem("authToken", response.data);
   }
 
   async function login(email, password) {
@@ -111,6 +116,7 @@ export function AuthProvider({ children }) {
   }
 
   async function addSelectedType(typeId) {
+    console.log("new type:", typeId, "| token:", token);
     try {
       const config = {
         headers: {
@@ -148,6 +154,17 @@ export function AuthProvider({ children }) {
       return null;
     }
   }
+
+  // async function attemptGiveRandomGoals() {
+  //   try {
+  //     if (!token) throw new Error("Not logged in");
+
+  //     const user = await getUser();
+  //     await attemptGiveUserRandomGoals(user.id);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   const value = {
     token,
