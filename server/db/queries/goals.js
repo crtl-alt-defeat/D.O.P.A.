@@ -31,16 +31,6 @@ export async function getGoal(id) {
   return goal;
 }
 
-/* export async function getGoalsByUserId(userId) {
-  const SQL = `
-  SELECT goals.*
-  FROM goals
-  JOIN users_goals ON users_goals.goal_id = goals.id
-  WHERE users_goals.user_id = $1
-  `;
-  const { rows: goals } = await client.query(SQL, [userId]);
-  return goals;
-} */
 export async function getGoalsByUserId(userId) {
   const SQL = `
     SELECT goals.*, users_goals.date_made, users_goals.date_complete

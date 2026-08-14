@@ -6,6 +6,10 @@ import client from "../db/client.js";
 import requireBody from "../middleware/requireBody.js";
 import getUserFromToken from "../middleware/getUsersFromToken.js";
 import requireUser from "../middleware/requireUser.js";
+import {
+  getSubscriptionForUser,
+  sendGoalNotification,
+} from "./notifications.js";
 
 //queries
 import {
@@ -269,16 +273,6 @@ usersRouter.get(
   },
 );
 
-//get weekly goals by user id
-/* usersRouter.get(
-  "/me/schedules",
-  getUserFromToken,
-  requireUser,
-  async (req, res, next) => {
-    const weeklyGoals = await getWeeksGoals(req.user.id);
-    res.status(200).send(weeklyGoals);
-  },
-); */
 usersRouter.get(
   "/me/schedules",
   getUserFromToken,
@@ -319,13 +313,22 @@ usersRouter.post(
   async (req, res, next) => {
     try {
       const { name, type_id } = req.body;
+
       const goal = await createGoal({ name, type_id });
+
       const userGoal = await createUserGoal({
         user_id: req.user.id,
         goal_id: goal.id,
         date_made: new Date(),
         date_complete: null,
       });
+      const subscription = getSubscriptionForUser(req.user.id);
+
+      if (subscription) {
+        await sendGoalNotification(subscription, name);
+      } else {
+        console.log("No subscription found for user, skipping push");
+      }
 
       res.status(201).send({ goal, userGoal });
     } catch (error) {
@@ -372,7 +375,6 @@ usersRouter.put(
         return res.status(404).send({ message: "Goal not found for user" });
       }
 
-      // Fetch the goal details
       const goalSQL = `
         SELECT *
         FROM goals
@@ -380,7 +382,6 @@ usersRouter.put(
       `;
       const { rows: goalRows } = await client.query(goalSQL, [goalId]);
 
-      // Return both
       res.status(200).send({
         userGoal: rows[0],
         goal: goalRows[0],
