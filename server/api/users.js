@@ -30,6 +30,7 @@ import {
   getWeeksGoals,
   createUserGoal,
 } from "../db/queries/usersGoals.js";
+import { attemptGiveUserRandomGoals } from "../utils/cron.js";
 
 usersRouter.post(
   "/register",
@@ -233,6 +234,26 @@ usersRouter.get(
   },
 );
 
+usersRouter.post(
+  "/me/daily",
+  getUserFromToken,
+  requireUser,
+  async (req, res, next) => {
+    try {
+      //console.log(`--🌐 attempting to give goals to ${req.user.name}`);
+      const created = await attemptGiveUserRandomGoals(req.user);
+
+      if (!created)
+        return res.status(422).send({ message: "failed to create goals" });
+
+      res.status(201).send(created);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+//get daily goals for logged in user
 usersRouter.get(
   "/me/daily",
   getUserFromToken,
@@ -244,6 +265,7 @@ usersRouter.get(
       if (dailyGoals.length === 0) {
         return res.status(404).send({ message: "User has no goals" });
       }
+
       res.status(200).send(dailyGoals);
     } catch (error) {
       next(error);

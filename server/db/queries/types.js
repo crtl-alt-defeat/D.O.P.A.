@@ -2,10 +2,12 @@ import client from "../client.js";
 
 export async function createType(name) {
   const insert = await client.query(
-    `INSERT INTO types (name)
-     VALUES ($1)
-     ON CONFLICT (name) DO NOTHING
-     RETURNING *`,
+    `
+    INSERT INTO types (name)
+    VALUES ($1)
+    ON CONFLICT (name) DO NOTHING
+    RETURNING *
+    `,
     [name],
   );
   if (insert.rows.length > 0) {
@@ -36,6 +38,18 @@ export async function getType(id) {
   const {
     rows: [type],
   } = await client.query(SQL, [id]);
+  return type;
+}
+
+export async function getTypeByName(name) {
+  const SQL = `
+  SELECT *
+  FROM types
+  WHERE name = $1
+  `;
+  const {
+    rows: [type],
+  } = await client.query(SQL, [name]);
   return type;
 }
 
