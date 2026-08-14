@@ -28,7 +28,7 @@ export default function TypesForm({ user }) {
     setSelectedTypes(data);
   }
 
-  return selectedTypes ? (
+  return types && selectedTypes ? (
     <section>
       <h3>Update Your Types</h3>
       <ul>
