@@ -21,6 +21,10 @@ app.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "../client/dist/index.html")),
 );
 
+app.get("/home", (req, res) => {
+  res.send("test");
+});
+
 app.use(
   "/assets",
   express.static(path.join(__dirname, "../client/dist/assets")),
@@ -36,7 +40,8 @@ app.use("/api", router);
 
 // Catch-all for incorrect routes
 app.use("/{*path}", (req, res) => {
-  res.status(404).send("Incorrect resource request");
+  //res.status(404).send("Incorrect resource request");
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
 
 // Custom error handler
