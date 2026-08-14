@@ -31,7 +31,7 @@ function SettingsPage() {
 
       <button
         onClick={async () => {
-          console.log("TOKEN FROM AUTH:", token);
+          //console.log("TOKEN FROM AUTH:", token);
           const sub = await subscribeUser(token);
           setSubscription(sub);
         }}
@@ -41,7 +41,7 @@ function SettingsPage() {
       <button
         onClick={async () => {
           if (!window._pushSubscription) {
-            console.log("No subscription yet");
+            //console.log("No subscription yet");
             return;
           }
           await sendTestPush(window._pushSubscription);
