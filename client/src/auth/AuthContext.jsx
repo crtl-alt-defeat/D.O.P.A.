@@ -117,7 +117,7 @@ export function AuthProvider({ children }) {
   }
 
   async function addSelectedType(typeId) {
-    console.log("new type:", typeId, "| token:", token);
+    //console.log("new type:", typeId, "| token:", token);
     try {
       const config = {
         headers: {
@@ -174,7 +174,7 @@ export function AuthProvider({ children }) {
         (window.location.pathname == "/home" ||
           window.location.pathname == "/schedules")
       ) {
-        console.log("refresh");
+        //console.log("refresh");
         window.location.reload();
       }
       return data;
