@@ -12,14 +12,25 @@ import {
   getGoalsByUserId,
   getGoalsByTypeId,
 } from "../db/queries/goals.js";
-
+import {
+  getSubscriptionForUser,
+  sendGoalNotification,
+} from "./notifications.js";
 //todo: make more secure (restrict this call to admins?)
 goalsRouter.post(
   "/",
   requireBody(["name", "type_id"]),
   async (req, res, next) => {
     try {
-      const newGoal = await createGoal(req.body);
+      const newGoal = await createGoal({
+        ...req.body,
+        user_id: req.user.id,
+      });
+      const subscription = getSubscriptionForUser(req.user.id);
+      if (subscription) {
+        sendGoalNotification(subscription, newGoal.name);
+      }
+
       res.status(201).send(newGoal);
     } catch (error) {
       next(error);

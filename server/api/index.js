@@ -1,10 +1,16 @@
 import express from "express";
+import getUserFromToken from "../middleware/getUsersFromToken.js";
 const router = express.Router();
 
-//routes
+// routes
 import usersRouter from "./users.js";
 import typesRouter from "./types.js";
 import goalsRouter from "./goals.js";
+import notificationsRouter from "./notifications.js";
+router.use("/users", usersRouter);
+router.use("/types", typesRouter);
+router.use("/goals", goalsRouter);
+router.use("/notifications", getUserFromToken, notificationsRouter);
 import pingRouter from "./ping.js";
 
 router.use("/users", usersRouter);
