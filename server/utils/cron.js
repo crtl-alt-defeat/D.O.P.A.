@@ -3,24 +3,36 @@ import { getUsers } from "../db/queries/users.js";
 import { getGoals, getPotentialGoals } from "../db/queries/goals.js";
 import { createUserGoal } from "../db/queries/usersGoals.js";
 
+export function getCronString() {
+  return process.env.DAILY_GOAL_CRON || "0 4 * * *";
+}
+
 export async function goalsScheduler() {
-  cron.schedule("0 4 * * *", async () => {
-    console.log("Added new goals for users:", new Date().toLocaleString());
-    const users = await getUsers();
+  cron.schedule(
+    getCronString(),
+    async () => {
+      await giveUsersRandomGoals();
+    },
+    { timezone: "America/Chicago" },
+  );
+}
 
-    for (const user of users) {
-      const randomGoals = await getRandomGoals(user.id);
+async function giveUsersRandomGoals() {
+  console.log("Added new goals for users:", new Date().toLocaleString());
+  const users = await getUsers();
 
-      for (const goal of randomGoals) {
-        const newUserGoal = {
-          user_id: user.id,
-          goal_id: goal.id,
-          date_made: new Date(),
-        };
-        const created = await createUserGoal(newUserGoal);
-      }
+  for (const user of users) {
+    const randomGoals = await getRandomGoals(user.id);
+
+    for (const goal of randomGoals) {
+      const newUserGoal = {
+        user_id: user.id,
+        goal_id: goal.id,
+        date_made: new Date(),
+      };
+      const created = await createUserGoal(newUserGoal);
     }
-  });
+  }
 }
 
 //get 3 goals (preferably of selected types)

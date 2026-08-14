@@ -11,5 +11,11 @@ router.use("/users", usersRouter);
 router.use("/types", typesRouter);
 router.use("/goals", goalsRouter);
 router.use("/notifications", getUserFromToken, notificationsRouter);
+import pingRouter from "./ping.js";
+
+router.use("/users", usersRouter);
+router.use("/types", typesRouter);
+router.use("/goals", goalsRouter);
+router.use("/ping", pingRouter);
 
 export default router;
