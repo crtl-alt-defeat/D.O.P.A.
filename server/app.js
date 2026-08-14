@@ -1,14 +1,19 @@
 import express from "express";
 import path from "path";
+import getUserFromToken from "./middleware/getUsersFromToken.js";
+
 import router from "./api/index.js";
 
 const app = express();
 export default app;
 
-// Body parsing middleware
 app.use(express.json());
-
-// Deployment-only dirname
+app.use((req, res, next) => {
+  if (req.originalUrl.includes("/api/notifications/vapidPublicKey")) {
+    return next();
+  }
+  return getUserFromToken(req, res, next);
+});
 const __dirname = import.meta.dirname;
 
 // Serve main index.html
@@ -16,7 +21,6 @@ app.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "../client/dist/index.html")),
 );
 
-// Serve static assets (JS, CSS, images)
 app.use(
   "/assets",
   express.static(path.join(__dirname, "../client/dist/assets")),
@@ -38,7 +42,5 @@ app.use("/{*path}", (req, res) => {
 // Custom error handler
 app.use((err, req, res, next) => {
   console.log(err);
-  res
-    .status(err.status || 500)
-    .send({ error: err.message ? err.message : err });
+  res.status(err.status || 500).send({ error: err.message || err });
 });
