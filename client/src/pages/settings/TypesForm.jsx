@@ -32,17 +32,19 @@ export default function TypesForm({ user }) {
     <section>
       <h3>Update Your Types</h3>
       <ul>
-        {types.map((type) => {
-          return (
-            <TypesFormItem
-              key={type.id}
-              user={user}
-              type={type}
-              selectedTypes={selectedTypes}
-              syncSelectedTypes={syncSelectedTypes}
-            />
-          );
-        })}
+        {types
+          .filter((type) => type.name != "custom")
+          .map((type) => {
+            return (
+              <TypesFormItem
+                key={type.id}
+                user={user}
+                type={type}
+                selectedTypes={selectedTypes}
+                syncSelectedTypes={syncSelectedTypes}
+              />
+            );
+          })}
       </ul>
     </section>
   ) : (
