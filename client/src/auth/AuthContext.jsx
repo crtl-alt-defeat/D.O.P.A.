@@ -8,10 +8,8 @@ import axios from "axios";
 //const API = import.meta.env.VITE_API || "http://localhost:3000";
 //const userAPI = API + "/users";
 
-//create context
 const authContext = createContext();
 
-//create provider
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
 
@@ -31,21 +29,7 @@ export function AuthProvider({ children }) {
   //     attemptGiveRandomGoals();
   //   }
   // }, token);
-
-  /*   async function register(name, email, password) {
-    const newUser = {
-      name: name,
-      email: email,
-      password: password,
-    };
-    const config = {
-      "Content-type": "application/json",
-    };
-
-    const response = await axios.post("/api/users/register", newUser, config);
-    setToken(response.data);
-    localStorage.setItem("authToken", response.data);
-  } */
+  
   async function register(name, email, password) {
     const newUser = { name, email, password };
 
@@ -196,7 +180,6 @@ export function AuthProvider({ children }) {
   return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }
 
-//use context
 export function useAuth() {
   const context = useContext(authContext);
   if (!context) throw Error("useAuth must be used within AuthProvider");
