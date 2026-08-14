@@ -23,7 +23,7 @@ function HomePage() {
     const data = await getUncompletedGoals(token);
     console.log("--loadGoals: data:", data);
 
-    const today = new Date().toISOString().split("T")[0];
+    //const today = new Date().toISOString().split("T")[0];
 
     const todaysGoals = data.filter((goal) => {
       if (!goal.date_made) return false;
