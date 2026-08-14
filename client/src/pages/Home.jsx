@@ -21,6 +21,7 @@ function HomePage() {
     if (!token) return;
 
     const data = await getUncompletedGoals(token);
+    console.log("--loadGoals: data:", data);
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -36,6 +37,7 @@ function HomePage() {
         made.getDate() === today.getDate()
       );
     });
+    console.log("--loadGoals: todaysGoals:", todaysGoals);
     setGoals(todaysGoals);
 
     //console.log("--loadGoals: ended");
