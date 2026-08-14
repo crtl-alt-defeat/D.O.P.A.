@@ -2,18 +2,24 @@ import { getUserById } from "../db/queries/users.js";
 import { verifyToken } from "../utils/jwt.js";
 
 /** Attaches the user to the request if a valid token is provided */
+
 export default async function getUserFromToken(req, res, next) {
   const authorization = req.get("authorization");
-  if (!authorization || !authorization.startsWith("Bearer ")) return next();
+  if (!authorization || !authorization.toLowerCase().startsWith("bearer ")) {
+    req.user = null;
+    return next();
+  }
 
   const token = authorization.split(" ")[1];
+
   try {
     const { id } = verifyToken(token);
     const user = await getUserById(id);
     req.user = user;
-    next();
+    return next();
   } catch (e) {
-    console.error(e);
-    res.status(401).send("Invalid token.");
+    console.error("JWT error:", e.message);
+    req.user = null;
+    return next();
   }
 }

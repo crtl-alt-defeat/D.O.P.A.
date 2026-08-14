@@ -48,7 +48,7 @@ function SchedulesPage() {
     days[index] = dayGoals.sort((a, b) => {
       const aCompleted = a.status !== "Not Completed";
       const bCompleted = b.status !== "Not Completed";
-      return aCompleted - bCompleted; // false (0) before true (1)
+      return aCompleted - bCompleted;
     });
   });
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

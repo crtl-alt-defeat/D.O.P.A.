@@ -37,16 +37,6 @@ export const getDailyGoals = async (userId) => {
   return rows;
 };
 
-/* export const getWeeksGoals = async (userId) => {
-  const SQL = `
-    select goals.*
-    FROM goals
-    JOIN users_goals ON users_goals.goal_id = goals.id
-    WHERE users_goals.user_id = $1
-    AND goals.date_made BETWEEN CURRENT_DATE - INTERVAL '7 days' AND CURRENT_DATE`;
-  const { rows } = await client.query(SQL, [userId]);
-  return rows;
-}; */
 export const getWeeksGoals = async (userId) => {
   const SQL = `
     SELECT 
