@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { addGoal, getUncompletedGoals, completeGoal } from "../api/goals";
 import { getTypes } from "../api/types";
-import { createUserType } from "../api/usersTypes";
+//import { createUserType } from "../api/usersTypes";
 
 function HomePage() {
-  const { token, user, getSelectedTypes } = useAuth();
+  const { token, hasGottenGoals, getSelectedTypes } = useAuth();
 
   const [name, setName] = useState("");
   const [goals, setGoals] = useState([]);
@@ -17,6 +17,7 @@ function HomePage() {
   const [attachTypeId, setAttachTypeId] = useState("");
 
   async function loadGoals() {
+    console.log("--loadGoals: started");
     if (!token) return;
 
     const data = await getUncompletedGoals(token);
@@ -36,8 +37,11 @@ function HomePage() {
       );
     });
     setGoals(todaysGoals);
+
+    //console.log("--loadGoals: ended");
   }
   async function loadTypes() {
+    console.log("--loadTypes: started");
     if (!token) return;
 
     const systemTypes = await getTypes();
@@ -52,6 +56,7 @@ function HomePage() {
   }
 
   async function handleAddGoal() {
+    console.log("--handleAddGoal: started");
     if (!name.trim()) return;
     if (!selectedTypeId) return;
 
@@ -60,19 +65,20 @@ function HomePage() {
     await loadGoals();
   }
 
-  async function handleAttachType() {
-    if (!attachTypeId) return;
+  // async function handleAttachType() {
+  //   if (!attachTypeId) return;
 
-    await createUserType({
-      user_id: user.id,
-      type_id: attachTypeId,
-    });
+  //   await createUserType({
+  //     user_id: user.id,
+  //     type_id: attachTypeId,
+  //   });
 
-    await loadTypes();
-    setAttachTypeId("");
-  }
+  //   await loadTypes();
+  //   setAttachTypeId("");
+  // }
 
   async function handleComplete(goalId) {
+    console.log("--handleComplete: started");
     await completeGoal(goalId, token);
     await loadGoals();
   }
@@ -80,7 +86,7 @@ function HomePage() {
   useEffect(() => {
     loadGoals();
     loadTypes();
-  }, [token]);
+  }, [hasGottenGoals]);
 
   return (
     <div>
@@ -88,6 +94,7 @@ function HomePage() {
 
       <section>
         <h3>Your Daily Goals</h3>
+        {console.log("--return: goals:", goals)}
         <ul>
           {goals.map((goal) => (
             <li key={goal.id}>
