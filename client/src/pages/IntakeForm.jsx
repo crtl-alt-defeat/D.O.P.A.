@@ -10,8 +10,6 @@ function IntakePage() {
 
   // Stores true/false qualification per section
   const [sectionResults, setSectionResults] = useState([]);
-
-  // ⭐ Updated survey with scoring
   const survey = [
     {
       heading: "Health & Self-Care",
