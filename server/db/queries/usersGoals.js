@@ -32,7 +32,7 @@ export const getDailyGoals = async (userId) => {
     FROM goals
     JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
-    AND users_goals.date_made = CURRENT_DATE`;
+    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE 'America/Chicago')::date`;
   const { rows } = await client.query(SQL, [userId]);
   return rows;
 };
