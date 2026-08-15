@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// const API = import.meta.env.VITE_API || "http://localhost:3000";
-// const goalsAPI = API + "/goals";
 export async function addGoal(name, type_id, token) {
   const config = {
     headers: {
@@ -60,6 +58,9 @@ export async function getGoalByUserId(userId) {
     console.error(error);
   }
 }
+
+//todo: export async function getGoalsByTypeId(typeId) (get goals by type_id)
+
 export async function getWeeklyGoals(userId) {
   try {
     const { data } = await axios.get("/me/schedules" + `/user/${userId}`);
@@ -100,10 +101,8 @@ export async function getPotentialGoals(token) {
   }
 }
 
-//todo: export async function getGoalsByTypeId(typeId) (get goals by type_id)
 /* added Fri */
 export async function getUncompletedGoals(token) {
-  console.log("--getUncompletedGoals: token:", token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -111,9 +110,9 @@ export async function getUncompletedGoals(token) {
   };
 
   const { data } = await axios.get("/api/users/me/goals/uncompleted", config);
-  console.log("--getUncompletedGoals: data:", data);
   return data;
 }
+
 export async function completeGoal(goalId, token) {
   const config = {
     headers: {
