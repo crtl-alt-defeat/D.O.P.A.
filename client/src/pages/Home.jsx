@@ -20,29 +20,20 @@ function HomePage() {
 
     const data = await getUncompletedGoals(token);
 
-    const today = new Date().toISOString().split("T")[0];
-
     const todaysGoals = data.filter((goal) => {
       if (!goal.date_made) return false;
 
-      const made = goal.date_made.split("T")[0];
-      return today === made;
+      const made = new Date(goal.date_made);
+      const today = new Date();
+
+      const sameYear = made.getFullYear() === today.getFullYear();
+      const sameMonth = made.getMonth() === today.getMonth();
+      const sameDate = made.getDate() === today.getDate();
+
+      return sameYear && sameMonth && sameDate;
     });
     setGoals(todaysGoals);
   }
-  // async function loadTypes() {
-  //   if (!token) return;
-
-  //   const systemTypes = await getTypes();
-  //   const ownedTypes = await getSelectedTypes();
-
-  //   setAllTypes(systemTypes);
-  //   setUserTypes(ownedTypes);
-
-  //   if (ownedTypes.length > 0 && !selectedTypeId) {
-  //     setSelectedTypeId(ownedTypes[0].id);
-  //   }
-  // }
 
   async function handleAddGoal() {
     if (!name.trim()) return;
