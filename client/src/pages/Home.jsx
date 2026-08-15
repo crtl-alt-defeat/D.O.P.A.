@@ -18,21 +18,23 @@ function HomePage() {
   async function loadGoals() {
     if (!token) return;
 
-    const data = await getUncompletedGoals(token);
+    //const data = await getUncompletedGoals(token);
 
-    const todaysGoals = data.filter((goal) => {
-      if (!goal.date_made) return false;
+    // const todaysGoals = data.filter((goal) => {
+    //   if (!goal.date_made) return false;
 
-      const made = new Date(goal.date_made);
-      const today = new Date();
+    //   const made = new Date(goal.date_made);
+    //   const today = new Date();
 
-      const sameYear = made.getFullYear() === today.getFullYear();
-      const sameMonth = made.getMonth() === today.getMonth();
-      const sameDate = made.getDate() === today.getDate();
+    //   const sameYear = made.getFullYear() === today.getFullYear();
+    //   const sameMonth = made.getMonth() === today.getMonth();
+    //   const sameDate = made.getDate() === today.getDate();
 
-      return sameYear && sameMonth && sameDate;
-    });
-    setGoals(todaysGoals);
+    //   return sameYear && sameMonth && sameDate;
+    // });
+
+    const uncompleted = await getUncompletedGoals(token);
+    setGoals(uncompleted);
   }
 
   async function handleAddGoal() {

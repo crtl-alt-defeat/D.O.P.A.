@@ -37,6 +37,18 @@ export const getDailyGoals = async (userId) => {
   return rows;
 };
 
+export const getUncompletedDailyGoals = async (userId) => {
+  const SQL = `
+    select goals.*
+    FROM goals
+    JOIN users_goals ON users_goals.goal_id = goals.id
+    WHERE users_goals.user_id = $1
+    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE 'America/Chicago')::date
+    AND users_goals.date_complete IS NULL`;
+  const { rows } = await client.query(SQL, [userId]);
+  return rows;
+};
+
 export const getWeeksGoals = async (userId) => {
   const SQL = `
     SELECT 
