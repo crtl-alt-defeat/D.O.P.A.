@@ -29,6 +29,7 @@ import {
   getTypesByUserId,
   getWeeksGoals,
   createUserGoal,
+  getUncompletedDailyGoals,
 } from "../db/queries/usersGoals.js";
 import { attemptGiveUserRandomGoals } from "../utils/cron.js";
 
@@ -345,7 +346,8 @@ usersRouter.get(
     try {
       const userId = req.user.id;
 
-      const goals = await getGoalsByUserId(userId);
+      //const goals = await getGoalsByUserId(userId);
+      const goals = await getUncompletedDailyGoals(req.user.id);
 
       const uncompleted = goals.filter((g) => !g.date_complete);
 
