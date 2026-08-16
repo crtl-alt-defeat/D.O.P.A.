@@ -23,7 +23,7 @@ export async function goalsScheduler() {
 
 //alternative goals scheduler: runs every 12 minutes; gives goals to any user who doesn't have goals for the day
 export async function goalsSchedulerV2() {
-  cron.schedule("*/12 * * * *", async () => {
+  cron.schedule("*/16 * * * *", async () => {
     console.log(
       "--📅 attempting to give users goals:",
       new Date().toLocaleString(),
