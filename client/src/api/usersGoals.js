@@ -1,6 +1,20 @@
 import axios from "axios";
 import { getGoalsForToday, getPotentialGoals } from "./goals";
 
+export async function addUserGoal(name, type_id, token) {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const body = { name, type_id };
+
+  const { data } = await axios.post("/api/users/me/goals", body, config);
+  return data;
+}
+
 /*
 export async function replaceUserGoal(token, goalId) {
   try {
