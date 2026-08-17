@@ -320,7 +320,7 @@ usersRouter.post(
       const userGoal = await createUserGoal({
         user_id: req.user.id,
         goal_id: goal.id,
-        date_made: new Date(),
+        date_made: new Date().toISOString(),
         date_complete: null,
       });
       const subscription = getSubscriptionForUser(req.user.id);
@@ -367,7 +367,7 @@ usersRouter.put(
 
       const SQL = `
         UPDATE users_goals
-        SET date_complete = CURRENT_DATE
+        SET date_complete = (CURRENT_TIMESTAMP AT TIME ZONE 'America/Chicago')::date
         WHERE user_id = $1 AND goal_id = $2
         RETURNING *;
       `;
