@@ -58,7 +58,7 @@ export const getWeeksGoals = async (userId) => {
   const localDate = new Date().toLocaleString("en-US", {
     timeZone: userTimeZone,
   });
-  const dayInteger = new Date(localDate).getDay();
+  const dayInteger = new Date(localDate).getDay() + 1;
 
   const SQL = `
     SELECT 
