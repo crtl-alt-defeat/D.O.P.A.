@@ -65,13 +65,13 @@ async function giveUserRandomGoals(userId) {
   const createdUsersGoals = [];
   for (const goal of randomGoals) {
     const date = new Date();
-    const localDate = date.toLocaleString("en-US", {
-      timeZone: "America/Chicago",
-    });
+    // const localDate = date.toLocaleString("en-US", {
+    //   timeZone: "America/Chicago",
+    // });
     const newUserGoal = {
       user_id: userId,
       goal_id: goal.id,
-      date_made: localDate,
+      date_made: date.toISOString(),
     };
     const created = await createUserGoal(newUserGoal);
     createdUsersGoals.push(created);

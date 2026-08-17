@@ -1,19 +1,5 @@
 import axios from "axios";
 
-export async function addGoal(name, type_id, token) {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  };
-
-  const body = { name, type_id };
-
-  const { data } = await axios.post("/api/users/me/goals", body, config);
-  return data;
-}
-
 export async function createGoal(name, type_id) {
   try {
     const newGoal = {
@@ -25,7 +11,7 @@ export async function createGoal(name, type_id) {
       "Content-type": "application/json",
     };
 
-    await axios.post("/goals", newUser, config);
+    await axios.post("/api/goals", newUser, config);
   } catch (error) {
     console.error(error);
   }
