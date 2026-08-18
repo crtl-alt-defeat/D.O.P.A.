@@ -307,7 +307,22 @@ usersRouter.get(
         } else {
           status = "Completed Previously";
         }
-        const dayOfWeek = new Date(goal.date_made).getDay();
+
+        const dateMade = new Date(goal.date_made);
+        const dayName = dateMade.toLocaleDateString("en-us", {
+          timeZone: timeZone,
+          weekday: "long",
+        });
+        const weekdays = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const dayOfWeek = weekdays.indexOf(dayName);
 
         return { ...goal, status, dayOfWeek };
       });
