@@ -28,6 +28,7 @@ export async function getUsersGoals() {
 
 export const getDailyGoals = async (userId) => {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log("queries:getDailyGoals: timezone =", userTimeZone);
 
   const SQL = `
     select goals.*
@@ -41,6 +42,7 @@ export const getDailyGoals = async (userId) => {
 
 export const getUncompletedDailyGoals = async (userId) => {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log("queries:getUncompletedDailyGoals: timezone =", userTimeZone);
 
   const SQL = `
     select goals.*
@@ -55,6 +57,7 @@ export const getUncompletedDailyGoals = async (userId) => {
 
 export const getWeeksGoals = async (userId) => {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log("queries:getWeeksGoals: timezone =", userTimeZone);
   const localDate = new Date().toLocaleString("en-US", {
     timeZone: userTimeZone,
   });
