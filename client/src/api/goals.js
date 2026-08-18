@@ -49,7 +49,17 @@ export async function getGoalByUserId(userId) {
 
 export async function getWeeklyGoals(userId) {
   try {
-    const { data } = await axios.get("/me/schedules" + `/user/${userId}`);
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const config = {
+      params: {
+        timeZone: userTimeZone,
+      },
+    };
+
+    const { data } = await axios.get(
+      "/me/schedules" + `/user/${userId}`,
+      config,
+    );
     return data;
   } catch (error) {
     console.error(error);
@@ -57,9 +67,13 @@ export async function getWeeklyGoals(userId) {
 }
 export async function getGoalsForToday(token) {
   try {
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
+      },
+      params: {
+        timeZone: userTimeZone,
       },
     };
 
@@ -73,9 +87,13 @@ export async function getGoalsForToday(token) {
 
 export async function getPotentialGoals(token) {
   try {
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
+      },
+      params: {
+        timeZone: userTimeZone,
       },
     };
 
@@ -89,9 +107,13 @@ export async function getPotentialGoals(token) {
 
 /* added Fri */
 export async function getUncompletedGoals(token) {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
+    },
+    params: {
+      timeZone: userTimeZone,
     },
   };
 

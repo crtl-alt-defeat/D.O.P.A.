@@ -20,8 +20,6 @@ function HomePage() {
   async function loadGoals() {
     if (!token) return;
 
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log("pages:Home:loadGoals: timezone =", userTimeZone);
     const uncompleted = await getUncompletedGoals(token);
     setGoals(uncompleted);
   }

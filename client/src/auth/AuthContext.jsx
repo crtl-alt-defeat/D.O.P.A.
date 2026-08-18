@@ -164,9 +164,13 @@ export function AuthProvider({ children }) {
     try {
       if (!token) throw new Error("Not logged in");
 
+      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
+        },
+        params: {
+          timeZone: userTimeZone,
         },
       };
 
