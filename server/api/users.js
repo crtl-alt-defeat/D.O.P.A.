@@ -262,7 +262,6 @@ usersRouter.get(
   getUserFromToken,
   requireUser,
   async (req, res, next) => {
-    console.log("GET /users/me/daily: test");
     try {
       const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
@@ -371,7 +370,6 @@ usersRouter.get(
   getUserFromToken,
   requireUser,
   async (req, res, next) => {
-    console.log("GET /users/me/uncompleted: test");
     try {
       const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
