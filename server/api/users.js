@@ -265,6 +265,15 @@ usersRouter.get(
     try {
       const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
+
+      const localTimeString = new Date().toLocaleString("en-US", {
+        timeZone: timeZone,
+      });
+      console.log(
+        `GET /users/me/daily: Current time in local timezone(${timeZone}):`,
+        localTimeString,
+      );
+
       const dailyGoals = await getDailyGoals(userId, timeZone);
 
       if (dailyGoals.length === 0) {
@@ -286,6 +295,15 @@ usersRouter.get(
     try {
       const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
+
+      const localTimeString = new Date().toLocaleString("en-US", {
+        timeZone: timeZone,
+      });
+      console.log(
+        `GET /users/me/schedules: Current time in local timezone(${timeZone}):`,
+        localTimeString,
+      );
+
       const weeklyGoals = await getWeeksGoals(userId, timeZone);
 
       const labeledGoals = weeklyGoals.map((goal) => {
@@ -352,6 +370,15 @@ usersRouter.get(
     try {
       const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
+
+      const localTimeString = new Date().toLocaleString("en-US", {
+        timeZone: timeZone,
+      });
+      console.log(
+        `GET /users/me/uncompleted: Current time in local timezone(${timeZone}):`,
+        localTimeString,
+      );
+
       const goals = await getUncompletedDailyGoals(userId, timeZone);
 
       const uncompleted = goals.filter((g) => !g.date_complete);
