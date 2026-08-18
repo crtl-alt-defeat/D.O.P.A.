@@ -264,6 +264,9 @@ usersRouter.get(
   async (req, res, next) => {
     try {
       const timeZone = req.query.timeZone || "UTC";
+      const localTimeString = new Date().toLocaleString("en-US", {
+        timeZone: timeZone,
+      });
 
       const dailyGoals = await getDailyGoals(req.user.id, timeZone);
 
@@ -285,6 +288,10 @@ usersRouter.get(
   async (req, res, next) => {
     try {
       const timeZone = req.query.timeZone || "UTC";
+      const localTimeString = new Date().toLocaleString("en-US", {
+        timeZone: timeZone,
+      });
+
       const weeklyGoals = await getWeeksGoals(req.user.id, timeZone);
 
       const labeledGoals = weeklyGoals.map((goal) => {
@@ -351,6 +358,9 @@ usersRouter.get(
     try {
       const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
+      const localTimeString = new Date().toLocaleString("en-US", {
+        timeZone: timeZone,
+      });
 
       const goals = await getUncompletedDailyGoals(userId, timeZone);
 
