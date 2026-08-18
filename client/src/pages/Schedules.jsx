@@ -10,6 +10,9 @@ function SchedulesPage() {
   useEffect(() => {
     async function getWeeksGoals() {
       try {
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        console.log("pages:Schedules:getWeeksGoals: timezone =", userTimeZone);
+
         const res = await fetch("/api/users/me/schedules", {
           headers: {
             Authorization: `Bearer ${token}`,
