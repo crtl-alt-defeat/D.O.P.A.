@@ -45,13 +45,13 @@ export default async function seedUsersGoals(num, users, goals, usersTypes) {
           if (foundUnique) {
             let dateComplete = null;
             if (Math.random() > 0.33) {
-              dateComplete = currDay;
+              dateComplete = currDay.toISOString();
             }
             assignedGoals.push(newGoal);
             const newUserGoal = {
               user_id: user.id,
               goal_id: newGoal.id,
-              date_made: currDay,
+              date_made: currDay.toISOString(),
               date_complete: dateComplete,
             };
             usersGoals.push(await createUserGoal(newUserGoal));
