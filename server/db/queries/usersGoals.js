@@ -85,3 +85,33 @@ export async function getTypesByUserId(userId) {
   const { rows: types } = await client.query(SQL, [userId]);
   return types;
 }
+
+//attepted streaks query
+export async function getPartialStreak(userId) {
+  const SQL = `
+  -- pulls dates form users goals, renames date_complete to day, filters out incompleted dates and today
+  WITH days AS (
+  SELECT date_complete AS day
+  FROM  users_goals
+  WHERE user_id = $1
+  AND date_complete IS NOT NULL
+  AND date_complete < CURRENT_DATE
+  ),
+  -- sorts the days so that sorts the dates by recency and assigns a row number
+  ordered AS (
+  SELECT day,
+  ROW_NUMBER() OVER (ORDER BY day DESC) AS rn
+  FROM days
+  ),
+  -- groups 
+  grouped AS (
+  SELECT day, rn, (day + rn * INTERVAL '1 day') AS grp
+  FROM ordered)
+  SELECT COUNT(*) AS streak
+  FROM grouped
+  WHERE grp = (SELECT grp FROM grouped ORDER BY day DESC LIMIT 1)`;
+  const {
+    rows: [{ streak }],
+  } = await client.query(SQL, [userId]);
+  return streak;
+}

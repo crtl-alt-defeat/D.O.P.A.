@@ -1,5 +1,6 @@
 /* Testing, ignore unless interfering, then comment out. */
 self.addEventListener("push", (event) => {
+  /* Why raw? */
   const raw = event.data ? event.data.text() : null;
 
   const data = event.data

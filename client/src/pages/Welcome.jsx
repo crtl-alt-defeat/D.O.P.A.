@@ -16,7 +16,7 @@ function WelcomePage() {
         with clarity instead of decision fatigue. As you complete them, you’ll
         see your progress tracking update in real time, giving you a quick
         visual snapshot of how far you’ve come. And when you finish any of your
-        daily goals, you’ll add another day to your personal streak, sa quiet
+        daily goals, you’ll add another day to your personal streak, its a quiet
         celebration of consistency, not perfection.
       </p>
       <p>
