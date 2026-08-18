@@ -37,8 +37,8 @@ CREATE TABLE users_goals (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     goal_id INT NOT NULL,
-    date_made DATE NOT NULL,
-    date_complete DATE,
+    date_made TIMESTAMPTZ NOT NULL,
+    date_complete TIMESTAMPTZ,
     CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id),
     CONSTRAINT fk_goals FOREIGN KEY (goal_id) REFERENCES goals(id)
 );
