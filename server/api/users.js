@@ -393,7 +393,7 @@ usersRouter.put(
 
       const SQL = `
         UPDATE users_goals
-        SET date_complete = (CURRENT_TIMESTAMP AT TIME ZONE 'America/Chicago')::date
+        SET date_complete = CURRENT_TIMESTAMP
         WHERE user_id = $1 AND goal_id = $2
         RETURNING *;
       `;
