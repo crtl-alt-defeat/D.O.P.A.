@@ -52,3 +52,22 @@ button {
   padding: 10px 16px;
   font-size: 1rem;
 }
+.completed-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.completed-goal {
+  display: inline-block; /* ⭐ makes the box fit the text */
+  text-decoration: line-through;
+  background-color: #648464;
+  padding: 6px 10px; /* a little horizontal padding looks nicer */
+  border-radius: 4px;
+  margin-bottom: 6px;
+  margin-right: 6px; /* spacing if multiple items appear inline */
+}
+
+.uncompleted-list {
+  list-style: none;
+  padding-left: 0;
+}

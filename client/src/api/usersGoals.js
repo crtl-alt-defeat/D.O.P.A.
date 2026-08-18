@@ -1,5 +1,23 @@
 import axios from "axios";
+import { useAuth } from "../auth/AuthContext.jsx";
 import { getGoalsForToday, getPotentialGoals } from "./goals";
+export async function getPartialStreak(token) {
+  const response = await fetch("api/usersGoals/streak", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  return data.streak;
+}
+export async function getCompletedGoalsForToday(token) {
+  const response = await fetch("/api/usersGoals/completedToday", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}
 
 export async function addUserGoal(name, type_id, token) {
   const config = {
