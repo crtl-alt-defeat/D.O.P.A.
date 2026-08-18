@@ -47,19 +47,19 @@ export async function getGoalByUserId(userId) {
 
 //todo: export async function getGoalsByTypeId(typeId) (get goals by type_id)
 
-export async function getWeeklyGoals(userId) {
+export async function getWeeklyGoals(token) {
   try {
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       params: {
         timeZone: userTimeZone,
       },
     };
 
-    const { data } = await axios.get(
-      "/me/schedules" + `/user/${userId}`,
-      config,
-    );
+    const { data } = await axios.get("/api/users/me/schedules", config);
     return data;
   } catch (error) {
     console.error(error);
