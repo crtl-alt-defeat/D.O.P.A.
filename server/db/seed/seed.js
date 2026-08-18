@@ -44,7 +44,7 @@ export default async function seed() {
       console.error("ERROR: failed to seed users:", e.message);
     }
     const users = await getUsers();
-    if (logging) await logObjectArray(USER_INFO_FILE, users);
+    if (logging) await logObjectArray(USER_INFO_FILE, newUsers || users);
   }
 
   // seed types table

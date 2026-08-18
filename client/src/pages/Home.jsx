@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
-import { addGoal, getUncompletedGoals, completeGoal } from "../api/goals";
+
+import { getUncompletedGoals, completeGoal } from "../api/goals";
 import { getTypeByName } from "../api/types";
-import { getPartialStreak } from "../api/usersGoals";
-import { getCompletedGoalsForToday } from "../api/usersGoals";
+import { addUserGoal, getPartialStreak, getCompletedGoalsForToday } from "../api/usersGoals";
 
 function HomePage() {
   const { token, hasGottenGoals, getSelectedTypes } = useAuth();
@@ -25,21 +25,6 @@ function HomePage() {
   async function loadGoals() {
     if (!token) return;
 
-    //const data = await getUncompletedGoals(token);
-
-    // const todaysGoals = data.filter((goal) => {
-    //   if (!goal.date_made) return false;
-
-    //   const made = new Date(goal.date_made);
-    //   const today = new Date();
-
-    //   const sameYear = made.getFullYear() === today.getFullYear();
-    //   const sameMonth = made.getMonth() === today.getMonth();
-    //   const sameDate = made.getDate() === today.getDate();
-
-    //   return sameYear && sameMonth && sameDate;
-    // });
-
     const uncompleted = await getUncompletedGoals(token);
     setGoals(uncompleted);
   }
@@ -53,7 +38,7 @@ function HomePage() {
     if (!name.trim()) return;
     //if (!selectedTypeId) return;
     const custom = await getTypeByName("custom");
-    await addGoal(name, custom.id, token);
+    await addUserGoal(name, custom.id, token);
     setName("");
     await loadGoals();
   }

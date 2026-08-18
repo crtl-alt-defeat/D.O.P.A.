@@ -13,7 +13,7 @@ export async function goalsScheduler() {
     async () => {
       console.log(
         "--📅 giving users goals for the day:",
-        new Date().toLocaleString(),
+        new Date().toLocaleString("en-US", { timeZone: "America/Chicago" }),
       );
       await giveUsersGoals();
     },
@@ -23,17 +23,21 @@ export async function goalsScheduler() {
 
 //alternative goals scheduler: runs every 12 minutes; gives goals to any user who doesn't have goals for the day
 export async function goalsSchedulerV2() {
-  cron.schedule("*/16 * * * *", async () => {
-    console.log(
-      "--📅 attempting to give users goals:",
-      new Date().toLocaleString(),
-    );
-    const users = await getUsers();
+  cron.schedule(
+    "*/12 * * * *",
+    async () => {
+      console.log(
+        "--📅 attempting to give users goals:",
+        new Date().toLocaleString("en-US", { timeZone: "America/Chicago" }),
+      );
+      const users = await getUsers();
 
-    for (const user of users) {
-      await attemptGiveUserRandomGoals(user);
-    }
-  });
+      for (const user of users) {
+        await attemptGiveUserRandomGoals(user, "UTC");
+      }
+    },
+    { timezone: "America/Chicago" },
+  );
 }
 
 async function giveUsersGoals() {
@@ -44,8 +48,8 @@ async function giveUsersGoals() {
   }
 }
 
-export async function attemptGiveUserRandomGoals(user) {
-  const dailyGoals = await getDailyGoals(user.id);
+export async function attemptGiveUserRandomGoals(user, timeZone) {
+  const dailyGoals = await getDailyGoals(user.id, timeZone);
   if (dailyGoals.length == 0) {
     console.log(`  ⤷ giving goals to ${user.name}`);
     const createdUsersGoals = await giveUserRandomGoals(user.id);
@@ -61,13 +65,13 @@ async function giveUserRandomGoals(userId) {
   const createdUsersGoals = [];
   for (const goal of randomGoals) {
     const date = new Date();
-    const localDate = date.toLocaleString("en-US", {
-      timeZone: "America/Chicago",
-    });
+    // const localDate = date.toLocaleString("en-US", {
+    //   timeZone: "America/Chicago",
+    // });
     const newUserGoal = {
       user_id: userId,
       goal_id: goal.id,
-      date_made: localDate,
+      date_made: date.toISOString(),
     };
     const created = await createUserGoal(newUserGoal);
     createdUsersGoals.push(created);

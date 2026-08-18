@@ -16,7 +16,8 @@ export default async function seedUsers(num) {
       name: `${firstName} ${lastName}`,
     };
     const token = await createUser(newUser);
-    users.push(verifyToken(token));
+    const userInfo = verifyToken(token);
+    users.push({ ...newUser, id: userInfo.id });
   }
 
   return users;

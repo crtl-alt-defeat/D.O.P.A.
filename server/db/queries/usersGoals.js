@@ -26,30 +26,35 @@ export async function getUsersGoals() {
   return usersGoals;
 }
 
-export const getDailyGoals = async (userId) => {
+export const getDailyGoals = async (userId, timeZone) => {
   const SQL = `
     select goals.*
     FROM goals
     JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
-    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE 'America/Chicago')::date`;
-  const { rows } = await client.query(SQL, [userId]);
+    AND (users_goals.date_made::timestamptz AT TIME ZONE $2)::date = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date`;
+  const { rows } = await client.query(SQL, [userId, timeZone]);
   return rows;
 };
 
-export const getUncompletedDailyGoals = async (userId) => {
+export const getUncompletedDailyGoals = async (userId, timeZone) => {
   const SQL = `
     select goals.*
     FROM goals
     JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
-    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE 'America/Chicago')::date
+    AND (users_goals.date_made::timestamptz AT TIME ZONE $2)::date = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date
     AND users_goals.date_complete IS NULL`;
-  const { rows } = await client.query(SQL, [userId]);
+  const { rows } = await client.query(SQL, [userId, timeZone]);
   return rows;
 };
 
-export const getWeeksGoals = async (userId) => {
+export const getWeeksGoals = async (userId, timeZone) => {
+  const localDate = new Date().toLocaleString("en-US", {
+    timeZone: timeZone,
+  });
+  const dayInteger = new Date(localDate).getDay();
+
   const SQL = `
     SELECT 
       goals.*,
@@ -58,9 +63,10 @@ export const getWeeksGoals = async (userId) => {
     FROM goals
     JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
-      AND users_goals.date_made BETWEEN CURRENT_DATE - INTERVAL '7 days' AND CURRENT_DATE
+      AND (users_goals.date_made::timestamptz AT TIME ZONE $2)::date >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
+      AND (users_goals.date_made::timestamptz AT TIME ZONE $2)::date <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
   `;
-  const { rows } = await client.query(SQL, [userId]);
+  const { rows } = await client.query(SQL, [userId, timeZone, dayInteger]);
   return rows;
 };
 

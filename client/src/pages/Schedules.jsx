@@ -1,44 +1,25 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import "./Schedules.css";
+import { getWeeklyGoals } from "../api/goals";
 
 function SchedulesPage() {
   const { token } = useAuth();
-  const [goals, setGoals] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [goals, setGoals] = useState(null);
+
+  async function syncGoals() {
+    const data = await getWeeklyGoals(token);
+    setGoals(data);
+  }
 
   useEffect(() => {
-    async function getWeeksGoals() {
-      try {
-        const res = await fetch("/api/users/me/schedules", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("Server error:", text);
-          return;
-        }
-
-        const data = await res.json();
-        setGoals(data);
-      } catch (err) {
-        console.error("Failed to load goals:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     if (token) {
-      getWeeksGoals();
-    } else {
-      setLoading(false);
+      syncGoals();
     }
   }, [token]);
 
-  if (loading) return <p>Loading schedules...</p>;
+  if (!goals) return <p>Loading schedules...</p>;
 
   const days = [[], [], [], [], [], [], []];
   goals.forEach((goal) => {

@@ -241,8 +241,10 @@ usersRouter.post(
   requireUser,
   async (req, res, next) => {
     try {
+      const timeZone = req.query.timeZone || "UTC";
+
       //console.log(`--🌐 attempting to give goals to ${req.user.name}`);
-      const created = await attemptGiveUserRandomGoals(req.user);
+      const created = await attemptGiveUserRandomGoals(req.user, timeZone);
 
       if (!created)
         return res.status(422).send({ message: "failed to create goals" });
@@ -261,7 +263,9 @@ usersRouter.get(
   requireUser,
   async (req, res, next) => {
     try {
-      const dailyGoals = await getDailyGoals(req.user.id);
+      const userId = req.user.id;
+      const timeZone = req.query.timeZone || "UTC";
+      const dailyGoals = await getDailyGoals(userId, timeZone);
 
       if (dailyGoals.length === 0) {
         return res.status(404).send({ message: "User has no goals" });
@@ -280,11 +284,19 @@ usersRouter.get(
   requireUser,
   async (req, res, next) => {
     try {
-      const weeklyGoals = await getWeeksGoals(req.user.id);
+      const userId = req.user.id;
+      const timeZone = req.query.timeZone || "UTC";
+      const weeklyGoals = await getWeeksGoals(userId, timeZone);
 
       const labeledGoals = weeklyGoals.map((goal) => {
-        const complete = goal.date_complete;
-        const today = new Date().toISOString().slice(0, 10);
+        const formatter = new Intl.DateTimeFormat("en-us", {
+          timeZone: timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
+        const complete = formatter.format(new Date(goal.date_complete));
+        const today = formatter.format(new Date());
 
         let status;
 
@@ -295,7 +307,22 @@ usersRouter.get(
         } else {
           status = "Completed Previously";
         }
-        const dayOfWeek = new Date(goal.date_made).getDay();
+
+        const dateMade = new Date(goal.date_made);
+        const dayName = dateMade.toLocaleDateString("en-us", {
+          timeZone: timeZone,
+          weekday: "long",
+        });
+        const weekdays = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const dayOfWeek = weekdays.indexOf(dayName);
 
         return { ...goal, status, dayOfWeek };
       });
@@ -320,7 +347,7 @@ usersRouter.post(
       const userGoal = await createUserGoal({
         user_id: req.user.id,
         goal_id: goal.id,
-        date_made: new Date(),
+        date_made: new Date().toISOString(),
         date_complete: null,
       });
       const subscription = getSubscriptionForUser(req.user.id);
@@ -345,9 +372,8 @@ usersRouter.get(
   async (req, res, next) => {
     try {
       const userId = req.user.id;
-
-      //const goals = await getGoalsByUserId(userId);
-      const goals = await getUncompletedDailyGoals(req.user.id);
+      const timeZone = req.query.timeZone || "UTC";
+      const goals = await getUncompletedDailyGoals(userId, timeZone);
 
       const uncompleted = goals.filter((g) => !g.date_complete);
 
@@ -367,7 +393,7 @@ usersRouter.put(
 
       const SQL = `
         UPDATE users_goals
-        SET date_complete = CURRENT_DATE
+        SET date_complete = (CURRENT_TIMESTAMP AT TIME ZONE 'America/Chicago')::date
         WHERE user_id = $1 AND goal_id = $2
         RETURNING *;
       `;

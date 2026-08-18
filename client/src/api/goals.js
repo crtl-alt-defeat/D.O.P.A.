@@ -1,19 +1,5 @@
 import axios from "axios";
 
-export async function addGoal(name, type_id, token) {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  };
-
-  const body = { name, type_id };
-
-  const { data } = await axios.post("/api/users/me/goals", body, config);
-  return data;
-}
-
 export async function createGoal(name, type_id) {
   try {
     const newGoal = {
@@ -25,7 +11,7 @@ export async function createGoal(name, type_id) {
       "Content-type": "application/json",
     };
 
-    await axios.post("/goals", newUser, config);
+    await axios.post("/api/goals", newUser, config);
   } catch (error) {
     console.error(error);
   }
@@ -61,9 +47,19 @@ export async function getGoalByUserId(userId) {
 
 //todo: export async function getGoalsByTypeId(typeId) (get goals by type_id)
 
-export async function getWeeklyGoals(userId) {
+export async function getWeeklyGoals(token) {
   try {
-    const { data } = await axios.get("/me/schedules" + `/user/${userId}`);
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        timeZone: userTimeZone,
+      },
+    };
+
+    const { data } = await axios.get("/api/users/me/schedules", config);
     return data;
   } catch (error) {
     console.error(error);
@@ -71,9 +67,13 @@ export async function getWeeklyGoals(userId) {
 }
 export async function getGoalsForToday(token) {
   try {
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
+      },
+      params: {
+        timeZone: userTimeZone,
       },
     };
 
@@ -87,9 +87,13 @@ export async function getGoalsForToday(token) {
 
 export async function getPotentialGoals(token) {
   try {
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
+      },
+      params: {
+        timeZone: userTimeZone,
       },
     };
 
@@ -103,9 +107,13 @@ export async function getPotentialGoals(token) {
 
 /* added Fri */
 export async function getUncompletedGoals(token) {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
+    },
+    params: {
+      timeZone: userTimeZone,
     },
   };
 
