@@ -3,10 +3,11 @@ import { useAuth } from "../auth/AuthContext";
 
 import { getUncompletedGoals, completeGoal } from "../api/goals";
 import { getTypeByName } from "../api/types";
-import { addUserGoal } from "../api/usersGoals";
+import { addUserGoal, getPartialStreak, getCompletedGoalsForToday } from "../api/usersGoals";
 
 function HomePage() {
   const { token, hasGottenGoals, getSelectedTypes } = useAuth();
+  const [completedToday, setCompletedToday] = useState([]);
 
   const [name, setName] = useState("");
   const [goals, setGoals] = useState([]);
@@ -14,14 +15,23 @@ function HomePage() {
   const [allTypes, setAllTypes] = useState([]);
   const [userTypes, setUserTypes] = useState([]);
   const [selectedTypeId, setSelectedTypeId] = useState("");
-
+  const [streak, setStreak] = useState("");
   const [attachTypeId, setAttachTypeId] = useState("");
-
+  async function loadPartialStreak() {
+    if (!token) return;
+    const partialStreak = await getPartialStreak(token);
+    setStreak(partialStreak);
+  }
   async function loadGoals() {
     if (!token) return;
 
     const uncompleted = await getUncompletedGoals(token);
     setGoals(uncompleted);
+  }
+  async function loadCompletedToday() {
+    if (!token) return;
+    const data = await getCompletedGoalsForToday(token);
+    setCompletedToday(data);
   }
 
   async function handleAddGoal() {
@@ -36,24 +46,36 @@ function HomePage() {
   async function handleComplete(goalId) {
     await completeGoal(goalId, token);
     await loadGoals();
+    await loadCompletedToday();
   }
 
   useEffect(() => {
+    if (!token) return;
     loadGoals();
-    //loadTypes();
-  }, [hasGottenGoals]);
-
+    loadPartialStreak();
+    loadCompletedToday();
+  }, [token, hasGottenGoals]);
   return (
     <div>
       <h2>Your Stuff</h2>
 
       <section>
         <h3>Your Daily Goals</h3>
-        <ul>
+        <ul className="uncompleted-list">
           {goals.map((goal) => (
             <li key={goal.id}>
               {goal.name}
               <button onClick={() => handleComplete(goal.id)}>Complete</button>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section>
+        <h3>Completed Today</h3>
+        <ul className="completed-list">
+          {completedToday.map((goal) => (
+            <li key={goal.id} className="completed-goal">
+              {goal.name}
             </li>
           ))}
         </ul>
@@ -84,6 +106,10 @@ function HomePage() {
         <button type="button" onClick={handleAddGoal}>
           Add
         </button>
+      </section>
+      <section>
+        <h3>Your Completion Streak</h3>
+        <p>{streak} day(s) in a row</p>
       </section>
     </div>
   );
