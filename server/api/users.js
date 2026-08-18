@@ -263,12 +263,9 @@ usersRouter.get(
   requireUser,
   async (req, res, next) => {
     try {
+      const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
-      const localTimeString = new Date().toLocaleString("en-US", {
-        timeZone: timeZone,
-      });
-
-      const dailyGoals = await getDailyGoals(req.user.id, timeZone);
+      const dailyGoals = await getDailyGoals(userId, timeZone);
 
       if (dailyGoals.length === 0) {
         return res.status(404).send({ message: "User has no goals" });
@@ -287,12 +284,9 @@ usersRouter.get(
   requireUser,
   async (req, res, next) => {
     try {
+      const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
-      const localTimeString = new Date().toLocaleString("en-US", {
-        timeZone: timeZone,
-      });
-
-      const weeklyGoals = await getWeeksGoals(req.user.id, timeZone);
+      const weeklyGoals = await getWeeksGoals(userId, timeZone);
 
       const labeledGoals = weeklyGoals.map((goal) => {
         const complete = goal.date_complete;
@@ -358,10 +352,6 @@ usersRouter.get(
     try {
       const userId = req.user.id;
       const timeZone = req.query.timeZone || "UTC";
-      const localTimeString = new Date().toLocaleString("en-US", {
-        timeZone: timeZone,
-      });
-
       const goals = await getUncompletedDailyGoals(userId, timeZone);
 
       const uncompleted = goals.filter((g) => !g.date_complete);
