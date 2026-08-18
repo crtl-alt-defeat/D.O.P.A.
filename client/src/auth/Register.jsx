@@ -56,16 +56,16 @@ function RegisterPage() {
         await getTypeByName("relationship"),
       ];
 
-      console.log(types);
+      //console.log(types);
 
       for (let i = 0; i < types.length; i++) {
         const type = types[i];
         const result = sectionResults[i];
-        console.log(type, result);
+        //console.log(type, result);
 
         if (result) {
           await addSelectedType(type.id);
-          console.log("- added");
+          //console.log("- added");
         }
       }
 

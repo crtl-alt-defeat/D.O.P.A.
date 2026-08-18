@@ -33,7 +33,7 @@ export async function goalsSchedulerV2() {
       const users = await getUsers();
 
       for (const user of users) {
-        await attemptGiveUserRandomGoals(user);
+        await attemptGiveUserRandomGoals(user, "UTC");
       }
     },
     { timezone: "America/Chicago" },
@@ -48,8 +48,8 @@ async function giveUsersGoals() {
   }
 }
 
-export async function attemptGiveUserRandomGoals(user) {
-  const dailyGoals = await getDailyGoals(user.id);
+export async function attemptGiveUserRandomGoals(user, timeZone) {
+  const dailyGoals = await getDailyGoals(user.id, timeZone);
   if (dailyGoals.length == 0) {
     console.log(`  ⤷ giving goals to ${user.name}`);
     const createdUsersGoals = await giveUserRandomGoals(user.id);

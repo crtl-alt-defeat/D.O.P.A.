@@ -241,8 +241,10 @@ usersRouter.post(
   requireUser,
   async (req, res, next) => {
     try {
+      const timeZone = req.query.timeZone || "UTC";
+
       //console.log(`--🌐 attempting to give goals to ${req.user.name}`);
-      const created = await attemptGiveUserRandomGoals(req.user);
+      const created = await attemptGiveUserRandomGoals(req.user, timeZone);
 
       if (!created)
         return res.status(422).send({ message: "failed to create goals" });
@@ -261,7 +263,9 @@ usersRouter.get(
   requireUser,
   async (req, res, next) => {
     try {
-      const dailyGoals = await getDailyGoals(req.user.id);
+      const timeZone = req.query.timeZone || "UTC";
+
+      const dailyGoals = await getDailyGoals(req.user.id, timeZone);
 
       if (dailyGoals.length === 0) {
         return res.status(404).send({ message: "User has no goals" });
@@ -280,7 +284,8 @@ usersRouter.get(
   requireUser,
   async (req, res, next) => {
     try {
-      const weeklyGoals = await getWeeksGoals(req.user.id);
+      const timeZone = req.query.timeZone || "UTC";
+      const weeklyGoals = await getWeeksGoals(req.user.id, timeZone);
 
       const labeledGoals = weeklyGoals.map((goal) => {
         const complete = goal.date_complete;
@@ -345,9 +350,9 @@ usersRouter.get(
   async (req, res, next) => {
     try {
       const userId = req.user.id;
+      const timeZone = req.query.timeZone || "UTC";
 
-      //const goals = await getGoalsByUserId(userId);
-      const goals = await getUncompletedDailyGoals(req.user.id);
+      const goals = await getUncompletedDailyGoals(userId, timeZone);
 
       const uncompleted = goals.filter((g) => !g.date_complete);
 

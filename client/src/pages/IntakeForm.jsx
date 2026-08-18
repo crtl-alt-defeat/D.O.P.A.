@@ -315,14 +315,14 @@ function IntakePage() {
 
     const sectionIndex = currentStep - 1;
     const sectionScore = getSectionScore(sectionIndex);
-    console.log(`Score for section ${currentStep}:`, sectionScore);
+    //console.log(`Score for section ${currentStep}:`, sectionScore);
     const section = survey[sectionIndex];
     const questionsCount = section.questions.length;
     const threshold = questionsCount * 2;
 
     const qualifies = sectionScore >= threshold;
 
-    console.log(`Section ${currentStep} qualifies:`, qualifies);
+    //console.log(`Section ${currentStep} qualifies:`, qualifies);
 
     const updatedResults = [...sectionResults, qualifies];
     setSectionResults(updatedResults);
@@ -335,9 +335,9 @@ function IntakePage() {
         0,
       );
 
-      console.log("Final total score:", totalScore);
+      //console.log("Final total score:", totalScore);
 
-      console.log("Section results:", updatedResults);
+      //console.log("Section results:", updatedResults);
 
       localStorage.setItem("intakeAnswers", JSON.stringify(answers));
       localStorage.setItem("intakeScore", totalScore);
