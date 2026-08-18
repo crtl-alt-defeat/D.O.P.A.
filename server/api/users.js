@@ -300,7 +300,7 @@ usersRouter.get(
 
         let status;
 
-        if (!complete) {
+        if (!goal.date_complete) {
           status = "Not Completed";
         } else if (complete === today) {
           status = "Completed Today";
