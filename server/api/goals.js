@@ -79,5 +79,4 @@ goalsRouter.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
-
 export default goalsRouter;

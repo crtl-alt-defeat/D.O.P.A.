@@ -48,12 +48,6 @@ beforeAll(async () => {
   firstGoal = goal;
 
   //todo: get admin token using authenticate (if we implement an admin role)
-  /*
-  const response = await authenticate({
-    email: process.env.ADMIN_EMAIL,
-    password: process.env.ADMIN_PASS,
-  });
-  */
 });
 
 //post processing

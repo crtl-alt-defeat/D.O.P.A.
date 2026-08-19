@@ -8,6 +8,7 @@ import TypesForm from "./TypesForm";
 
 function SettingsPage() {
   const [subscription, setSubscription] = useState(null);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   const { getUser, updateUser, token } = useAuth();
   const [user, setUser] = useState(null);
@@ -20,30 +21,63 @@ function SettingsPage() {
   useEffect(() => {
     syncUser();
   }, [token]);
+  useEffect(() => {
+    async function checkExistingSubscription() {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+
+      if (sub) {
+        window._pushSubscription = sub;
+        setSubscription(sub);
+        setNotificationsEnabled(true);
+      }
+    }
+
+    checkExistingSubscription();
+  }, []);
 
   return user ? (
     <div>
       <h2>Account Settings</h2>
+
       <UserInfo user={user} />
       <UserForm user={user} syncUser={syncUser} />
       <TypesForm user={user} />
-      {/* Notification related Ignore */}
+      <label className="notif-toggle">
+        <input
+          type="checkbox"
+          checked={notificationsEnabled}
+          onChange={async (e) => {
+            const checked = e.target.checked;
+            setNotificationsEnabled(checked);
 
-      <button
-        onClick={async () => {
-          //console.log("TOKEN FROM AUTH:", token);
-          const sub = await subscribeUser(token);
-          setSubscription(sub);
-        }}
-      >
+            if (checked) {
+              // SUBSCRIBE
+              const sub = await subscribeUser(token);
+              setSubscription(sub);
+              window._pushSubscription = sub;
+            } else {
+              // UNSUBSCRIBE
+              if (window._pushSubscription) {
+                try {
+                  await window._pushSubscription.unsubscribe();
+                  console.log("Push subscription removed");
+                } catch (err) {
+                  console.error("Failed to unsubscribe:", err);
+                }
+
+                window._pushSubscription = null;
+                setSubscription(null);
+              }
+            }
+          }}
+        />
         Enable Notifications
-      </button>
+      </label>
       <button
+        type="button"
         onClick={async () => {
-          if (!window._pushSubscription) {
-            //console.log("No subscription yet");
-            return;
-          }
+          if (!window._pushSubscription) return;
           await sendTestPush(window._pushSubscription);
         }}
       >
@@ -57,4 +91,5 @@ function SettingsPage() {
     </div>
   );
 }
+
 export default SettingsPage;

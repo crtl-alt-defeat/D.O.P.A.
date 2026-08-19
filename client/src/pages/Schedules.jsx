@@ -37,21 +37,20 @@ function SchedulesPage() {
   return (
     <div>
       <h2>Schedules</h2>
-
       <div className="grid-container">
         {days.map((dayGoals, dayIndex) => (
           <div key={dayIndex} className="grid-column">
             <h4 className="day-label">{dayNames[dayIndex]}</h4>
-
-            {dayGoals.map((goal, index) => (
-              <div
-                key={index}
-                className={`grid-item ${goal.status.replace(/\s+/g, "-").toLowerCase()}`}
-              >
-                <strong>{goal.name}</strong>
-                <p>{goal.status}</p>
-              </div>
-            ))}
+            <div className="grid-tasks">
+              {dayGoals.map((goal, index) => (
+                <div
+                  key={index}
+                  className={`grid-item ${goal.status.replace(/\s+/g, "-").toLowerCase()}`}
+                >
+                  <strong>{goal.name}</strong>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>

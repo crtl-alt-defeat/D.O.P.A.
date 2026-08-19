@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
-
 import { getUncompletedGoals, completeGoal } from "../api/goals";
 import { getTypeByName } from "../api/types";
-import { addUserGoal, getPartialStreak, getCompletedGoalsForToday } from "../api/usersGoals";
+import {
+  addUserGoal,
+  getPartialStreak,
+  getCompletedGoalsForToday,
+} from "../api/usersGoals";
 
 function HomePage() {
   const { token, hasGottenGoals, getSelectedTypes } = useAuth();
@@ -55,6 +58,22 @@ function HomePage() {
     loadPartialStreak();
     loadCompletedToday();
   }, [token, hasGottenGoals]);
+  const gifStill = "Flame.png";
+  const gifOnce = "Flame_single_loop.gif";
+  const gifAnimated = "Flame.gif";
+  const [gifSrc, setGifSrc] = useState(gifStill);
+
+  useEffect(() => {
+    setGifSrc(gifOnce);
+  }, []);
+
+  const hover = () => {
+    setGifSrc(gifAnimated);
+  };
+
+  const noHover = () => {
+    setGifSrc(gifStill);
+  };
   return (
     <div>
       <h2>Your Stuff</h2>
@@ -90,26 +109,25 @@ function HomePage() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        {/* <select
-          value={selectedTypeId}
-          onChange={(e) => setSelectedTypeId(e.target.value)}
-        >
-          <option value="">Select one of your types...</option>
-
-          {userTypes.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.name}
-            </option>
-          ))}
-        </select> */}
 
         <button type="button" onClick={handleAddGoal}>
           Add
         </button>
       </section>
-      <section>
+      <section className="streak-section">
         <h3>Your Completion Streak</h3>
-        <p>{streak} day(s) in a row</p>
+
+        <div className="streak-row">
+          <p>{streak} day(s) in a row</p>
+
+          <div
+            className="flame-wrapper"
+            onMouseEnter={hover}
+            onMouseLeave={noHover}
+          >
+            <img id="flame-gif" src={gifSrc} alt="Flame" />
+          </div>
+        </div>
       </section>
     </div>
   );
