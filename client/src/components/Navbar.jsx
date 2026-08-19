@@ -10,7 +10,8 @@ export default function Navbar() {
   return (
     <header className="navbar-header">
       <h1 className="navbar-title">
-        <img id="logo-gif" src="Icon.gif" />
+        <img id="logo-gif" src="../../public/Icon.gif" />
+        {/* <img id="logo-gif" src="Icon.gif" /> */}
         D.O.P.A
       </h1>
 
@@ -21,7 +22,12 @@ export default function Navbar() {
             onClick={() => setIsOpen(!isOpen)}
           >
             <img
-              src={isOpen ? "Dropdown_2.png" : "Dropdown_1.png"}
+              src={
+                isOpen
+                  ? "../../public/Dropdown_2.png"
+                  : "../../public/Dropdown_1.png"
+              }
+              // src={isOpen ? "Dropdown_2.png" : "Dropdown_1.png"}
               alt="menu"
               className="menu-icon"
             />
