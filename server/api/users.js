@@ -312,20 +312,7 @@ usersRouter.get(
         }
 
         const dateMade = new Date(goal.date_made);
-        const dayName = dateMade.toLocaleDateString("en-us", {
-          timeZone: timeZone,
-          weekday: "long",
-        });
-        const weekdays = [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ];
-        const dayOfWeek = weekdays.indexOf(dayName);
+        const dayOfWeek = dateMade.getDay();
 
         return { ...goal, status, dayOfWeek };
       });
