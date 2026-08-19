@@ -1,18 +1,23 @@
+import { getTypeByName } from "../../queries/types.js";
 import { createUserType } from "../../queries/usersTypes.js";
 
 export default async function seedUsersTypes(users, types) {
+  const customType = await getTypeByName("custom");
+  const validTypes = types.filter((type) => type.id != customType.id);
+
   const usersTypes = [];
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
 
     //add a random number of desired goal types to a user
-    let numTypes = Math.ceil(Math.random() * types.length);
+    let numTypes = Math.ceil(Math.random() * validTypes.length);
     for (let j = 0; j < numTypes; j++) {
       //only add new types to the user
       let foundUnique = false;
       do {
         //randomly pick a type
-        const newType = types[Math.floor(Math.random() * types.length)];
+        const newType =
+          validTypes[Math.floor(Math.random() * validTypes.length)];
 
         //check if user already has an entry for picked type
         const findPair = usersTypes.find(

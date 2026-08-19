@@ -32,7 +32,7 @@ export const getDailyGoals = async (userId, timeZone) => {
     FROM goals
     JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
-    AND (users_goals.date_made::timestamptz AT TIME ZONE $2)::date = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date`;
+    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date`;
   const { rows } = await client.query(SQL, [userId, timeZone]);
   return rows;
 };
@@ -43,7 +43,7 @@ export const getUncompletedDailyGoals = async (userId, timeZone) => {
     FROM goals
     JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
-    AND (users_goals.date_made::timestamptz AT TIME ZONE $2)::date = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date
+    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date
     AND users_goals.date_complete IS NULL`;
   const { rows } = await client.query(SQL, [userId, timeZone]);
   return rows;
@@ -63,8 +63,8 @@ export const getWeeksGoals = async (userId, timeZone) => {
     FROM goals
     JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
-      AND (users_goals.date_made::timestamptz AT TIME ZONE $2)::date >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
-      AND (users_goals.date_made::timestamptz AT TIME ZONE $2)::date <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
+      AND users_goals.date_made >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
+      AND users_goals.date_made <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
   `;
   const { rows } = await client.query(SQL, [userId, timeZone, dayInteger]);
   return rows;

@@ -52,27 +52,33 @@ export async function attemptGiveUserRandomGoals(user, timeZone) {
   const dailyGoals = await getDailyGoals(user.id, timeZone);
   if (dailyGoals.length == 0) {
     console.log(`  ⤷ giving goals to ${user.name}`);
-    const createdUsersGoals = await giveUserRandomGoals(user.id);
+    const createdUsersGoals = await giveUserRandomGoals(user.id, timeZone);
     return createdUsersGoals;
   } else {
     return null;
   }
 }
 
-async function giveUserRandomGoals(userId) {
+async function giveUserRandomGoals(userId, timeZone) {
   const randomGoals = await getRandomGoals(userId);
 
   const createdUsersGoals = [];
   for (const goal of randomGoals) {
-    const date = new Date();
-    // const localDate = date.toLocaleString("en-US", {
-    //   timeZone: "America/Chicago",
-    // });
+    //en-CA (or canadian date format) is YYYY-MM-DD, which is also the standard SQL date format
+    const formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const date = formatter.format(new Date());
+
     const newUserGoal = {
       user_id: userId,
       goal_id: goal.id,
-      date_made: date.toISOString(),
+      date_made: date,
     };
+
     const created = await createUserGoal(newUserGoal);
     createdUsersGoals.push(created);
   }
