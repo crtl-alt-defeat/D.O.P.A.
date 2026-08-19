@@ -299,7 +299,6 @@ usersRouter.get(
           "en-CA",
         );
         const today = formatter.format(new Date());
-        console.log(complete, today);
 
         let status;
 
