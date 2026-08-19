@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Navbar.css";
 import { NavLink } from "react-router";
 import { useAuth } from "../auth/AuthContext";
@@ -7,11 +7,33 @@ export default function Navbar() {
   const { token, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
+  const gifStill = "../../public/Logo.png";
+  const gifOnce = "../../public/Checkmark_Animation.gif";
+  const gifAnimated = "../../public/Icon.gif";
+  const [gifSrc, setGifSrc] = useState(gifStill);
+
+  useEffect(() => {
+    setGifSrc(gifOnce);
+  }, []);
+
+  const hover = () => {
+    setGifSrc(gifAnimated);
+  };
+
+  const noHover = () => {
+    setGifSrc(gifStill);
+  };
+
   return (
     <header className="navbar-header">
       <h1 className="navbar-title">
-        <img id="logo-gif" src="../../public/Icon.gif" />
-        {/* <img id="logo-gif" src="Icon.gif" /> */}
+        <div
+          className="logo-wrapper"
+          onMouseEnter={hover}
+          onMouseLeave={noHover}
+        >
+          <img id="logo-gif" src={gifSrc} alt="logo" />
+        </div>
         D.O.P.A
       </h1>
 
@@ -27,7 +49,6 @@ export default function Navbar() {
                   ? "../../public/Dropdown_2.png"
                   : "../../public/Dropdown_1.png"
               }
-              // src={isOpen ? "Dropdown_2.png" : "Dropdown_1.png"}
               alt="menu"
               className="menu-icon"
             />

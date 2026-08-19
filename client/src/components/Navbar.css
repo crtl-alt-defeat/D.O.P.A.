@@ -1,9 +1,15 @@
-#logo-gif {
+.logo-wrapper {
+  display: block;
   width: 120px;
+  margin: 20px auto;
+}
+
+#logo-gif {
+  width: 100%;
   height: auto;
   border-radius: 8px;
   display: block;
-  margin: 20px auto;
+  object-fit: cover;
 }
 .navbar-header {
   display: flex;
