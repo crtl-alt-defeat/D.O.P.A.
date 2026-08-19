@@ -7,10 +7,18 @@ export default function Navbar() {
   const { token, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  const gifStill = "./Logo.png";
-  const gifOnce = "./Checkmark_Animation.gif";
-  const gifAnimated = "./Icon.gif";
+  const gifStill =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/main/client/public/Logo.png?raw=true";
+  const gifOnce =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/main/client/public/Checkmark_Animation.gif?raw=true";
+  const gifAnimated =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/main/client/public/Icon.gif?raw=true";
   const [gifSrc, setGifSrc] = useState(gifStill);
+
+  const dropdown1 =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/main/client/public/Dropdown_1.png?raw=true";
+  const dropdown2 =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/main/client/public/Dropdown_2.png?raw=true";
 
   useEffect(() => {
     setGifSrc(gifOnce);
@@ -44,7 +52,7 @@ export default function Navbar() {
             onClick={() => setIsOpen(!isOpen)}
           >
             <img
-              src={isOpen ? "./Dropdown_2.png" : "./Dropdown_1.png"}
+              src={isOpen ? dropdown2 : dropdown1}
               alt="menu"
               className="menu-icon"
             />
