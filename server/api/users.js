@@ -289,14 +289,17 @@ usersRouter.get(
       const weeklyGoals = await getWeeksGoals(userId, timeZone);
 
       const labeledGoals = weeklyGoals.map((goal) => {
-        const formatter = new Intl.DateTimeFormat("en-us", {
+        const formatter = new Intl.DateTimeFormat("en-CA", {
           timeZone: timeZone,
           year: "numeric",
           month: "2-digit",
           day: "2-digit",
         });
-        const complete = formatter.format(new Date(goal.date_complete));
+        const complete = new Date(goal.date_complete).toLocaleDateString(
+          "en-CA",
+        );
         const today = formatter.format(new Date());
+        console.log(complete, today);
 
         let status;
 
