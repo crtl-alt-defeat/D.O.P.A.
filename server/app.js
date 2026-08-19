@@ -8,6 +8,12 @@ const app = express();
 export default app;
 
 app.use(express.json());
+/* app.use((req, res, next) => {
+  if (req.originalUrl.startsWith("/api/notifications")) {
+    return next();
+  }
+  return getUserFromToken(req, res, next);
+}); */
 app.use((req, res, next) => {
   if (req.originalUrl.includes("/api/notifications/vapidPublicKey")) {
     return next();
@@ -40,7 +46,7 @@ app.use("/{*path}", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
 
-// Custom error handler
+// Error handler
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(err.status || 500).send({ error: err.message || err });
