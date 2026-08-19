@@ -7,9 +7,9 @@ export default function Navbar() {
   const { token, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  const gifStill = "Logo.png";
-  const gifOnce = "Checkmark_Animation.gif";
-  const gifAnimated = "Icon.gif";
+  const gifStill = "../../public/Logo.png";
+  const gifOnce = "../../public/Checkmark_Animation.gif";
+  const gifAnimated = "../../public/Icon.gif";
   const [gifSrc, setGifSrc] = useState(gifStill);
 
   useEffect(() => {
@@ -44,7 +44,11 @@ export default function Navbar() {
             onClick={() => setIsOpen(!isOpen)}
           >
             <img
-              src={isOpen ? "Dropdown_2.png" : "Dropdown_1.png"}
+              src={
+                isOpen
+                  ? "../../public/Dropdown_2.png"
+                  : "../../public/Dropdown_1.png"
+              }
               alt="menu"
               className="menu-icon"
             />
