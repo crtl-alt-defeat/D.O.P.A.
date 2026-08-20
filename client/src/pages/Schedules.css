@@ -11,35 +11,21 @@
   text-align: center;
   max-height: inherit;
   border-radius: 6px;
-}
-.grid-item {
-  background-color: #648464;
-  color: black;
-  padding: 0.2rem;
-  text-align: center;
-  max-height: inherit;
-  border-radius: 6px;
-}
-.grid-item {
-  background-color: #648464;
-  color: black;
-  padding: 0.2rem;
-  text-align: center;
-  border-radius: 6px;
+  margin-top: 6px;
 }
 
 .grid-item.completed-today {
-  background-color: #4caf50;
+  background-color: #799779;
   color: white;
 }
 
 .grid-item.completed-previously {
-  background-color: #8bc34a;
+  background-color: #648464;
   color: white;
 }
 
 .grid-item.not-completed {
-  background-color: #f44336;
+  background-color: #b42222;
   color: white;
 }
 .grid-column {
@@ -52,4 +38,46 @@
   text-align: center;
   font-weight: bold;
   margin-bottom: 6px;
+}
+@media (width<=720px) {
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0.5rem;
+  }
+  .grid-column {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 10px;
+  }
+  .day-label {
+    font-weight: bold;
+    text-align: left;
+    padding-top: 4px;
+  }
+  .grid-tasks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .grid-item {
+    flex: 0 0 120px;
+    width: 15rem;
+    background-color: #648464;
+    color: white;
+    padding: 0.3rem 0.5rem;
+    border-radius: 6px;
+    text-align: center;
+    white-space: normal;
+  }
+  .grid-item.completed-today {
+    background-color: #799779;
+  }
+  .grid-item.not-completed {
+    background-color: #b42222;
+  }
 }

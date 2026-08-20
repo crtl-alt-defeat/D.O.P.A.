@@ -8,7 +8,6 @@ button {
   margin: 0.5rem;
   font-size: small;
   font-weight: 600;
-  max-width: 12vw;
   text-align: center;
   border-radius: 6px;
 }
@@ -58,16 +57,34 @@ button {
 }
 
 .completed-goal {
-  display: inline-block; /* ⭐ makes the box fit the text */
+  display: inline-block;
   text-decoration: line-through;
   background-color: #648464;
-  padding: 6px 10px; /* a little horizontal padding looks nicer */
+  padding: 6px 10px;
   border-radius: 4px;
   margin-bottom: 6px;
-  margin-right: 6px; /* spacing if multiple items appear inline */
+  margin-right: 6px;
 }
 
 .uncompleted-list {
   list-style: none;
   padding-left: 0;
+}
+.streak-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flame-wrapper {
+  width: 120px;
+  margin: 0;
+}
+
+#flame-gif {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
 }
