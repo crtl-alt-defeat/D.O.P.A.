@@ -7,7 +7,7 @@ import {
   getPartialStreak,
   getCompletedGoalsForToday,
 } from "../api/usersGoals";
-
+import "./PopUpBox.css";
 function HomePage() {
   const { token, hasGottenGoals, getSelectedTypes } = useAuth();
   const [completedToday, setCompletedToday] = useState([]);
@@ -20,7 +20,9 @@ function HomePage() {
   const [selectedTypeId, setSelectedTypeId] = useState("");
   const [streak, setStreak] = useState("");
   const [attachTypeId, setAttachTypeId] = useState("");
-
+  /* added Thurs */
+  const [selectedDailyGoal, setSelectedDailyGoal] = useState(null);
+  const [selectedCompletedGoal, setSelectedCompletedGoal] = useState(null);
   async function loadPartialStreak() {
     if (!token) return;
     const partialStreak = await getPartialStreak(token);
@@ -78,8 +80,71 @@ function HomePage() {
   return (
     <div>
       <h2>Your Stuff</h2>
+      {/* Popup for Daily Goals */}
+      {selectedDailyGoal && (
+        <div
+          className="popup-overlay"
+          onClick={() => setSelectedDailyGoal(null)}
+        >
+          <div className="popup" onClick={(e) => e.stopPropagation()}>
+            <h4>Daily Goal Info</h4>
+            <p>
+              <strong>Name:{selectedDailyGoal.name}</strong>
+            </p>
+            <p>Type: {selectedDailyGoal.type_id}</p>
+            <p>ID: {selectedDailyGoal.id}</p>
+            <button onClick={() => setSelectedDailyGoal(null)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* Popup for Completed Today */}
+      {selectedCompletedGoal && (
+        <div
+          className="popup-overlay"
+          onClick={() => setSelectedCompletedGoal(null)}
+        >
+          <div className="popup" onClick={(e) => e.stopPropagation()}>
+            <h4>Completed Goal Info</h4>
+            <p>Type: {selectedCompletedGoal.type_id}</p>
+            <p>Name: {selectedCompletedGoal.name}</p>
+            <p>ID: {selectedCompletedGoal.id}</p>
+            <button onClick={() => setSelectedCompletedGoal(null)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       <section>
+        <h3>Your Daily Goals</h3>
+        <ul className="uncompleted-list">
+          {goals.map((goal) => (
+            <li key={goal.id}>
+              <span onClick={() => setSelectedDailyGoal(goal)}>
+                {goal.name}
+              </span>
+              <button onClick={() => handleComplete(goal.id)}>Complete</button>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h3>Completed Today</h3>
+        <ul className="completed-list">
+          {completedToday.map((goal) => (
+            <li
+              key={goal.id}
+              className="completed-goal"
+              onClick={() => setSelectedCompletedGoal(goal)}
+            >
+              {goal.name}
+            </li>
+          ))}
+        </ul>
+      </section>
+      {/*       <section>
         <h3>Your Daily Goals</h3>
         <ul className="uncompleted-list">
           {goals.map((goal) => (
@@ -99,8 +164,7 @@ function HomePage() {
             </li>
           ))}
         </ul>
-      </section>
-
+      </section> */}
       <section>
         <h3>Add a New Goal</h3>
 
