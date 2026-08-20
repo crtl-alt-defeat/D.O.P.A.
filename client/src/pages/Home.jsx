@@ -3,7 +3,11 @@ import { useAuth } from "../auth/AuthContext";
 
 import { getUncompletedGoals, completeGoal } from "../api/goals";
 import { getTypeByName } from "../api/types";
-import { addUserGoal, getPartialStreak, getCompletedGoalsForToday } from "../api/usersGoals";
+import {
+  addUserGoal,
+  getPartialStreak,
+  getCompletedGoalsForToday,
+} from "../api/usersGoals";
 
 function HomePage() {
   const { token, hasGottenGoals, getSelectedTypes } = useAuth();
@@ -17,6 +21,7 @@ function HomePage() {
   const [selectedTypeId, setSelectedTypeId] = useState("");
   const [streak, setStreak] = useState("");
   const [attachTypeId, setAttachTypeId] = useState("");
+
   async function loadPartialStreak() {
     if (!token) return;
     const partialStreak = await getPartialStreak(token);

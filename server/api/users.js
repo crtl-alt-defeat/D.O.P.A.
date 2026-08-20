@@ -32,6 +32,7 @@ import {
   getUncompletedDailyGoals,
 } from "../db/queries/usersGoals.js";
 import { attemptGiveUserRandomGoals } from "../utils/cron.js";
+import getTimeZoneFromQuery from "../middleware/getTimeZoneFromQuery.js";
 
 usersRouter.post(
   "/register",
@@ -239,12 +240,11 @@ usersRouter.post(
   "/me/daily",
   getUserFromToken,
   requireUser,
+  getTimeZoneFromQuery,
   async (req, res, next) => {
     try {
-      const timeZone = req.query.timeZone || "UTC";
-
       //console.log(`--🌐 attempting to give goals to ${req.user.name}`);
-      const created = await attemptGiveUserRandomGoals(req.user, timeZone);
+      const created = await attemptGiveUserRandomGoals(req.user, req.timeZone);
 
       if (!created)
         return res.status(422).send({ message: "failed to create goals" });
@@ -261,11 +261,10 @@ usersRouter.get(
   "/me/daily",
   getUserFromToken,
   requireUser,
+  getTimeZoneFromQuery,
   async (req, res, next) => {
     try {
-      const userId = req.user.id;
-      const timeZone = req.query.timeZone || "UTC";
-      const dailyGoals = await getDailyGoals(userId, timeZone);
+      const dailyGoals = await getDailyGoals(req.user.id, req.timeZone);
 
       if (dailyGoals.length === 0) {
         return res.status(404).send({ message: "User has no goals" });
@@ -282,15 +281,14 @@ usersRouter.get(
   "/me/schedules",
   getUserFromToken,
   requireUser,
+  getTimeZoneFromQuery,
   async (req, res, next) => {
     try {
-      const userId = req.user.id;
-      const timeZone = req.query.timeZone || "UTC";
-      const weeklyGoals = await getWeeksGoals(userId, timeZone);
+      const weeklyGoals = await getWeeksGoals(req.user.id, req.timeZone);
 
       const labeledGoals = weeklyGoals.map((goal) => {
         const formatter = new Intl.DateTimeFormat("en-CA", {
-          timeZone: timeZone,
+          timeZone: req.timeZone,
           year: "numeric",
           month: "2-digit",
           day: "2-digit",
@@ -358,11 +356,10 @@ usersRouter.get(
   "/me/goals/uncompleted",
   getUserFromToken,
   requireUser,
+  getTimeZoneFromQuery,
   async (req, res, next) => {
     try {
-      const userId = req.user.id;
-      const timeZone = req.query.timeZone || "UTC";
-      const goals = await getUncompletedDailyGoals(userId, timeZone);
+      const goals = await getUncompletedDailyGoals(req.user.id, req.timeZone);
 
       const uncompleted = goals.filter((g) => !g.date_complete);
 
@@ -376,18 +373,21 @@ usersRouter.put(
   "/me/goals/:goalId/complete",
   getUserFromToken,
   requireUser,
+  getTimeZoneFromQuery,
   async (req, res, next) => {
     try {
-      const goalId = req.params.goalId;
-
       const SQL = `
         UPDATE users_goals
-        SET date_complete = CURRENT_TIMESTAMP
+        SET date_complete = (CURRENT_TIMESTAMP AT TIME ZONE $3)::date
         WHERE user_id = $1 AND goal_id = $2
         RETURNING *;
       `;
 
-      const { rows } = await client.query(SQL, [req.user.id, goalId]);
+      const { rows } = await client.query(SQL, [
+        req.user.id,
+        req.params.goalId,
+        req.timeZone,
+      ]);
 
       if (!rows.length) {
         return res.status(404).send({ message: "Goal not found for user" });
@@ -398,7 +398,9 @@ usersRouter.put(
         FROM goals
         WHERE id = $1;
       `;
-      const { rows: goalRows } = await client.query(goalSQL, [goalId]);
+      const { rows: goalRows } = await client.query(goalSQL, [
+        req.params.goalId,
+      ]);
 
       res.status(200).send({
         userGoal: rows[0],
