@@ -122,9 +122,13 @@ export async function getUncompletedGoals(token) {
 }
 
 export async function completeGoal(goalId, token) {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
+    },
+    params: {
+      timeZone: userTimeZone,
     },
   };
 
