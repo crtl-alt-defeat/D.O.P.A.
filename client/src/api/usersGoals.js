@@ -1,22 +1,35 @@
 import axios from "axios";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { getGoalsForToday, getPotentialGoals } from "./goals";
+
 export async function getPartialStreak(token) {
-  const response = await fetch("api/usersGoals/streak", {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const response = await axios.get("api/usersGoals/streak", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    params: {
+      timeZone: userTimeZone,
+    },
   });
-  const data = await response.json();
+  const data = await response.data;
   return data.streak;
 }
+
 export async function getCompletedGoalsForToday(token) {
-  const response = await fetch("/api/usersGoals/completedToday", {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log("getCompletedGoalsForToday:", userTimeZone);
+  const response = await axios.get("/api/usersGoals/completedToday", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    params: {
+      timeZone: userTimeZone,
+    },
   });
-  return response.json();
+
+  console.log("getCompletedGoalsForToday:", response);
+  return response.data;
 }
 
 export async function addUserGoal(name, type_id, token) {

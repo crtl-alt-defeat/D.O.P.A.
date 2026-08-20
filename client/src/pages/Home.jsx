@@ -20,6 +20,7 @@ function HomePage() {
   const [selectedTypeId, setSelectedTypeId] = useState("");
   const [streak, setStreak] = useState("");
   const [attachTypeId, setAttachTypeId] = useState("");
+
   async function loadPartialStreak() {
     if (!token) return;
     const partialStreak = await getPartialStreak(token);
