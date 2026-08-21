@@ -8,6 +8,7 @@ import HomePage from "./pages/Home.jsx";
 import SettingsPage from "./pages/settings/Settings.jsx";
 import SchedulesPage from "./pages/Schedules.jsx";
 import Layout from "./Layout.jsx";
+import TestOAuth from "./auth/OAuth/TestOAuth.jsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/schedules" element={<SchedulesPage />} />
+        <Route path="/OAuth-test" element={<TestOAuth />} />
       </Route>
     </Routes>
   );
