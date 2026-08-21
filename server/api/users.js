@@ -247,7 +247,7 @@ usersRouter.post(
       const created = await attemptGiveUserRandomGoals(req.user, req.timeZone);
 
       if (!created)
-        return res.status(422).send({ message: "failed to create goals" });
+        return res.status(204).send({ message: "failed to create goals" });
 
       res.status(201).send(created);
     } catch (error) {

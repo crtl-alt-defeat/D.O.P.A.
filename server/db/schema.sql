@@ -42,3 +42,7 @@ CREATE TABLE users_goals (
     CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id),
     CONSTRAINT fk_goals FOREIGN KEY (goal_id) REFERENCES goals(id)
 );
+
+--selected_goals
+--fk users
+--fk goals
