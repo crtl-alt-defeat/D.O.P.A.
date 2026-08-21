@@ -370,7 +370,7 @@ usersRouter.get(
   },
 );
 usersRouter.put(
-  "/me/goals/:goalId/complete",
+  "/me/goals/:userGoalId/complete",
   getUserFromToken,
   requireUser,
   getTimeZoneFromQuery,
@@ -379,13 +379,13 @@ usersRouter.put(
       const SQL = `
         UPDATE users_goals
         SET date_complete = (CURRENT_TIMESTAMP AT TIME ZONE $3)::date
-        WHERE user_id = $1 AND goal_id = $2
+        WHERE user_id = $1 AND id = $2
         RETURNING *;
       `;
 
       const { rows } = await client.query(SQL, [
         req.user.id,
-        req.params.goalId,
+        req.params.userGoalId,
         req.timeZone,
       ]);
 

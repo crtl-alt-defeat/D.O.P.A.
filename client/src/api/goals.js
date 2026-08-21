@@ -121,7 +121,7 @@ export async function getUncompletedGoals(token) {
   return data;
 }
 
-export async function completeGoal(goalId, token) {
+export async function completeGoal(userGoalId, token) {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const config = {
     headers: {
@@ -133,7 +133,7 @@ export async function completeGoal(goalId, token) {
   };
 
   const { data } = await axios.put(
-    `/api/users/me/goals/${goalId}/complete`,
+    `/api/users/me/goals/${userGoalId}/complete`,
     {},
     config,
   );
