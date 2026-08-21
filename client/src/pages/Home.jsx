@@ -53,6 +53,7 @@ function HomePage() {
     await completeGoal(goalId, token);
     await loadGoals();
     await loadCompletedToday();
+    await loadPartialStreak();
   }
 
   useEffect(() => {
