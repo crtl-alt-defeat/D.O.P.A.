@@ -29,22 +29,28 @@ export async function getUsersGoals() {
 export const getDailyGoals = async (userId, timeZone) => {
   const SQL = `
     select goals.*
-    FROM goals
-    JOIN users_goals ON users_goals.goal_id = goals.id
-    WHERE users_goals.user_id = $1
-    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date`;
+    FROM
+      goals
+      JOIN users_goals ON users_goals.goal_id = goals.id
+    WHERE
+      users_goals.user_id = $1
+      AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date`;
   const { rows } = await client.query(SQL, [userId, timeZone]);
   return rows;
 };
 
 export const getUncompletedDailyGoals = async (userId, timeZone) => {
   const SQL = `
-    select goals.*
-    FROM goals
-    JOIN users_goals ON users_goals.goal_id = goals.id
-    WHERE users_goals.user_id = $1
-    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date
-    AND users_goals.date_complete IS NULL`;
+    select
+      goals.*,
+      users_goals.id as user_goal_id
+    FROM
+      goals
+      JOIN users_goals ON users_goals.goal_id = goals.id
+    WHERE
+      users_goals.user_id = $1
+      AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date
+      AND users_goals.date_complete IS NULL`;
   const { rows } = await client.query(SQL, [userId, timeZone]);
   return rows;
 };
@@ -60,9 +66,11 @@ export const getWeeksGoals = async (userId, timeZone) => {
       goals.*,
       users_goals.date_made,
       users_goals.date_complete
-    FROM goals
-    JOIN users_goals ON users_goals.goal_id = goals.id
-    WHERE users_goals.user_id = $1
+    FROM
+      goals
+      JOIN users_goals ON users_goals.goal_id = goals.id
+    WHERE
+      users_goals.user_id = $1
       AND users_goals.date_made >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
       AND users_goals.date_made <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
   `;
@@ -73,8 +81,9 @@ export const getWeeksGoals = async (userId, timeZone) => {
 export async function getGoalsByUserId(userId) {
   const SQL = `
     SELECT goals.*
-    FROM goals
-    JOIN users_goals ON users_goals.goal_id = goals.id
+    FROM
+      goals
+      JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
   `;
   const { rows: goals } = await client.query(SQL, [userId]);
@@ -84,8 +93,9 @@ export async function getGoalsByUserId(userId) {
 export async function getTypesByUserId(userId) {
   const SQL = `
   SELECT types.*
-  FROM types
-  JOIN users_types ON users_types.type_id = types.id
+  FROM
+    types
+    JOIN users_types ON users_types.type_id = types.id
   WHERE users_types.user_id = $1
   `;
   const { rows: types } = await client.query(SQL, [userId]);

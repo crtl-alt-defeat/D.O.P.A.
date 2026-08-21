@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useAuth } from "../auth/AuthContext.jsx";
-import { getGoalsForToday, getPotentialGoals } from "./goals";
+//import { useAuth } from "../auth/AuthContext.jsx";
+//import { getGoalsForToday, getPotentialGoals } from "./goals";
 
 export async function getPartialStreak(token) {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -18,7 +18,6 @@ export async function getPartialStreak(token) {
 
 export async function getCompletedGoalsForToday(token) {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  console.log("getCompletedGoalsForToday:", userTimeZone);
   const response = await axios.get("/api/usersGoals/completedToday", {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -28,7 +27,6 @@ export async function getCompletedGoalsForToday(token) {
     },
   });
 
-  console.log("getCompletedGoalsForToday:", response);
   return response.data;
 }
 
