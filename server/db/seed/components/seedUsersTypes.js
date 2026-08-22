@@ -6,9 +6,7 @@ export default async function seedUsersTypes(users, types) {
   const validTypes = types.filter((type) => type.id != customType.id);
 
   const usersTypes = [];
-  for (let i = 0; i < users.length; i++) {
-    const user = users[i];
-
+  for (const user of users) {
     //add a random number of desired goal types to a user
     let numTypes = Math.ceil(Math.random() * validTypes.length);
     for (let j = 0; j < numTypes; j++) {
@@ -16,15 +14,10 @@ export default async function seedUsersTypes(users, types) {
       let foundUnique = false;
       do {
         //randomly pick a type
-        const newType =
-          validTypes[Math.floor(Math.random() * validTypes.length)];
+        const newType = getRandomType(validTypes);
 
         //check if user already has an entry for picked type
-        const findPair = usersTypes.find(
-          (userType) =>
-            userType.user_id == user.id && userType.type_id == newType.id,
-        );
-        foundUnique = !findPair;
+        foundUnique = isUnique(usersTypes, user, newType);
 
         //if user does not have an entry, add it to the table
         if (foundUnique) {
@@ -41,4 +34,16 @@ export default async function seedUsersTypes(users, types) {
   }
 
   return usersTypes;
+}
+
+function getRandomType(typesArr) {
+  return typesArr[Math.floor(Math.random() * typesArr.length)];
+}
+
+function isUnique(usersTypes, user, type) {
+  const findPair = usersTypes.find(
+    (userType) => userType.user_id == user.id && userType.type_id == type.id,
+  );
+
+  return !findPair;
 }

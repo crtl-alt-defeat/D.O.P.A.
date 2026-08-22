@@ -15,11 +15,12 @@ function HomePage() {
   const [name, setName] = useState("");
   const [goals, setGoals] = useState([]);
 
-  const [allTypes, setAllTypes] = useState([]);
-  const [userTypes, setUserTypes] = useState([]);
-  const [selectedTypeId, setSelectedTypeId] = useState("");
+  //const [allTypes, setAllTypes] = useState([]);
+  //const [userTypes, setUserTypes] = useState([]);
+  //const [selectedTypeId, setSelectedTypeId] = useState("");
   const [streak, setStreak] = useState("");
-  const [attachTypeId, setAttachTypeId] = useState("");
+  //const [attachTypeId, setAttachTypeId] = useState("");
+
   /* added Thurs */
   const [selectedDailyGoal, setSelectedDailyGoal] = useState(null);
   const [selectedCompletedGoal, setSelectedCompletedGoal] = useState(null);
@@ -49,8 +50,8 @@ function HomePage() {
     await loadGoals();
   }
 
-  async function handleComplete(goalId) {
-    await completeGoal(goalId, token);
+  async function handleComplete(userGoalId) {
+    await completeGoal(userGoalId, token);
     await loadGoals();
     await loadCompletedToday();
     await loadPartialStreak();
@@ -125,7 +126,9 @@ function HomePage() {
               <span onClick={() => setSelectedDailyGoal(goal)}>
                 {goal.name}
               </span>
-              <button onClick={() => handleComplete(goal.id)}>Complete</button>
+              <button onClick={() => handleComplete(goal.user_goal_id)}>
+                Complete
+              </button>
             </li>
           ))}
         </ul>
