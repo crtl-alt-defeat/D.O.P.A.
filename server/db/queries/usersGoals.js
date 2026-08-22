@@ -61,37 +61,24 @@ export const getWeeksGoals = async (userId, timeZone) => {
   });
   const dayInteger = new Date(localDate).getDay();
 
-<<<<<<< HEAD
   const SQL = `
-    SELECT 
-      goals.*,
-      users_goals.date_made,
-      users_goals.date_complete
-    FROM
-      goals
-      JOIN users_goals ON users_goals.goal_id = goals.id
-    WHERE
-      users_goals.user_id = $1
-      AND users_goals.date_made >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
-      AND users_goals.date_made <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
-  `;
-=======
-  const SQL = `SELECT 
-  users_goals.user_id,
-  users_goals.goal_id,
-  goals.name,
-  goals.type_id,
-  users_goals.status,
-  users_goals.dayOfWeek,
-  users_goals.date_made,
-  users_goals.date_complete
-FROM goals
-JOIN users_goals ON users_goals.goal_id = goals.id
-WHERE users_goals.user_id = $1
-  AND users_goals.date_made >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
-  AND users_goals.date_made <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
+  SELECT 
+    users_goals.user_id,
+    users_goals.goal_id,
+    goals.name,
+    goals.type_id,
+    users_goals.status,
+    users_goals.dayOfWeek,
+    users_goals.date_made,
+    users_goals.date_complete
+  FROM
+    goals
+    JOIN users_goals ON users_goals.goal_id = goals.id
+  WHERE
+    users_goals.user_id = $1
+    AND users_goals.date_made >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
+    AND users_goals.date_made <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
 `;
->>>>>>> 80a29d2c22dac8a507557337f8df36ddf50ae4c6
   const { rows } = await client.query(SQL, [userId, timeZone, dayInteger]);
   return rows;
 };
