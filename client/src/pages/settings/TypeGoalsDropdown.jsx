@@ -7,7 +7,7 @@ import {
 } from "../../api/selectedGoals";
 import { useAuth } from "../../auth/AuthContext";
 
-function TypeGoalsDropdown({ type, user }) {
+function TypeGoalsDropdown({ type, user, refreshSettings, refreshKey }) {
   const { token } = useAuth();
   const [goals, setGoals] = useState([]);
   const [selectedGoals, setSelectedGoals] = useState([]);
@@ -25,7 +25,7 @@ function TypeGoalsDropdown({ type, user }) {
     }
 
     load();
-  }, [type.id, user.id, token]); // include token in dependency list
+  }, [type.id, user.id, token, refreshKey]);
 
   async function toggle(goal_id) {
     const isSelected = selectedGoals.includes(goal_id);
@@ -33,9 +33,11 @@ function TypeGoalsDropdown({ type, user }) {
     if (isSelected) {
       await deselectGoal(user.id, goal_id, token);
       setSelectedGoals((prev) => prev.filter((id) => id !== goal_id));
+      refreshSettings(); // <-- already correct
     } else {
       await selectGoal(user.id, goal_id, token);
       setSelectedGoals((prev) => [...prev, goal_id]);
+      refreshSettings(); // <-- already correct
     }
   }
 

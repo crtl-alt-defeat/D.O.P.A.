@@ -16,6 +16,11 @@ function SettingsPage() {
 
   const { getUser, updateUser, token } = useAuth();
   const [user, setUser] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  function refreshSettings() {
+    setRefreshKey((prev) => prev + 1);
+  }
 
   async function syncUser() {
     const data = await getUser();
@@ -37,7 +42,18 @@ function SettingsPage() {
     }
 
     loadTypes();
-  }, [user]);
+  }, [user, refreshKey]);
+
+  /* useEffect(() => {
+    if (!user) return;
+
+    async function loadTypes() {
+      const types = await getTypesByUserId(user.id);
+      setUserTypes(types);
+    }
+
+    loadTypes();
+  }, [user]); */
 
   return user ? (
     <div>
@@ -45,14 +61,20 @@ function SettingsPage() {
 
       <UserInfo user={user} />
       <UserForm user={user} syncUser={syncUser} />
-      <TypesForm user={user} />
+      <TypesForm user={user} refreshSettings={refreshSettings} />
 
       {/* MULTI-DROPDOWN SECTION */}
       <div style={{ marginTop: "2rem" }}>
         <h3>Select Goals by Type</h3>
 
         {userTypes.map((type) => (
-          <TypeGoalsDropdown key={type.id} type={type} user={user} />
+          <TypeGoalsDropdown
+            key={type.id}
+            type={type}
+            user={user}
+            refreshSettings={refreshSettings}
+            refreshKey={refreshKey}
+          />
         ))}
       </div>
 

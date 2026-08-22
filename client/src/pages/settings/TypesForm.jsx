@@ -5,7 +5,7 @@ import { getTypes } from "../../api/types";
 //components
 import TypesFormItem from "./TypesFormItem";
 
-export default function TypesForm({ user }) {
+export default function TypesForm({ user, refreshSettings }) {
   const { getSelectedTypes } = useAuth();
   const [types, setTypes] = useState(null);
   const [selectedTypes, setSelectedTypes] = useState(null);
@@ -42,6 +42,7 @@ export default function TypesForm({ user }) {
                 type={type}
                 selectedTypes={selectedTypes}
                 syncSelectedTypes={syncSelectedTypes}
+                refreshSettings={refreshSettings}
               />
             );
           })}
