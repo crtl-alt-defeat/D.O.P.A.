@@ -6,7 +6,7 @@ import seedUsers from "./components/seedUsers.js";
 import seedTypes from "./components/seedTypes.js";
 import seedGoals from "./components/seedGoals.js";
 import seedUsersTypes from "./components/seedUsersTypes.js";
-//import seedSelectedGoals from "./components/seedSelectedGoals.js";
+import seedSelectedGoals from "./components/seedSelectedGoals.js";
 import seedUsersGoals from "./components/seedUsersGoals.js";
 
 //database queries
@@ -14,7 +14,7 @@ import { getUsers } from "../queries/users.js";
 import { getTypes } from "../queries/types.js";
 import { getGoals } from "../queries/goals.js";
 import { getUsersTypes } from "../queries/usersTypes.js";
-//import { getSelectedGoals } from "../queries/selectedGoals.js";
+import { getSelectedGoals } from "../queries/selectedGoals.js";
 import { getUsersGoals } from "../queries/usersGoals.js";
 
 //seed tables
@@ -35,6 +35,7 @@ export default async function seed() {
     await createLogFile(TYPES_INFO_FILE);
     await createLogFile(GOALS_INFO_FILE);
     await createLogFile(USERS_TYPES_INFO_FILE);
+    await createLogFile(SELECTED_GOALS_INFO_FILE);
     await createLogFile(USERS_GOALS_INFO_FILE);
   }
 
@@ -80,14 +81,14 @@ export default async function seed() {
     if (logging) await logObjectArray(USERS_TYPES_INFO_FILE, usersTypes);
 
     //seed selected_goals table
-    // try {
-    //   if (!newUsers) throw new Error("prequisite users failed to seed");
-    //   await seedSelectedGoals(newUsers, usersTypes);
-    // } catch (e) {
-    //   console.error("ERROR: failed to seed users_types:\n", e);
-    // }
-    // const selectedGoals = await getSelectedGoals();
-    // if (logging) await logObjectArray(SELECTED_GOALS_INFO_FILE, selectedGoals);
+    try {
+      if (!newUsers) throw new Error("prequisite users failed to seed");
+      await seedSelectedGoals(newUsers, goals);
+    } catch (e) {
+      console.error("ERROR: failed to seed selected_goals:\n", e);
+    }
+    const selectedGoals = await getSelectedGoals();
+    if (logging) await logObjectArray(SELECTED_GOALS_INFO_FILE, selectedGoals);
 
     // seed users_goals table
     try {

@@ -1,10 +1,14 @@
-<<<<<<< HEAD
-//add selected goal
-//remove selected goal
-//get selected goals by user id
-//get selected goals by user id and type id
-=======
 import client from "../client.js";
+
+//get all selected goals
+export async function getSelectedGoals() {
+  const SQL = `
+    SELECT *
+    FROM selected_goals
+  `;
+  const { rows: selectedGoals } = await client.query(SQL);
+  return selectedGoals;
+}
 
 //add selected goal
 export async function userSelectGoal({ user_id, goal_id }) {
@@ -17,6 +21,7 @@ export async function userSelectGoal({ user_id, goal_id }) {
   } = await client.query(SQL, [user_id, goal_id]);
   return userSelection;
 }
+
 //remove selected goal
 export async function userDeselectGoal({ user_id, goal_id }) {
   const SQL = `
@@ -52,4 +57,3 @@ export async function getUsersSelectionByType(user_id, type_id) {
   const { rows: goals } = await client.query(SQL, [user_id, type_id]);
   return goals;
 }
->>>>>>> 80a29d2c22dac8a507557337f8df36ddf50ae4c6
