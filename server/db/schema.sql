@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS goals CASCADE;
 DROP TABLE IF EXISTS types CASCADE;
 DROP TABLE IF EXISTS users_types CASCADE;
 DROP TABLE IF EXISTS users_goals CASCADE;
-
+DROP TABLE IF EXISTS selected_goals CASCADE;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
@@ -49,7 +49,18 @@ CREATE TABLE users_goals (
     CONSTRAINT fk_goals FOREIGN KEY (goal_id) REFERENCES goals(id),
     CONSTRAINT mutually_unique_user_and_goal_and_date UNIQUE (user_id, goal_id, date_made)
 );
+<<<<<<< HEAD
 
 --selected_goals
 --fk users
 --fk goals
+=======
+CREATE TABLE selected_goals (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    goal_id INT NOT NULL,
+    CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_goals FOREIGN KEY (goal_id) REFERENCES goals(id),
+    CONSTRAINT mutually_unique_user_and_goal UNIQUE (user_id, goal_id)
+);
+>>>>>>> 80a29d2c22dac8a507557337f8df36ddf50ae4c6
