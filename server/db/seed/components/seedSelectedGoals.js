@@ -2,7 +2,7 @@ import { userSelectGoal } from "../../queries/selectedGoals.js";
 import { getTypesByUserId } from "../../queries/types.js";
 import { getGoalsByTypeId } from "../../queries/goals.js";
 
-export default async function seedSelectedGoals(users, goals) {
+export default async function seedSelectedGoals(users) {
   const selectedGoals = [];
 
   //loop through users

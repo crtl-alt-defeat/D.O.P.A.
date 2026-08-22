@@ -83,7 +83,7 @@ export default async function seed() {
     //seed selected_goals table
     try {
       if (!newUsers) throw new Error("prequisite users failed to seed");
-      await seedSelectedGoals(newUsers, goals);
+      await seedSelectedGoals(newUsers);
     } catch (e) {
       console.error("ERROR: failed to seed selected_goals:\n", e);
     }
@@ -93,7 +93,7 @@ export default async function seed() {
     // seed users_goals table
     try {
       if (!newUsers) throw new Error("prequisite users failed to seed");
-      await seedUsersGoals(3, newUsers, goals, usersTypes);
+      await seedUsersGoals(3, newUsers);
     } catch (e) {
       console.error("ERROR: failed to seed users_goals:\n", e);
     }

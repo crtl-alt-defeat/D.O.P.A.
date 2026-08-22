@@ -1,13 +1,13 @@
-import { getPotentialGoals } from "../../queries/goals.js";
+import { getUsersSelections } from "../../queries/selectedGoals.js";
 import { createUserGoal } from "../../queries/usersGoals.js";
 
-export default async function seedUsersGoals(num, users, goals, usersTypes) {
+export default async function seedUsersGoals(num, users) {
   const usersGoals = [];
 
   //give every user 3 goals (based on their interests)
   for (const user of users) {
     //find goals the user is interested in (based on type of goal)
-    const possibleGoals = await getPotentialGoals(user.id);
+    const possibleGoals = await getUsersSelections(user.id);
 
     //give user goals for every day of the last week
     const today = new Date();
