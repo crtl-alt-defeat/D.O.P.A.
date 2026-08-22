@@ -8,8 +8,10 @@ import {
   getCompletedGoalsForToday,
 } from "../api/usersGoals";
 import "./PopUpBox.css";
+import { markGoalIncomplete } from "../api/usersGoals";
 function HomePage() {
-  const { token, hasGottenGoals, getSelectedTypes } = useAuth();
+  const { token, hasGottenGoals, getUser, getSelectedTypes } = useAuth();
+  const [user, setUser] = useState(null);
   const [completedToday, setCompletedToday] = useState([]);
 
   const [name, setName] = useState("");
@@ -23,6 +25,17 @@ function HomePage() {
   /* added Thurs */
   const [selectedDailyGoal, setSelectedDailyGoal] = useState(null);
   const [selectedCompletedGoal, setSelectedCompletedGoal] = useState(null);
+  useEffect(() => {
+    if (!token) return;
+
+    async function loadUser() {
+      const data = await getUser();
+      setUser(data);
+    }
+
+    loadUser();
+  }, [token]);
+
   async function loadPartialStreak() {
     if (!token) return;
     const partialStreak = await getPartialStreak(token);
@@ -108,7 +121,22 @@ function HomePage() {
             <h4>Completed Goal Info</h4>
             <p>Type: {selectedCompletedGoal.type_id}</p>
             <p>Name: {selectedCompletedGoal.name}</p>
-            <p>ID: {selectedCompletedGoal.id}</p>
+            <p>ID: {selectedCompletedGoal.goal_id}</p> {/* FIXED */}
+            <button
+              onClick={async () => {
+                await markGoalIncomplete(
+                  selectedCompletedGoal.user_id, // FIXED
+                  selectedCompletedGoal.goal_id, // FIXED
+                  token,
+                );
+
+                await loadGoals();
+                await loadCompletedToday();
+                setSelectedCompletedGoal(null);
+              }}
+            >
+              Mark Incomplete
+            </button>
             <button onClick={() => setSelectedCompletedGoal(null)}>
               Close
             </button>

@@ -62,7 +62,7 @@ usersRouter.get("/me", getUserFromToken, requireUser, async (req, res) => {
   res.send(req.user);
 });
 
-usersRouter.post(
+/* usersRouter.post(
   "/me/types",
   getUserFromToken,
   requireUser,
@@ -79,7 +79,7 @@ usersRouter.post(
       next(error);
     }
   },
-);
+); */
 
 usersRouter.put(
   "/me/update",

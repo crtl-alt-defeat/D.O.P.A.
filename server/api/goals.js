@@ -62,13 +62,23 @@ goalsRouter.get("/user/:userId", async (req, res, next) => {
 
 goalsRouter.get("/type/:id", async (req, res, next) => {
   try {
-    const goals = await getGoalsByTypeId(req.params.id);
-    if (!goals) return res.status(404).send({ message: "Goals not found." });
-    return goals;
+    const typeId = Number(req.params.id);
+    const goals = await getGoalsByTypeId(typeId);
+    res.send(goals || []); // ✔ ALWAYS send JSON
   } catch (error) {
     next(error);
   }
 });
+
+/* goalsRouter.get("/type/:id", async (req, res, next) => {
+  try {
+    const goals = await getGoalsByTypeId(req.params.id);
+    if (!goals) return res.status(404).send({ message: "Goals not found." });
+    res.send(goals);
+  } catch (error) {
+    next(error);
+  }
+}); */
 
 goalsRouter.get("/:id", async (req, res, next) => {
   try {

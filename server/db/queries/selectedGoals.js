@@ -28,8 +28,8 @@ export async function getUsersSelections(user_id) {
   const SQL = `
     SELECT goals.*
     FROM selected_goals
-    JOIN goals ON selected_goals.goal_id
-    WHERE selected_goals.user_id = 1$
+    JOIN goals ON selected_goals.goal_id = goals.id
+    WHERE selected_goals.user_id = $1
   `;
   const { rows: goals } = await client.query(SQL, [user_id]);
   return goals;
@@ -39,10 +39,10 @@ export async function getUsersSelectionByType(user_id, type_id) {
   const SQL = `
     SELECT goals.*
     FROM selected_goals
-    JOIN goals On selected_goals.goal_id
+    JOIN goals ON selected_goals.goal_id = goals.id
     WHERE selected_goals.user_id = $1
-    AND goals.type_id = $2
-    `;
+      AND goals.type_id = $2
+  `;
   const { rows: goals } = await client.query(SQL, [user_id, type_id]);
   return goals;
 }
