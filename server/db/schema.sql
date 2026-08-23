@@ -9,7 +9,7 @@ CREATE TABLE users (
     name TEXT NOT NULL,
     email TEXT UNIQUE NULL,
     password TEXT NULL,
-    google_sub VARCHAR(255) NULL,
+    google_sub VARCHAR(255) UNIQUE NULL,
     CONSTRAINT at_least_1_credential
         CHECK (
             (email IS NOT NULL AND password IS NOT NULL) 

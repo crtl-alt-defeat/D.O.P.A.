@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-//potential handlers for selected goals
-=======
 import express from "express";
 const selectionsRouter = express.Router();
 
@@ -70,4 +67,3 @@ selectionsRouter.get("/:user_id", async (req, res, next) => {
 });
 
 export default selectionsRouter;
->>>>>>> 80a29d2c22dac8a507557337f8df36ddf50ae4c6

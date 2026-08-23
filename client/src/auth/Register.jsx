@@ -4,9 +4,12 @@ import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { getTypeByName } from "../api/types";
+import RegisterWithGoogle from "./OAuth/google/RegisterWithGoogle";
+import { getGoalsByTypeId } from "../api/goals";
+import { selectGoal } from "../api/selectedGoals";
 
 function RegisterPage() {
-  const { register, addSelectedType } = useAuth();
+  const { getUser, token, register, addSelectedType } = useAuth();
   const navigate = useNavigate();
 
   const [error, setError] = useState(null);
@@ -49,6 +52,8 @@ function RegisterPage() {
 
   async function handleAddSelectedTypes() {
     try {
+      const user = await getUser();
+
       const types = [
         await getTypeByName("self care"),
         await getTypeByName("household"),
@@ -56,16 +61,17 @@ function RegisterPage() {
         await getTypeByName("relationship"),
       ];
 
-      //console.log(types);
-
       for (let i = 0; i < types.length; i++) {
         const type = types[i];
         const result = sectionResults[i];
-        //console.log(type, result);
 
         if (result) {
           await addSelectedType(type.id);
-          //console.log("- added");
+
+          const goals = await getGoalsByTypeId(type.id);
+          for (const goal of goals) {
+            await selectGoal(user.id, goal.id, token);
+          }
         }
       }
 
@@ -113,6 +119,11 @@ function RegisterPage() {
         <button type="submit">Submit & Continue</button>
         {error && <p role="alert">{error}</p>}
       </form>
+      <h3>or</h3>
+      <div>
+        <h2>Register with</h2>
+        <RegisterWithGoogle setAccountMade={setAccountMade} />
+      </div>
     </div>
   );
 }

@@ -1,16 +1,23 @@
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
-import Layout from "./Layout.jsx";
-import "./style.css";
-import App from "./App.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import App from "./App.jsx";
+
+import "./style.css";
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </GoogleOAuthProvider>
   </BrowserRouter>,
 );
+
 /* Notification related, ignore unless interfereing. */
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
