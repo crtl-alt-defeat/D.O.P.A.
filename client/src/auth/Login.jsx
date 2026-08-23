@@ -3,6 +3,7 @@ import "./auth.css";
 import { useNavigate } from "react-router";
 import { useAuth } from "./AuthContext";
 import { useState } from "react";
+import LoginWithGoogle from "./OAuth/google/LoginWithGoogle";
 
 function LoginPage() {
   const { login } = useAuth();
@@ -54,6 +55,11 @@ function LoginPage() {
         <button type="submit">Submit</button>
         {error && <p role="alert">{error}</p>}
       </form>
+      <h3>or</h3>
+      <div>
+        <h2>Login with</h2>
+        <LoginWithGoogle />
+      </div>
     </div>
   );
 }

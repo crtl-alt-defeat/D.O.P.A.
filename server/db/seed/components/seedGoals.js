@@ -4,17 +4,10 @@ import { getTypeByName } from "../../queries/types.js";
 export default async function seedGoals(types) {
   const goals = [];
 
-  // console.log("types:", types);
-
   const selfCare = await getTypeByName("self care");
   const household = await getTypeByName("household");
   const workSchool = await getTypeByName("work/school");
   const relationship = await getTypeByName("relationship");
-
-  // console.log("self care:", selfCare);
-  // console.log("household:", household);
-  // console.log("work/school:", workSchool);
-  // console.log("relationship:", relationship);
 
   if (selfCare) {
     goals.push(

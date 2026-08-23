@@ -11,4 +11,5 @@ export default defineConfig({
       "/api": `http://localhost:${serverPort}`,
     },
   },
+  envDir: "../",
 });
