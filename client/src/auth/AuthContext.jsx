@@ -190,6 +190,7 @@ export function AuthProvider({ children }) {
   async function attemptGiveRandomGoals() {
     try {
       if (!token) throw new Error("Not logged in");
+      if (window.location.pathname == "/register") return;
 
       const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const config = {

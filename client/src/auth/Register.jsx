@@ -76,6 +76,7 @@ function RegisterPage() {
       }
 
       navigate("/home");
+      window.location.reload();
     } catch (e) {
       console.error(e);
       setError(e.message);
