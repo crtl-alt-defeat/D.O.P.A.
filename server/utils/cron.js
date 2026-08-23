@@ -1,7 +1,8 @@
 import cron from "node-cron";
 import { getUsers } from "../db/queries/users.js";
-import { getGoals, getPotentialGoals } from "../db/queries/goals.js";
+import { getGoals } from "../db/queries/goals.js";
 import { createUserGoal, getDailyGoals } from "../db/queries/usersGoals.js";
+import { getUsersSelections } from "../db/queries/selectedGoals.js";
 
 export function getCronString() {
   return process.env.DAILY_GOAL_CRON || "0 4 * * *";
@@ -89,7 +90,7 @@ async function giveUserRandomGoals(userId, timeZone) {
 //get 3 goals (preferably of selected types)
 async function getRandomGoals(userId) {
   const goals = await getGoals();
-  const potentialGoals = await getPotentialGoals(userId);
+  const potentialGoals = await getUsersSelections(userId);
 
   const newGoals = [];
 

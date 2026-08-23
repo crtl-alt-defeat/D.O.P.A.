@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import "./Schedules.css";
 
-import { getWeeklyGoals, markGoalIncomplete } from "../api/usersgoals";
+import { getWeeklyGoals, markGoalIncomplete } from "../api/usersGoals";
 import { completeGoal } from "../api/goals";
 import { getTypes } from "../api/types";
 

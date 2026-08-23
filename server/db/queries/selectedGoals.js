@@ -1,5 +1,15 @@
 import client from "../client.js";
 
+//get all selected goals
+export async function getSelectedGoals() {
+  const SQL = `
+    SELECT *
+    FROM selected_goals
+  `;
+  const { rows: selectedGoals } = await client.query(SQL);
+  return selectedGoals;
+}
+
 //add selected goal
 export async function userSelectGoal({ user_id, goal_id }) {
   const SQL = `
@@ -11,6 +21,7 @@ export async function userSelectGoal({ user_id, goal_id }) {
   } = await client.query(SQL, [user_id, goal_id]);
   return userSelection;
 }
+
 //remove selected goal
 export async function userDeselectGoal({ user_id, goal_id }) {
   const SQL = `

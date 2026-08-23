@@ -6,9 +6,10 @@ import {
   addUserGoal,
   getPartialStreak,
   getCompletedGoalsForToday,
+  markGoalIncomplete,
 } from "../api/usersGoals";
 import "./PopUpBox.css";
-import { markGoalIncomplete } from "../api/usersGoals";
+
 function HomePage() {
   const { token, hasGottenGoals, getUser, getSelectedTypes } = useAuth();
   const [user, setUser] = useState(null);
@@ -22,6 +23,7 @@ function HomePage() {
   const [selectedTypeId, setSelectedTypeId] = useState("");
   const [streak, setStreak] = useState("");
   const [attachTypeId, setAttachTypeId] = useState("");
+
   /* added Thurs */
   const [selectedDailyGoal, setSelectedDailyGoal] = useState(null);
   const [selectedCompletedGoal, setSelectedCompletedGoal] = useState(null);
@@ -73,10 +75,11 @@ function HomePage() {
     await loadGoals();
   }
 
-  async function handleComplete(goalId) {
-    await completeGoal(goalId, token);
+  async function handleComplete(userGoalId) {
+    await completeGoal(userGoalId, token);
     await loadGoals();
     await loadCompletedToday();
+    await loadPartialStreak();
   }
 
   useEffect(() => {
@@ -163,7 +166,9 @@ function HomePage() {
               <span onClick={() => setSelectedDailyGoal(goal)}>
                 {goal.name}
               </span>
-              <button onClick={() => handleComplete(goal.id)}>Complete</button>
+              <button onClick={() => handleComplete(goal.user_goal_id)}>
+                Complete
+              </button>
             </li>
           ))}
         </ul>
