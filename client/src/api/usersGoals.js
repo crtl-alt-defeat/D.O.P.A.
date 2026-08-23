@@ -55,7 +55,7 @@ export async function replaceUserGoal(token, goalId) {
       throw new Error("ERROR: replaceUserGoal: cannot replace; goal not found");
 
     //todo: find valid replacement goals
-    const potentialGoals = await getPotentialGoals(token);
+    const potentialGoals = await getUsersSelections(token);
     const validGoals;
 
     //todo: randomly select replacement goal
