@@ -55,7 +55,7 @@ export async function replaceUserGoal(token, goalId) {
       throw new Error("ERROR: replaceUserGoal: cannot replace; goal not found");
 
     //todo: find valid replacement goals
-    const potentialGoals = await getPotentialGoals(token);
+    const potentialGoals = await getUsersSelections(token);
     const validGoals;
 
     //todo: randomly select replacement goal
@@ -87,3 +87,36 @@ export async function replaceUserGoal(token, goalId) {
   }
 }
 */
+/* Uncomplete Goals */
+export async function markGoalIncomplete(user_id, goal_id, token) {
+  try {
+    const { data } = await axios.put(
+      "/api/usersGoals/incomplete",
+      { user_id, goal_id },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+export async function getWeeklyGoals(token) {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const response = await axios.get("/api/usersGoals/weekly", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      timeZone: userTimeZone,
+    },
+  });
+
+  return response.data;
+}

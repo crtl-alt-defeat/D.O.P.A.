@@ -13,3 +13,8 @@ export async function createUserType({ user_id, type_id }) {
     throw error;
   }
 }
+/* Related to selections */
+export async function getUserTypes(user_id) {
+  const { data } = await axios.get(`/api/types/user/${user_id}`);
+  return data;
+}

@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import App from "../App";
 import axios from "axios";
+import RegisterWithGoogle from "./OAuth/google/RegisterWithGoogle";
+import { googleLogout } from "@react-oauth/google";
 
 //import { attemptGiveUserRandomGoals } from "../../../server/utils/cron";
 
@@ -46,6 +48,18 @@ export function AuthProvider({ children }) {
     localStorage.setItem("authToken", response.data);
   }
 
+  async function registerWithGoogle(googleToken) {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${googleToken}`,
+      },
+    };
+
+    const { data } = await axios.post("/api/oauth/google/register", {}, config);
+    setToken(data);
+    localStorage.setItem("authToken", data);
+  }
+
   async function login(email, password) {
     const userInfo = {
       email: email,
@@ -61,9 +75,22 @@ export function AuthProvider({ children }) {
     localStorage.setItem("authToken", response.data);
   }
 
+  async function loginWithGoogle(googleToken) {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${googleToken}`,
+      },
+    };
+
+    const { data } = await axios.post("/api/oauth/google/login", {}, config);
+    setToken(data);
+    localStorage.setItem("authToken", data);
+  }
+
   function logout() {
     setToken(null);
     localStorage.removeItem("authToken");
+    googleLogout();
   }
 
   async function getUser() {
@@ -163,6 +190,7 @@ export function AuthProvider({ children }) {
   async function attemptGiveRandomGoals() {
     try {
       if (!token) throw new Error("Not logged in");
+      if (window.location.pathname == "/register") return;
 
       const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const config = {
@@ -194,7 +222,9 @@ export function AuthProvider({ children }) {
     token,
     hasGottenGoals,
     register,
+    registerWithGoogle,
     login,
+    loginWithGoogle,
     logout,
     getUser,
     updateUser,
