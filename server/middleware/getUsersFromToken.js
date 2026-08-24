@@ -18,7 +18,7 @@ export default async function getUserFromToken(req, res, next) {
     req.user = user;
     return next();
   } catch (e) {
-    console.error("JWT error:", e.message);
+    console.error("getUserFromToken: JWT error:", e.message);
     req.user = null;
     return next();
   }

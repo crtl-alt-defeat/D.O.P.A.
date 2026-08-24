@@ -46,8 +46,45 @@ export async function getGoalByUserId(userId) {
 }
 
 //todo: export async function getGoalsByTypeId(typeId) (get goals by type_id)
+export async function getGoalsByTypeId(typeId, token) {
+  try {
+    const { data } = await axios.get(`/api/goals/type/${typeId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
 
+/* export async function getGoalsByTypeId(typeId) {
+  try {
+    const { data } = await axios.get(`/api/goals/type/${typeId}`);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+} */
 export async function getWeeklyGoals(token) {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const response = await axios.get("/api/usersGoals/weekly", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      timeZone: userTimeZone,
+    },
+  });
+
+  return response.data;
+}
+
+/* export async function getWeeklyGoals(token) {
   try {
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const config = {
@@ -64,7 +101,7 @@ export async function getWeeklyGoals(token) {
   } catch (error) {
     console.error(error);
   }
-}
+} */
 export async function getGoalsForToday(token) {
   try {
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -121,7 +158,7 @@ export async function getUncompletedGoals(token) {
   return data;
 }
 
-export async function completeGoal(goalId, token) {
+export async function completeGoal(userGoalId, token) {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const config = {
     headers: {
@@ -133,7 +170,7 @@ export async function completeGoal(goalId, token) {
   };
 
   const { data } = await axios.put(
-    `/api/users/me/goals/${goalId}/complete`,
+    `/api/users/me/goals/${userGoalId}/complete`,
     {},
     config,
   );

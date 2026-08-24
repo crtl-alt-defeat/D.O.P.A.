@@ -62,7 +62,7 @@ usersRouter.get("/me", getUserFromToken, requireUser, async (req, res) => {
   res.send(req.user);
 });
 
-usersRouter.post(
+/* usersRouter.post(
   "/me/types",
   getUserFromToken,
   requireUser,
@@ -79,7 +79,7 @@ usersRouter.post(
       next(error);
     }
   },
-);
+); */
 
 usersRouter.put(
   "/me/update",
@@ -247,7 +247,7 @@ usersRouter.post(
       const created = await attemptGiveUserRandomGoals(req.user, req.timeZone);
 
       if (!created)
-        return res.status(422).send({ message: "failed to create goals" });
+        return res.status(204).send({ message: "failed to create goals" });
 
       res.status(201).send(created);
     } catch (error) {
@@ -370,7 +370,7 @@ usersRouter.get(
   },
 );
 usersRouter.put(
-  "/me/goals/:goalId/complete",
+  "/me/goals/:userGoalId/complete",
   getUserFromToken,
   requireUser,
   getTimeZoneFromQuery,
@@ -379,13 +379,13 @@ usersRouter.put(
       const SQL = `
         UPDATE users_goals
         SET date_complete = (CURRENT_TIMESTAMP AT TIME ZONE $3)::date
-        WHERE user_id = $1 AND goal_id = $2
+        WHERE user_id = $1 AND id = $2
         RETURNING *;
       `;
 
       const { rows } = await client.query(SQL, [
         req.user.id,
-        req.params.goalId,
+        req.params.userGoalId,
         req.timeZone,
       ]);
 

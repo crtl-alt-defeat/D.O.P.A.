@@ -1,28 +1,54 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { getUncompletedGoals, completeGoal } from "../api/goals";
-import { getTypeByName } from "../api/types";
+import { getTypeByName, getTypes } from "../api/types";
 import {
   addUserGoal,
   getPartialStreak,
   getCompletedGoalsForToday,
+  markGoalIncomplete,
 } from "../api/usersGoals";
 import "./PopUpBox.css";
+
 function HomePage() {
-  const { token, hasGottenGoals, getSelectedTypes } = useAuth();
+  const { token, hasGottenGoals, getUser, getSelectedTypes } = useAuth();
+  const [user, setUser] = useState(null);
   const [completedToday, setCompletedToday] = useState([]);
 
   const [name, setName] = useState("");
   const [goals, setGoals] = useState([]);
-
+  const [types, setTypes] = useState([]);
   const [allTypes, setAllTypes] = useState([]);
   const [userTypes, setUserTypes] = useState([]);
   const [selectedTypeId, setSelectedTypeId] = useState("");
   const [streak, setStreak] = useState("");
   const [attachTypeId, setAttachTypeId] = useState("");
+
   /* added Thurs */
   const [selectedDailyGoal, setSelectedDailyGoal] = useState(null);
   const [selectedCompletedGoal, setSelectedCompletedGoal] = useState(null);
+  useEffect(() => {
+    if (!token) return;
+
+    async function loadUser() {
+      const data = await getUser();
+      setUser(data);
+    }
+
+    loadUser();
+  }, [token]);
+  useEffect(() => {
+    async function loadTypes() {
+      const data = await getTypes();
+      setTypes(data);
+    }
+
+    loadTypes();
+  }, []);
+  function getTypeName(typeId) {
+    const found = types.find((t) => t.id === typeId);
+    return found ? found.name : typeId;
+  }
   async function loadPartialStreak() {
     if (!token) return;
     const partialStreak = await getPartialStreak(token);
@@ -49,10 +75,11 @@ function HomePage() {
     await loadGoals();
   }
 
-  async function handleComplete(goalId) {
-    await completeGoal(goalId, token);
+  async function handleComplete(userGoalId) {
+    await completeGoal(userGoalId, token);
     await loadGoals();
     await loadCompletedToday();
+    await loadPartialStreak();
   }
 
   useEffect(() => {
@@ -91,7 +118,7 @@ function HomePage() {
             <p>
               <strong>Name:{selectedDailyGoal.name}</strong>
             </p>
-            <p>Type: {selectedDailyGoal.type_id}</p>
+            <p>Type: {getTypeName(selectedDailyGoal.type_id)}</p>
             <p>ID: {selectedDailyGoal.id}</p>
             <button onClick={() => setSelectedDailyGoal(null)}>Close</button>
           </div>
@@ -106,9 +133,24 @@ function HomePage() {
         >
           <div className="popup" onClick={(e) => e.stopPropagation()}>
             <h4>Completed Goal Info</h4>
-            <p>Type: {selectedCompletedGoal.type_id}</p>
+            <p>Type: {getTypeName(selectedCompletedGoal.type_id)}</p>
             <p>Name: {selectedCompletedGoal.name}</p>
-            <p>ID: {selectedCompletedGoal.id}</p>
+            <p>ID: {selectedCompletedGoal.goal_id}</p> {/* FIXED */}
+            <button
+              onClick={async () => {
+                await markGoalIncomplete(
+                  selectedCompletedGoal.user_id, // FIXED
+                  selectedCompletedGoal.goal_id, // FIXED
+                  token,
+                );
+
+                await loadGoals();
+                await loadCompletedToday();
+                setSelectedCompletedGoal(null);
+              }}
+            >
+              Mark Incomplete
+            </button>
             <button onClick={() => setSelectedCompletedGoal(null)}>
               Close
             </button>
@@ -124,7 +166,9 @@ function HomePage() {
               <span onClick={() => setSelectedDailyGoal(goal)}>
                 {goal.name}
               </span>
-              <button onClick={() => handleComplete(goal.id)}>Complete</button>
+              <button onClick={() => handleComplete(goal.user_goal_id)}>
+                Complete
+              </button>
             </li>
           ))}
         </ul>

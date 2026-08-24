@@ -29,22 +29,28 @@ export async function getUsersGoals() {
 export const getDailyGoals = async (userId, timeZone) => {
   const SQL = `
     select goals.*
-    FROM goals
-    JOIN users_goals ON users_goals.goal_id = goals.id
-    WHERE users_goals.user_id = $1
-    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date`;
+    FROM
+      goals
+      JOIN users_goals ON users_goals.goal_id = goals.id
+    WHERE
+      users_goals.user_id = $1
+      AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date`;
   const { rows } = await client.query(SQL, [userId, timeZone]);
   return rows;
 };
 
 export const getUncompletedDailyGoals = async (userId, timeZone) => {
   const SQL = `
-    select goals.*
-    FROM goals
-    JOIN users_goals ON users_goals.goal_id = goals.id
-    WHERE users_goals.user_id = $1
-    AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date
-    AND users_goals.date_complete IS NULL`;
+    select
+      goals.*,
+      users_goals.id as user_goal_id
+    FROM
+      goals
+      JOIN users_goals ON users_goals.goal_id = goals.id
+    WHERE
+      users_goals.user_id = $1
+      AND users_goals.date_made = (CURRENT_TIMESTAMP AT TIME ZONE $2)::date
+      AND users_goals.date_complete IS NULL`;
   const { rows } = await client.query(SQL, [userId, timeZone]);
   return rows;
 };
@@ -56,16 +62,23 @@ export const getWeeksGoals = async (userId, timeZone) => {
   const dayInteger = new Date(localDate).getDay();
 
   const SQL = `
-    SELECT 
-      goals.*,
-      users_goals.date_made,
-      users_goals.date_complete
-    FROM goals
+  SELECT 
+    users_goals.user_id,
+    users_goals.goal_id,
+    goals.name,
+    goals.type_id,
+    users_goals.status,
+    users_goals.dayOfWeek,
+    users_goals.date_made,
+    users_goals.date_complete
+  FROM
+    goals
     JOIN users_goals ON users_goals.goal_id = goals.id
-    WHERE users_goals.user_id = $1
-      AND users_goals.date_made >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
-      AND users_goals.date_made <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
-  `;
+  WHERE
+    users_goals.user_id = $1
+    AND users_goals.date_made >= (CURRENT_TIMESTAMP AT TIME ZONE $2 - ($3 * INTERVAL '1 day'))::date
+    AND users_goals.date_made <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
+`;
   const { rows } = await client.query(SQL, [userId, timeZone, dayInteger]);
   return rows;
 };
@@ -73,8 +86,9 @@ export const getWeeksGoals = async (userId, timeZone) => {
 export async function getGoalsByUserId(userId) {
   const SQL = `
     SELECT goals.*
-    FROM goals
-    JOIN users_goals ON users_goals.goal_id = goals.id
+    FROM
+      goals
+      JOIN users_goals ON users_goals.goal_id = goals.id
     WHERE users_goals.user_id = $1
   `;
   const { rows: goals } = await client.query(SQL, [userId]);
@@ -84,8 +98,9 @@ export async function getGoalsByUserId(userId) {
 export async function getTypesByUserId(userId) {
   const SQL = `
   SELECT types.*
-  FROM types
-  JOIN users_types ON users_types.type_id = types.id
+  FROM
+    types
+    JOIN users_types ON users_types.type_id = types.id
   WHERE users_types.user_id = $1
   `;
   const { rows: types } = await client.query(SQL, [userId]);
@@ -124,4 +139,19 @@ export async function getPartialStreak(userId, timeZone) {
     rows: [{ streak }],
   } = await client.query(SQL, [userId, timeZone]);
   return streak;
+}
+/* Uncomplete goal */
+export async function markGoalIncomplete({ user_id, goal_id }) {
+  const SQL = `
+    UPDATE users_goals
+    SET date_complete = NULL
+    WHERE user_id = $1 AND goal_id = $2
+    RETURNING *;
+  `;
+
+  const {
+    rows: [updatedGoal],
+  } = await client.query(SQL, [user_id, goal_id]);
+
+  return updatedGoal;
 }
