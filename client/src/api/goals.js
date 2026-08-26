@@ -145,6 +145,21 @@ export async function getPotentialGoals(token) {
 /* added Fri */
 export async function getUncompletedGoals(token) {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const { data } = await axios.get("/api/usersGoals/uncompleted", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      timeZone: userTimeZone,
+    },
+  });
+
+  return data;
+}
+
+/* export async function getUncompletedGoals(token) {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -156,9 +171,32 @@ export async function getUncompletedGoals(token) {
 
   const { data } = await axios.get("/api/users/me/goals/uncompleted", config);
   return data;
+} */
+export async function completeGoal(user_goal_id, token) {
+  try {
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    const { data } = await axios.put(
+      `/api/users/me/goals/${user_goal_id}/complete`,
+      {}, // backend expects no body
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          timeZone: userTimeZone,
+        },
+      },
+    );
+
+    return data;
+  } catch (error) {
+    console.error("completeGoal error:", error);
+    return null;
+  }
 }
 
-export async function completeGoal(userGoalId, token) {
+/* export async function completeGoal(userGoalId, token) {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const config = {
     headers: {
@@ -175,4 +213,4 @@ export async function completeGoal(userGoalId, token) {
     config,
   );
   return data;
-}
+} */

@@ -88,7 +88,26 @@ export async function replaceUserGoal(token, goalId) {
 }
 */
 /* Uncomplete Goals */
-export async function markGoalIncomplete(user_id, goal_id, token) {
+export async function markGoalIncomplete(user_goal_id, token) {
+  try {
+    const { data } = await axios.put(
+      "/api/usersGoals/incomplete",
+      { user_goal_id },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/* export async function markGoalIncomplete(user_id, goal_id, token) {
   try {
     const { data } = await axios.put(
       "/api/usersGoals/incomplete",
@@ -105,7 +124,7 @@ export async function markGoalIncomplete(user_id, goal_id, token) {
     console.error(error);
     return null;
   }
-}
+} */
 export async function getWeeklyGoals(token) {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
