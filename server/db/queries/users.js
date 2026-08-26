@@ -146,6 +146,88 @@ export const authenticateUsingGoogle = async (sub) => {
 //   return;
 // };
 
+// export const linkUserToGithub = async (userId, credentials) => {
+//   const SQL = `
+//     UPDATE users
+//     SET github_credential = $1
+//     WHERE id = $2
+//     RETURNING *
+//   `
+
+//   const { rows: [user] } = await client.query(SQL, [credentials, userId]);
+//   return user;
+// };
+
+export const linkUserToGoogle = async (userId, sub) => {
+  const SQL = `
+    UPDATE users
+    SET google_sub = $1
+    WHERE id = $2
+    RETURNING *
+  `;
+
+  const {
+    rows: [user],
+  } = await client.query(SQL, [sub, userId]);
+  return user;
+};
+
+// export const linkUserToLinkedIn = async (userId, credentials) => {
+//   const SQL = `
+//     UPDATE users
+//     SET linkedin_credential = $1
+//     WHERE id = $2
+//     RETURNING *
+//   `;
+
+//   const {
+//     rows: [user],
+//   } = await client.query(SQL, [credentials, userId]);
+//   return user;
+// };
+
+// export const unlinkUserFromGithub = async (userId) => {
+//   const SQL = `
+//     UPDATE users
+//     SET github_credentials = NULL
+//     WHERE id = $1
+//     RETURNING *
+//   `;
+
+//   const {
+//     rows: [user],
+//   } = await client.query(SQL, [userId]);
+//   return user;
+// };
+
+export const unlinkUserFromGoogle = async (userId) => {
+  const SQL = `
+    UPDATE users
+    SET google_sub = NULL
+    WHERE id = $1
+    RETURNING *
+  `;
+
+  const {
+    rows: [user],
+  } = await client.query(SQL, [userId]);
+  return user;
+};
+
+// export const unlinkUserFromLinkedIn = async (userId) => {
+//   const SQL = `
+//     UPDATE users
+//     SET linkedin_credentials = NULL
+//     WHERE id = $1
+//     RETURNING *
+//   `;
+
+//   const {
+//     rows: [user],
+//   } = await client.query(SQL, [userId]);
+//   return user;
+// };
+
 export const getUsers = async () => {
   const SQL = `
     SELECT *

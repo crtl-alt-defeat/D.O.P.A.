@@ -21,7 +21,7 @@ function LoginWithGoogle() {
   }
 
   return (
-    <>
+    <div className="googleLogin">
       <GoogleLogin
         onSuccess={handleLogin}
         onError={() => {
@@ -30,7 +30,7 @@ function LoginWithGoogle() {
         useOneTap
       />
       {error && <p role="alert">{error}</p>}
-    </>
+    </div>
   );
 }
 export default LoginWithGoogle;

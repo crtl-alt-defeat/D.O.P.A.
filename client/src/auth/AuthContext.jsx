@@ -49,13 +49,11 @@ export function AuthProvider({ children }) {
   }
 
   async function registerWithGoogle(googleToken) {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${googleToken}`,
-      },
+    const userInfo = {
+      googleToken: googleToken,
     };
 
-    const { data } = await axios.post("/api/oauth/google/register", {}, config);
+    const { data } = await axios.post("/api/oauth/google/register", userInfo);
     setToken(data);
     localStorage.setItem("authToken", data);
   }
@@ -76,13 +74,11 @@ export function AuthProvider({ children }) {
   }
 
   async function loginWithGoogle(googleToken) {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${googleToken}`,
-      },
+    const userInfo = {
+      googleToken: googleToken,
     };
 
-    const { data } = await axios.post("/api/oauth/google/login", {}, config);
+    const { data } = await axios.post("/api/oauth/google/login", userInfo);
     setToken(data);
     localStorage.setItem("authToken", data);
   }
@@ -127,6 +123,46 @@ export function AuthProvider({ children }) {
     const { data } = await axios.put(
       "/api/users/me/update",
       updatedUser,
+      config,
+    );
+    return data;
+  }
+
+  async function linkToGoogle(googleToken) {
+    const userInfo = {
+      googleToken: googleToken,
+    };
+
+    const config = {
+      "Content-type": "application/json",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      "/api/oauth/google/link",
+      userInfo,
+      config,
+    );
+    return data;
+  }
+
+  async function unlinkFromGoogle(codeResponse) {
+    const userInfo = {
+      googleToken: codeResponse,
+    };
+
+    const config = {
+      "Content-type": "application/json",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      "/api/oauth/google/unlink",
+      userInfo,
       config,
     );
     return data;
@@ -225,6 +261,8 @@ export function AuthProvider({ children }) {
     registerWithGoogle,
     login,
     loginWithGoogle,
+    linkToGoogle,
+    unlinkFromGoogle,
     logout,
     getUser,
     updateUser,
