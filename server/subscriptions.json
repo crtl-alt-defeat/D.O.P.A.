@@ -8,11 +8,11 @@
     }
   },
   "6": {
-    "endpoint": "https://fcm.googleapis.com/fcm/send/eG1tog5tlwY:APA91bHbCInaamEAsB1FrEKE7x1wtTDC6uupSyafldCIBSMvvU2Wheis4YbACkBVB--BhRrhETncJquh7hiJOI-gO9KM0KTr2gr1DAZwQVokg4KHbd-K80-QUAjce0rnkJMjO7VbNYis",
+    "endpoint": "https://fcm.googleapis.com/fcm/send/f7GkTafeuH8:APA91bHYnHIOcZ_0B9WuCcmfNk4qjRceNp3sWMEIMLig77oHM_lHHBzAt0OtCnsq--HhyW3fWobXHriAeXsrKaExd69O1Z-YLL7d7KhV1jEm4GDPNweQ755CMhQX1lK-eb6WQx6ASb2e",
     "expirationTime": null,
     "keys": {
-      "p256dh": "BJsvd0UPSkA5gD1BIkjo89tmBk5izC0TPrZ_K6Z_isRjQ4DXiqEtmsKd1BL1YrfsfznJa3Ctm2p82k7jyveOPT4",
-      "auth": "G6SNxginhZ7jUHS_bpwbkQ"
+      "p256dh": "BBweUQnVouvKMwvc4Xuq5OKKmcLiJDTLG6KVbjX3LeGeWXnBynVFf29t1UukK8yePGj-ao00U_mNkcjBgfDvJmk",
+      "auth": "CqkEwmFRlHC1koxSA-nmMg"
     }
   },
   "72": {
