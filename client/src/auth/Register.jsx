@@ -86,8 +86,6 @@ function RegisterPage() {
   return (
     <div>
       <h2>Create an Account</h2>
-      <p>Survey Results: {JSON.stringify(sectionResults)}</p>
-
       <form action={handleRegister}>
         <p>
           <label>
