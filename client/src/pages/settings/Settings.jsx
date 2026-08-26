@@ -9,6 +9,7 @@ import UserInfo from "./UserInfo";
 import UserForm from "./UserForm";
 import TypesForm from "./TypesForm";
 import TypeGoalsDropdown from "./TypeGoalsDropdown";
+import LinkToGoogle from "../../auth/OAuth/google/LinkToGoogle";
 
 function SettingsPage() {
   const [subscription, setSubscription] = useState(null);
@@ -61,6 +62,12 @@ function SettingsPage() {
 
       <UserInfo user={user} />
       <UserForm user={user} syncUser={syncUser} />
+
+      <div>
+        <h3>Link Accounts</h3>
+        <LinkToGoogle user={user} syncUser={syncUser} />
+      </div>
+
       <TypesForm user={user} refreshSettings={refreshSettings} />
 
       {/* MULTI-DROPDOWN SECTION */}

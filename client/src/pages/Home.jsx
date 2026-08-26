@@ -6,10 +6,250 @@ import {
   addUserGoal,
   getPartialStreak,
   getCompletedGoalsForToday,
-  markGoalIncomplete,
 } from "../api/usersGoals";
 import "./PopUpBox.css";
+import { markGoalIncomplete } from "../api/usersGoals";
 
+function HomePage() {
+  const { token, hasGottenGoals, getUser } = useAuth();
+  const [user, setUser] = useState(null);
+  const [completedToday, setCompletedToday] = useState([]);
+
+  const [name, setName] = useState("");
+  const [goals, setGoals] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [streak, setStreak] = useState("");
+
+  const [selectedDailyGoal, setSelectedDailyGoal] = useState(null);
+  const [selectedCompletedGoal, setSelectedCompletedGoal] = useState(null);
+  /* gif update */
+  const gifStill =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/0cb5dcbb9fb0c1e55891ab312e19128fc19ac0f0/client/public/Flame.png?raw=true";
+  const gifOnce =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/0cb5dcbb9fb0c1e55891ab312e19128fc19ac0f0/client/public/Flame_single_loop.gif?raw=true";
+  const gifAnimated =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/0cb5dcbb9fb0c1e55891ab312e19128fc19ac0f0/client/public/Flame.gif?raw=true";
+  const [gifSrc, setGifSrc] = useState(gifStill);
+
+  useEffect(() => {
+    setGifSrc(gifOnce);
+  }, []);
+
+  const hover = () => {
+    setGifSrc(gifAnimated);
+  };
+
+  const noHover = () => {
+    setGifSrc(gifStill);
+  };
+  /*   const gifStill = "Flame.png";
+  const gifOnce = "Flame_single_loop.gif";
+  const gifAnimated = "Flame.gif";
+  const [gifSrc, setGifSrc] = useState(gifStill);
+
+  useEffect(() => {
+    setGifSrc(gifOnce);
+  }, []);
+
+  const hover = () => setGifSrc(gifAnimated);
+  const noHover = () => setGifSrc(gifStill); */
+  /* gif update */
+  useEffect(() => {
+    if (!token) return;
+
+    async function loadUser() {
+      const data = await getUser();
+      setUser(data);
+    }
+
+    loadUser();
+  }, [token]);
+
+  useEffect(() => {
+    async function loadTypes() {
+      const data = await getTypes();
+      setTypes(data);
+    }
+    loadTypes();
+  }, []);
+
+  function getTypeName(typeId) {
+    const found = types.find((t) => t.id === typeId);
+    return found ? found.name : typeId;
+  }
+
+  async function loadPartialStreak() {
+    if (!token) return;
+    const partialStreak = await getPartialStreak(token);
+    setStreak(partialStreak);
+  }
+
+  async function loadGoals() {
+    if (!token) return;
+    const uncompleted = await getUncompletedGoals(token);
+    setGoals(uncompleted);
+  }
+
+  async function loadCompletedToday() {
+    if (!token) return;
+    const data = await getCompletedGoalsForToday(token);
+    setCompletedToday(data);
+  }
+
+  async function handleAddGoal() {
+    if (!name.trim()) return;
+    const custom = await getTypeByName("custom");
+    await addUserGoal(name, custom.id, token);
+    setName("");
+    await loadGoals();
+  }
+
+  async function handleComplete(userGoalId) {
+    console.log("Completing:", userGoalId);
+    await completeGoal(userGoalId, token);
+    await loadGoals();
+    await loadCompletedToday();
+  }
+
+  useEffect(() => {
+    if (!token) return;
+    loadGoals();
+    loadPartialStreak();
+    loadCompletedToday();
+  }, [token, hasGottenGoals]);
+
+  return (
+    <div>
+      <h2>Your Stuff</h2>
+
+      {/* Popup for Daily Goals */}
+      {selectedDailyGoal && (
+        <div
+          className="popup-overlay"
+          onClick={() => setSelectedDailyGoal(null)}
+        >
+          <div className="popup" onClick={(e) => e.stopPropagation()}>
+            <h4>Daily Goal Info</h4>
+            <p>
+              <strong>Name: {selectedDailyGoal.name}</strong>
+            </p>
+            <p>Type: {getTypeName(selectedDailyGoal.type_id)}</p>
+            <p>ID: {selectedDailyGoal.user_goal_id}</p>
+            <button onClick={() => setSelectedDailyGoal(null)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* Popup for Completed Today */}
+      {selectedCompletedGoal && (
+        <div
+          className="popup-overlay"
+          onClick={() => setSelectedCompletedGoal(null)}
+        >
+          <div className="popup" onClick={(e) => e.stopPropagation()}>
+            <h4>Completed Goal Info</h4>
+            <p>Type: {getTypeName(selectedCompletedGoal.type_id)}</p>
+            <p>Name: {selectedCompletedGoal.name}</p>
+            <p>ID: {selectedCompletedGoal.user_goal_id}</p>
+
+            <button
+              onClick={async () => {
+                await markGoalIncomplete(
+                  selectedCompletedGoal.user_goal_id,
+                  token,
+                );
+                await loadGoals();
+                await loadCompletedToday();
+                setSelectedCompletedGoal(null);
+              }}
+            >
+              Mark Incomplete
+            </button>
+
+            <button onClick={() => setSelectedCompletedGoal(null)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      <section>
+        <h3>Your Daily Goals</h3>
+        <ul className="uncompleted-list">
+          {Array.isArray(goals) &&
+            goals.map((goal) => (
+              <li key={goal.user_goal_id}>
+                <span onClick={() => setSelectedDailyGoal(goal)}>
+                  {goal.name}
+                </span>
+                <button onClick={() => handleComplete(goal.user_goal_id)}>
+                  Complete
+                </button>
+              </li>
+            ))}
+        </ul>
+      </section>
+
+      <section>
+        <h3>Completed Today</h3>
+        <ul className="completed-list">
+          {Array.isArray(completedToday) &&
+            completedToday.map((goal) => (
+              <li
+                key={goal.user_goal_id}
+                className="completed-goal"
+                onClick={() => setSelectedCompletedGoal(goal)}
+              >
+                {goal.name}
+              </li>
+            ))}
+        </ul>
+      </section>
+
+      <section>
+        <h3>Add a New Goal</h3>
+        <input
+          type="text"
+          placeholder="Type a new goal..."
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button type="button" onClick={handleAddGoal}>
+          Add
+        </button>
+      </section>
+
+      <section className="streak-section">
+        <h3>Your Completion Streak</h3>
+        <div className="streak-row">
+          <p>{streak} day(s) in a row</p>
+
+          <div
+            className="flame-wrapper"
+            onMouseEnter={hover}
+            onMouseLeave={noHover}
+          >
+            <img id="flame-gif" src={gifSrc} alt="Flame" />
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default HomePage;
+
+/* import { useState, useEffect } from "react";
+import { useAuth } from "../auth/AuthContext";
+import { getUncompletedGoals, completeGoal } from "../api/goals";
+import { getTypeByName, getTypes } from "../api/types";
+import {
+  addUserGoal,
+  getPartialStreak,
+  getCompletedGoalsForToday,
+} from "../api/usersGoals";
+import "./PopUpBox.css";
+import { markGoalIncomplete } from "../api/usersGoals";
 function HomePage() {
   const { token, hasGottenGoals, getUser, getSelectedTypes } = useAuth();
   const [user, setUser] = useState(null);
@@ -23,8 +263,7 @@ function HomePage() {
   const [selectedTypeId, setSelectedTypeId] = useState("");
   const [streak, setStreak] = useState("");
   const [attachTypeId, setAttachTypeId] = useState("");
-
-  /* added Thurs */
+  /* added Thurs *
   const [selectedDailyGoal, setSelectedDailyGoal] = useState(null);
   const [selectedCompletedGoal, setSelectedCompletedGoal] = useState(null);
   useEffect(() => {
@@ -75,11 +314,10 @@ function HomePage() {
     await loadGoals();
   }
 
-  async function handleComplete(userGoalId) {
-    await completeGoal(userGoalId, token);
+  async function handleComplete(goalId) {
+    await completeGoal(goalId, token);
     await loadGoals();
     await loadCompletedToday();
-    await loadPartialStreak();
   }
 
   useEffect(() => {
@@ -107,7 +345,7 @@ function HomePage() {
   return (
     <div>
       <h2>Your Stuff</h2>
-      {/* Popup for Daily Goals */}
+      {/* Popup for Daily Goals *}
       {selectedDailyGoal && (
         <div
           className="popup-overlay"
@@ -125,7 +363,7 @@ function HomePage() {
         </div>
       )}
 
-      {/* Popup for Completed Today */}
+      {/* Popup for Completed Today *}
       {selectedCompletedGoal && (
         <div
           className="popup-overlay"
@@ -135,16 +373,15 @@ function HomePage() {
             <h4>Completed Goal Info</h4>
             <p>Type: {getTypeName(selectedCompletedGoal.type_id)}</p>
             <p>Name: {selectedCompletedGoal.name}</p>
-            <p>ID: {selectedCompletedGoal.goal_id}</p> {/* FIXED */}
+            <p>ID: {selectedCompletedGoal.user_goal_id}</p>
+
             <button
               onClick={async () => {
                 await markGoalIncomplete(
-                  selectedCompletedGoal.user_id, // FIXED
-                  selectedCompletedGoal.goal_id, // FIXED
+                  selectedCompletedGoal.user_goal_id,
                   token,
                 );
-
-                await loadGoals();
+                /* await markGoalIncomplete(selectedGoal.user_goal_id, token) * await loadGoals();
                 await loadCompletedToday();
                 setSelectedCompletedGoal(null);
               }}
@@ -166,9 +403,8 @@ function HomePage() {
               <span onClick={() => setSelectedDailyGoal(goal)}>
                 {goal.name}
               </span>
-              <button onClick={() => handleComplete(goal.user_goal_id)}>
-                Complete
-              </button>
+              <button onClick={() => handleComplete(goal.id)}>Complete</button>
+              {/* <button onClick={() => handleComplete(goal.id)}>Complete</button> *}
             </li>
           ))}
         </ul>
@@ -208,7 +444,7 @@ function HomePage() {
             </li>
           ))}
         </ul>
-      </section> */}
+      </section> *}
       <section>
         <h3>Add a New Goal</h3>
 
@@ -242,4 +478,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default HomePage; */
