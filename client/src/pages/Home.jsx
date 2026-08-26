@@ -22,7 +22,38 @@ function HomePage() {
 
   const [selectedDailyGoal, setSelectedDailyGoal] = useState(null);
   const [selectedCompletedGoal, setSelectedCompletedGoal] = useState(null);
+  /* gif update */
+  const gifStill =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/0cb5dcbb9fb0c1e55891ab312e19128fc19ac0f0/client/public/Flame.png?raw=true";
+  const gifOnce =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/0cb5dcbb9fb0c1e55891ab312e19128fc19ac0f0/client/public/Flame_single_loop.gif?raw=true";
+  const gifAnimated =
+    "https://github.com/crtl-alt-defeat/D.O.P.A./blob/0cb5dcbb9fb0c1e55891ab312e19128fc19ac0f0/client/public/Flame.gif?raw=true";
+  const [gifSrc, setGifSrc] = useState(gifStill);
 
+  useEffect(() => {
+    setGifSrc(gifOnce);
+  }, []);
+
+  const hover = () => {
+    setGifSrc(gifAnimated);
+  };
+
+  const noHover = () => {
+    setGifSrc(gifStill);
+  };
+  /*   const gifStill = "Flame.png";
+  const gifOnce = "Flame_single_loop.gif";
+  const gifAnimated = "Flame.gif";
+  const [gifSrc, setGifSrc] = useState(gifStill);
+
+  useEffect(() => {
+    setGifSrc(gifOnce);
+  }, []);
+
+  const hover = () => setGifSrc(gifAnimated);
+  const noHover = () => setGifSrc(gifStill); */
+  /* gif update */
   useEffect(() => {
     if (!token) return;
 
@@ -73,9 +104,8 @@ function HomePage() {
     await loadGoals();
   }
 
-  // ⭐ Correct: complete using user_goal_id
   async function handleComplete(userGoalId) {
-    console.log("Completing:", userGoalId); // helpful debug
+    console.log("Completing:", userGoalId);
     await completeGoal(userGoalId, token);
     await loadGoals();
     await loadCompletedToday();
@@ -87,18 +117,6 @@ function HomePage() {
     loadPartialStreak();
     loadCompletedToday();
   }, [token, hasGottenGoals]);
-
-  const gifStill = "Flame.png";
-  const gifOnce = "Flame_single_loop.gif";
-  const gifAnimated = "Flame.gif";
-  const [gifSrc, setGifSrc] = useState(gifStill);
-
-  useEffect(() => {
-    setGifSrc(gifOnce);
-  }, []);
-
-  const hover = () => setGifSrc(gifAnimated);
-  const noHover = () => setGifSrc(gifStill);
 
   return (
     <div>
@@ -164,8 +182,6 @@ function HomePage() {
                 <span onClick={() => setSelectedDailyGoal(goal)}>
                   {goal.name}
                 </span>
-
-                {/* ⭐ Correct: use user_goal_id */}
                 <button onClick={() => handleComplete(goal.user_goal_id)}>
                   Complete
                 </button>
