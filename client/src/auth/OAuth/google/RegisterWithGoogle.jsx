@@ -1,10 +1,8 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../../AuthContext";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
 function RegisterWithGoogle({ setAccountMade }) {
-  const navigate = useNavigate();
   const { registerWithGoogle } = useAuth();
   const [error, setError] = useState(null);
 
@@ -21,16 +19,16 @@ function RegisterWithGoogle({ setAccountMade }) {
   }
 
   return (
-    <>
+    <div className="googleRegister">
       <GoogleLogin
         onSuccess={handleRegister}
         onError={() => {
-          console.log("Login Failed");
+          console.log("Register Failed");
         }}
         useOneTap
       />
       {error && <p role="alert">{error}</p>}
-    </>
+    </div>
   );
 }
 export default RegisterWithGoogle;

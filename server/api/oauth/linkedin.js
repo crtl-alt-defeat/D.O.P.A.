@@ -6,7 +6,11 @@ linkedinRouter.post("/register", async (req, res, next) => {
 });
 
 linkedinRouter.post("/login", async (req, res, next) => {
-  res.send("POST /oauth/linkedin/lgin: test");
+  res.send("POST /oauth/linkedin/login: test");
+});
+
+linkedinRouter.put("/link", async (req, res, next) => {
+  res.send("PUT /oauth/linkedin/link: test");
 });
 
 export default linkedinRouter;

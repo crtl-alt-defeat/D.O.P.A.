@@ -86,7 +86,8 @@ export const getWeeksGoals = async (userId, timeZone) => {
   const dayInteger = new Date(localDate).getDay();
 
   const SQL = `
-  SELECT 
+  SELECT
+    users_goals.id AS user_goal_id,
     users_goals.user_id,
     users_goals.goal_id,
     goals.name,
@@ -104,6 +105,7 @@ export const getWeeksGoals = async (userId, timeZone) => {
     AND users_goals.date_made <= (CURRENT_TIMESTAMP AT TIME ZONE $2)::date;
 `;
   const { rows } = await client.query(SQL, [userId, timeZone, dayInteger]);
+  console.log(rows);
   return rows;
 }; */
 

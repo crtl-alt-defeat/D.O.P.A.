@@ -55,9 +55,7 @@ typesRouter.get("/user/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const userTypes = await getTypesByUserId(userId);
-    /*     if (!userTypes.length)
-      return res.status(404).send({ message: "Types not found." }); */
-    //console.log(userTypes);
+
     res.send(userTypes);
   } catch (error) {
     next(error);

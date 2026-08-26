@@ -189,6 +189,7 @@ function SchedulesPage() {
 
   async function syncGoals() {
     const data = await getWeeklyGoals(token);
+    console.log("data:", data);
 
     const enriched = data.map((goal) => ({
       ...goal,
@@ -217,7 +218,8 @@ function SchedulesPage() {
   }
 
   async function handleCompleteGoal() {
-    await completeGoal(selectedGoal.goal_id, token);
+    console.log(selectedGoal);
+    await completeGoal(selectedGoal.user_goal_id, token);
     await syncGoals();
     setSelectedGoal(null);
   }

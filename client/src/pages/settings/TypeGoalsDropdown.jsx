@@ -17,9 +17,6 @@ function TypeGoalsDropdown({ type, user, refreshSettings, refreshKey }) {
       const allGoals = await getGoalsByTypeId(type.id, token);
       const selected = await getSelectedGoalsByType(user.id, type.id, token);
 
-      console.log("Type", type.id, "allGoals:", allGoals);
-      console.log("Type", type.id, "selected:", selected);
-
       setGoals(allGoals);
       setSelectedGoals(selected.map((g) => g.id));
     }
